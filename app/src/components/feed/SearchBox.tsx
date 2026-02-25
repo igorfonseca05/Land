@@ -31,7 +31,6 @@ import { getAuth } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { SearchPostCard } from "./SearchPost";
 
-
 type Post = {
   title: string;
   description: string;
@@ -40,7 +39,7 @@ type Post = {
 
 export function HeroSearch() {
   const { profile } = useProfileContext();
-  const {setSearchPost} = useSearchPost()
+  const { setSearchPost } = useSearchPost();
   const [isOpen, setIsOpen] = useState(false);
   const [post, setPost] = useState<Post>({
     title: "",
@@ -106,17 +105,17 @@ export function HeroSearch() {
       setError(null);
 
       if (!auth.currentUser?.uid) return;
-  
+
       const newPost = {
-            ...isValidPost.data,
+        ...isValidPost.data,
         userId: auth.currentUser?.uid,
         type: "search",
         status: "active",
         createdAt: serverTimestamp(),
-      }
+      };
 
-      await addDoc(collection(db, 'ads'), newPost);
-      setSearchPost(newPost)
+      await addDoc(collection(db, "ads"), newPost);
+      setSearchPost(newPost);
       setLoading(false);
       setIsOpen(false);
       toast.success("Publicado.");
@@ -150,7 +149,7 @@ export function HeroSearch() {
     //     details: { title: validPost.slice(0, 20) },
     //   } as const;
 
-      // setSearchPost({ ...postInfos });
+    // setSearchPost({ ...postInfos });
 
     //   batch.set(ads, postInfos);
     //   batch.set(feeds, postInfos);
@@ -264,30 +263,38 @@ export function HeroSearch() {
 
               <div className="flex flex-wrap gap-2">
                 {[
-                  { name: "electricityNearby", label: "Energia elétrica" },
-                  { name: "waterNearby", label: "Água próxima" },
-                  { name: "needsWell", label: "Necessita poço" },
-                  { name: "dirtRoadAccess", label: "Estrada de terra" },
-                  { name: "pavedRoadAccess", label: "Acesso asfaltado" },
-                  { name: "woodedArea", label: "Área arborizada" },
-                  { name: "flatLand", label: "Terreno plano" },
-                  { name: "fencedLand", label: "Terreno cercado" },
-                  { name: "noHoaFee", label: "Sem condomínio" },
+                    { name: "Energia elétrica disponível" },
+                    { name: "Abastecimento de água" },
+                    { name: "Acesso asfaltado" },
+                    { name: "Documentação regularizada" },
+                    { name: "Próximo ao centro urbano" },
+                    // { name: "Boa incidência solar" },
+                    { name: "Área arborizada" },
+                    { name: "Cercado" },
+                    { name: "Sem taxa de condomínio" },
+                    { name: "Ideal para plantio" },
+                    // { name: "Ideal para construção" },
+                    // { name: "Fonte de água (rio, nascente ou poço)" },
+                    { name: "Acesso para caminhão" },
+                    // { name: "Solo fértil" },
+                    { name: "Topografia plana ou levemente inclinada" },
+                    // { name: "Área produtiva" },
+                    { name: "Sem restrições ambientais" }
                 ].map((item, i) => {
                   return (
                     <label
                       key={item.name}
                       className={`flex items-center justify-start gap-2 px-4 py-2 rounded-full border text-sm font-medium cursor-pointer select-none transition-all duration-200 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300hover:bg-neutral-100 dark:hover:bg-neutral-800 
-                      ${Object.hasOwn(post.features, item.label) && "bg-green-500 text-white"}`}
+                      ${Object.hasOwn(post.features, item.name) && "bg-green-500 text-white"}`}
                     >
                       <input
                         type="checkbox"
-                        name={item.label}
+                        name={item.name}
                         className="hidden peer"
                         checked={!!post.features[item.name]}
                         onChange={handleInput}
                       />
-                      {item.label}
+                      {item.name}
                     </label>
                   );
                 })}

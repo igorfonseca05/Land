@@ -81,8 +81,6 @@ export type NormalizedAd = z.infer<typeof NormalizedAdSchema>;
 /* ========= Uso ========= */
 // const normalized = NormalizedAdSchema.parse(rawData)
 
-
-
 export const ProfileInfoSchema = z.object({
   name: z
     .string()
@@ -96,7 +94,7 @@ export const ProfileInfoSchema = z.object({
     .min(2, "A profissão deve ter pelo menos 2 caracteres")
     .max(60, "A profissão pode ter no máximo 60 caracteres")
     .optional()
-    .or(z.literal('')),
+    .or(z.literal("")),
 
   location: z
     .string()
@@ -104,55 +102,35 @@ export const ProfileInfoSchema = z.object({
     .min(2, "A localização deve ter pelo menos 2 caracteres")
     .max(80, "A localização pode ter no máximo 80 caracteres")
     .optional()
-    .or(z.literal('')),
-    
+    .or(z.literal("")),
+
   description: z
     .string()
     .trim()
     .max(300, "A descrição pode ter no máximo 300 caracteres")
     .optional(),
 
-    phone: z
+  phone: z
     .string()
     .trim()
     // aceita +55, espaços, parênteses e hífen
     .regex(
       /^(\+?\d{1,3})?\s?\(?\d{2}\)?\s?\d{4,5}-?\d{4}$/,
-      "Número de telefone inválido"
+      "Número de telefone inválido",
     )
     .optional()
     .or(z.literal("")),
 });
 
-export type Profile = z.infer<typeof ProfileInfoSchema>
-
+export type Profile = z.infer<typeof ProfileInfoSchema>;
 
 export const PostSchema = z.object({
-  title: z.string().trim().min(2, 'Insira um titulo para o post'),
+  title: z.string().trim().min(2, "Insira um titulo para o post"),
   description: z
-  .string()
-  .trim()
-  .min(1, "O post não pode estar vazio")
-  .max(2000, "O post pode ter no máximo 2000 caracteres"),
- features: z.object({
-    "Energia elétrica": z.literal("on").optional(),
-    "Água próxima": z.literal("on").optional(),
-    "Necessita poço": z.literal("on").optional(),
-    "Estrada de terra": z.literal("on").optional(),
-    "Acesso asfaltado": z.literal("on").optional(),
-    "Área arborizada": z.literal("on").optional(),
-    "Terreno plano": z.literal("on").optional(),
-    "Terreno cercado": z.literal("on").optional(),
-    "Sem condomínio": z.literal("on").optional(),
-  }),
-  status: z.string(),
-  createdAt: z.any().optional()
-});
-
-
-export const propertySchema = z.object({
-  title: z.string().min(1, "Título é obrigatório"),
-  description: z.string().min(1, "Descrição é obrigatória"),
+    .string()
+    .trim()
+    .min(1, "O post não pode estar vazio")
+    .max(2000, "O post pode ter no máximo 2000 caracteres"),
   features: z.object({
     "Energia elétrica": z.literal("on").optional(),
     "Água próxima": z.literal("on").optional(),
@@ -164,10 +142,36 @@ export const propertySchema = z.object({
     "Terreno cercado": z.literal("on").optional(),
     "Sem condomínio": z.literal("on").optional(),
   }),
+  status: z.string(),
+  createdAt: z.any().optional(),
 });
 
-export type PostSchema = z.infer<typeof PostSchema>
+export const propertySchema = z.object({
+  title: z.string().min(1, "Título é obrigatório"),
+  description: z.string().min(1, "Descrição é obrigatória"),
+  features: z.object({
+    "Energia elétrica disponível": z.literal("on").optional(),
+    "Abastecimento de água": z.literal("on").optional(),
+    "Acesso asfaltado": z.literal("on").optional(),
+    // "Acesso por estrada em boas condições": z.literal("on").optional(),
+    "Documentação regularizada": z.literal("on").optional(),
+    "Próximo ao centro urbano": z.literal("on").optional(),
+    // "Boa incidência solar": z.literal("on").optional(),
+    "Área arborizada": z.literal("on").optional(),
+    Cercado: z.literal("on").optional(),
+    "Sem taxa de condomínio": z.literal("on").optional(),
+    "Ideal para plantio": z.literal("on").optional(),
+    "Ideal para construção": z.literal("on").optional(),
+    "Fonte de água (rio, nascente ou poço)": z.literal("on").optional(),
+    "Acesso para caminhão": z.literal("on").optional(),
+    "Solo fértil": z.literal("on").optional(),
+    "Topografia plana ou levemente inclinada": z.literal("on").optional(),
+    "Área produtiva": z.literal("on").optional(),
+    "Sem restrições ambientais": z.literal("on").optional(),
+  }),
+});
 
+export type PostSchema = z.infer<typeof PostSchema>;
 
 // [2026-01-14T19:33:31.390Z]  @firebase/firestore: "Firestore (12.6.0): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unknown]: Fetching auth token failed: Firebase: Error (auth/network-request-failed).\nThis typically indicates that your device does not have a healthy Internet connection at the moment. The client will operate in offline mode until it is able to successfully connect to the backend."
 
