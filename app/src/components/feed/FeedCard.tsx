@@ -46,6 +46,7 @@ type Props = {
   title: string;
   postId: string;
   features: object;
+  likesCount?: number | undefined
 };
 
 export function FeedCard({
@@ -64,8 +65,11 @@ export function FeedCard({
   title,
   postId,
   features,
+  likesCount
 }: Props) {
-  console.log(postId)
+
+  // console.log('server', uid, postId)
+
   return (
     <article className="bg-white border border-neutral-200 rounded-2xl overflow-hidden">
       {type === "search" ? (
@@ -111,7 +115,7 @@ export function FeedCard({
           <hr className="text-neutral-200" />
           <div className="flex justify-between items-center py-1">
             <div className="flex gap-4 items-center">
-              <LikeButton postId={postId}/>
+              <LikeButton postId={postId} likesCount={likesCount}/>
               <MdShare />
             </div>
             <MdBookmark />

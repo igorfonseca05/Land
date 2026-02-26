@@ -142,6 +142,7 @@ export function Posts() {
             type={doc.type}
             title={doc.title}
             features={doc.features}
+            likesCount = {doc.likesCount}
           />
         ))
       )}

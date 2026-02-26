@@ -89,7 +89,8 @@ export interface PostProps {
   };
   owner: OwnerProps;
   status: string;
-  type: string
+  type: string;
+  likesCount?: number
 }
 
 export function Form() {

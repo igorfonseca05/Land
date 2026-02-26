@@ -98,7 +98,6 @@ export function HeroSearch() {
     if (!isValidPost.success) {
       return setError(isValidPost.error.flatten().fieldErrors);
     }
-    console.log(isValidPost.data);
 
     try {
       setLoading(true);
@@ -112,6 +111,7 @@ export function HeroSearch() {
         type: "search",
         status: "active",
         createdAt: serverTimestamp(),
+        likeCount: 0
       };
 
       await addDoc(collection(db, "ads"), newPost);
