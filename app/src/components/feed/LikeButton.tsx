@@ -25,7 +25,7 @@ export function LikeButton({
     if (!auth.currentUser) return;
 
     async function checkIfLiked() {
-      const likeRef = doc(db, "ads", postId, "likes", auth.currentUser.uid);
+      const likeRef = doc(db, "ads", postId, "likes", auth.currentUser?.uid!);
       const snap = await getDoc(likeRef);
       setHasLiked(snap.exists());
     }

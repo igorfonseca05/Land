@@ -8,15 +8,6 @@ interface PageContainerProps {
 }
 
 export async function PageContainer({ children }: PageContainerProps) {
-
-   const headersList = headers();
-  const pathname = (await headersList).get("x-pathname");
-
-  // console.log(pathname);
-
-
-  // max-w-2xl
-
   return (
     <div className="pt-20 pb-10 px-2 sm:px-6 lg:px-8 max-w-8xl mx-auto  bg-[#f1f2f6]">
       <div className="flex gap-8">

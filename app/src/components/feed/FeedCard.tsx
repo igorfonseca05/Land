@@ -1,36 +1,25 @@
 import {
   MdBookmark,
-  MdChatBubble,
   MdCheckCircle,
-  MdCurrencyExchange,
-  MdDetails,
-  MdFavorite,
-  MdMoney,
   MdMoreHoriz,
-  MdOutlineAttachMoney,
-  MdSave,
   MdSearch,
   MdShare,
 } from "react-icons/md";
 import { Avatar } from "../ui/Avatar";
-import { Button } from "../ui/Button";
 import { formatFirebaseTime } from "@/app/utils/functions";
 import { FieldValue, Timestamp } from "firebase/firestore";
 import { FaMoneyBill } from "react-icons/fa6";
 import { BiSolidArea } from "react-icons/bi";
-import { auth } from "@/app/config/firebase";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/swiper.css";
 import Image from "next/image";
 import { Navigation } from "swiper/modules";
-import { UserProfile } from "firebase/auth";
-import { PostActions } from "./PostActions";
 import Link from "next/link";
-import { FiArrowRight } from "react-icons/fi";
 import { LikeButton } from "./LikeButton";
+import { SavePost } from "./savePost";
 
-type Props = {
+export type PostProps = {
   author: string;
   location: string;
   time: Timestamp | FieldValue;
@@ -66,9 +55,8 @@ export function FeedCard({
   postId,
   features,
   likesCount
-}: Props) {
+}: PostProps) {
 
-  // console.log('server', uid, postId)
 
   return (
     <article className="bg-white border border-neutral-200 rounded-2xl overflow-hidden">
@@ -118,7 +106,7 @@ export function FeedCard({
               <LikeButton postId={postId} likesCount={likesCount}/>
               <MdShare />
             </div>
-            <MdBookmark />
+           <SavePost postId={postId}/>
           </div>
         </div>
       ) : (
