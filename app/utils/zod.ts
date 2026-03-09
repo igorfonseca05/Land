@@ -124,7 +124,7 @@ export const ProfileInfoSchema = z.object({
 
 export type Profile = z.infer<typeof ProfileInfoSchema>;
 
-export const PostSchema = z.object({
+export const PostSearchSchema = z.object({
   title: z.string().trim().min(2, "Insira um titulo para o post"),
   description: z
     .string()
@@ -144,6 +144,9 @@ export const PostSchema = z.object({
   }),
   status: z.string(),
   createdAt: z.any().optional(),
+  type: z.string().optional(),
+  userId: z.string().optional(),
+  likesCount: z.number().optional()
 });
 
 export const propertySchema = z.object({
@@ -171,7 +174,7 @@ export const propertySchema = z.object({
   }),
 });
 
-export type PostSchema = z.infer<typeof PostSchema>;
+export type PostSchema = z.infer<typeof PostSearchSchema>;
 
 // [2026-01-14T19:33:31.390Z]  @firebase/firestore: "Firestore (12.6.0): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unknown]: Fetching auth token failed: Firebase: Error (auth/network-request-failed).\nThis typically indicates that your device does not have a healthy Internet connection at the moment. The client will operate in offline mode until it is able to successfully connect to the backend."
 

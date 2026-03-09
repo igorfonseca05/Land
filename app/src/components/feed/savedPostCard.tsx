@@ -8,8 +8,9 @@ import { SavePost } from "./savePost";
 import { DocumentData } from "firebase/firestore";
 import { Profile } from "@/app/utils/zod";
 
-export function SearchCard({props}: {props: any | DocumentData}) {
+export function SavedPostCard({props}: {props: any | DocumentData}) {
 
+  console.log(props)
 
   return (
     <div className="p-2 md:p-6 space-y-2.5">

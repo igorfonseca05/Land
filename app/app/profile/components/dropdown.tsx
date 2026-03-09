@@ -14,11 +14,11 @@ import {
   MdSell,
 } from "react-icons/md";
 import { Ad } from "../[slug]/page";
-import { PostSchema } from "@/app/utils/zod";
+import { PostSchema, PostSearchSchema } from "@/app/utils/zod";
 import z, { ZodFlattenedError } from "zod";
 import { serverTimestamp } from "firebase/firestore";
 
-type Post = z.infer<typeof PostSchema>
+type Post = z.infer<typeof PostSearchSchema>
 
 export function Dropdown({ infos }: { infos: Ad }) {
   const { profile } = useProfileContext();
@@ -49,16 +49,16 @@ export function Dropdown({ infos }: { infos: Ad }) {
   function handleEditForm(e: FormEvent) {
     e.preventDefault();
 
-    const isValidPost = PostSchema.safeParse({ post });
+    const isValidPost = PostSearchSchema.safeParse({ post });
 
     if (!isValidPost.success) {
       return setError(isValidPost.error.flatten().fieldErrors);
     }
 
-    const { post: validPost } = isValidPost.data;
+    const { description } = isValidPost.data;
 
     const postInfos = {
-      description: validPost,
+      description,
       updatedAt: serverTimestamp(),
     } as const;
 
@@ -114,9 +114,9 @@ export function Dropdown({ infos }: { infos: Ad }) {
               className="w-full h-45 resize-none border-2 border-gray-200 p-2 rounded-lg text-base bg-transparent outline-none placeholder:text-neutral-400 dark:text-white"
               value={post}
             />
-            {error?.post && (
+            {error?.description && (
               <span className="mt-1 block text-xs text-red-500">
-                {error.post}
+                {error.description}
               </span>
             )}
           </form>

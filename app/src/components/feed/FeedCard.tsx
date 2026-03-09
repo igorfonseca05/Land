@@ -32,7 +32,7 @@ export type PostProps = {
   unit: string;
   img: string;
   type: string;
-  // uid: string | undefined;
+  uid: string | undefined;
   publicId: string | undefined;
   title: string;
   postId: string;

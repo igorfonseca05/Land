@@ -128,7 +128,7 @@ export function Posts() {
           <FeedCard
             key={i}
             postId={doc.id}
-            // uid={owner[doc.userId].uid as string}
+            uid={owner[doc.userId].uid as string}
             author={owner[doc.userId].name as string}
             img={owner[doc.userId].profile as string}
             publicId={owner[doc.userId].publicId as string}
