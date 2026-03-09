@@ -52,6 +52,8 @@ export function HeroSearch() {
   >(null);
   const [loading, setLoading] = useState(false);
 
+  const isLoggedIn = getAuth().currentUser
+
   function handleInput(
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
@@ -111,7 +113,7 @@ export function HeroSearch() {
         type: "search",
         status: "active",
         createdAt: serverTimestamp(),
-        likeCount: 0
+        likeCount: 0,
       };
 
       await addDoc(collection(db, "ads"), newPost);
@@ -127,45 +129,6 @@ export function HeroSearch() {
       setLoading(false);
       toast.error(err.message);
     }
-
-    // try {
-    //   setPostLoading(true);
-    //   setIsOpen(false);
-
-    //   // await new Promise((resolve) => setTimeout(resolve, 3000));
-    // const postId = doc(collection(db, "posts")).id;
-
-    //   const batch = writeBatch(db);
-
-    //   const ads = doc(db, "ads", postId);
-    //   const feeds = doc(db, "feeds", postId);
-
-    //   const postInfos = {
-    //     description: validPost,
-    //     createdAt: serverTimestamp(),
-    //     userId: auth.currentUser?.uid,
-    //     type: "search",
-    //     status: "active",
-    //     details: { title: validPost.slice(0, 20) },
-    //   } as const;
-
-    // setSearchPost({ ...postInfos });
-
-    //   batch.set(ads, postInfos);
-    //   batch.set(feeds, postInfos);
-
-    //   await batch.commit();
-
-    //   setPostLoading(false);
-    //   setPost("");
-    //   toast.success("Publicado.");
-    // } catch (error) {
-    //   // console.log(error)
-    //   setPostLoading(false);
-    //   toast.error("Erro ao publicar seu post, tente novamente!");
-    // } finally {
-    //   setPostLoading(false);
-    // }
   }
 
   useEffect(() => {
@@ -181,161 +144,200 @@ export function HeroSearch() {
 
   return (
     <>
-      <Modal isOpen={isOpen} setIsOpen={setIsOpen} style="sm:w-[70%]">
-        <div className="flex justify-end">
-          <div
-            className="hover:bg-gray-100 p-2 rounded-lg"
-            onClick={() => setIsOpen(false)}
-          >
-            <MdClose className="hover:bg-gray-100" />
-          </div>
-        </div>
-        <div className="flex flex-col justify-between gap-3 p-2 pt-0">
-          {/* Header */}
-          <div className="flex items-center gap-3">
-            <img
-              src={`${profile?.profile}` || "/place.webp"}
-              alt="User avatar"
-              className="w-10 h-10 rounded-full object-cover"
-            />
-
-            <div className="flex flex-col">
-              <span className="text-sm capitalize font-semibold text-neutral-900 dark:text-white">
-                {profile?.name.split(/\s+/)[0]}
-              </span>
-              <span className="text-xs capitalize text-neutral-400 dark:text-white">
-                {profile?.location}
-              </span>
-              {/* <span className="text-xs text-neutral-500">Público</span> */}
-            </div>
-          </div>
-
-          {/* Textarea */}
-          <form
-            id="postForm"
-            className="w-full space-y-2"
-            onSubmit={handlePostForm}
-          >
-            <div className="flex flex-col gap-2">
-              <label
-                htmlFor="title"
-                className="text-sm font-semibold text-neutral-800 dark:text-neutral-200"
+      <Modal isOpen={isOpen} setIsOpen={setIsOpen} style={`${isLoggedIn ? `sm:w-[70%]` : 'sm:w-[40%]'}`}>
+        {isLoggedIn ? (
+          <>
+            <div className="flex justify-end">
+              <div
+                className="hover:bg-gray-100 p-2 rounded-lg"
+                onClick={() => setIsOpen(false)}
               >
-                Título da busca
-              </label>
-
-              <input
-                id="title"
-                name="title"
-                type="text"
-                placeholder="Ex: Procuro terreno plano com acesso asfaltado"
-                minLength={2}
-                maxLength={70}
-                className="
-                 border-gray-200 p-2 border-2 rounded-lg text-base bg-transparent outline-none placeholder:text-neutral-400 dark:text-white w-f borde dark:border-neutral-7 dark:bg-neutral-900 px-4 py text-neutral-8 focus:outline-none transition-all duration-200"
-                onChange={handleInput}
-              />
-            </div>
-            <div className="relative">
-              <textarea
-                name="description"
-                rows={4}
-                maxLength={charactereCount}
-                onChange={handleInput}
-                placeholder="Descreva o terreno que você está buscando"
-                className="w-full h-25 resize-none border-2 border-gray-200 p-2 rounded-lg text-base bg-transparent outline-none placeholder:text-neutral-400 dark:text-white"
-              />
-              {error?.description && (
-                <span className="mt-1 block text-xs text-red-500">
-                  {error.description}
-                </span>
-              )}
-              <span className="absolute bottom-2 right-4 text-xs text-neutral-500 block text-end mb-2">
-                {post.description.length} / {charactereCount} caracteres
-                restantes
-              </span>
-            </div>
-
-            <div>
-              <h3 className="text-md font-bold text-neutral-900 dark:text-white mb-3">
-                O que o terreno precisa ter?
-              </h3>
-
-              <div className="flex flex-wrap gap-2">
-                {[
-                    { name: "Energia elétrica disponível" },
-                    { name: "Abastecimento de água" },
-                    { name: "Acesso asfaltado" },
-                    { name: "Documentação regularizada" },
-                    { name: "Próximo ao centro urbano" },
-                    // { name: "Boa incidência solar" },
-                    { name: "Área arborizada" },
-                    { name: "Cercado" },
-                    { name: "Sem taxa de condomínio" },
-                    { name: "Ideal para plantio" },
-                    // { name: "Ideal para construção" },
-                    // { name: "Fonte de água (rio, nascente ou poço)" },
-                    { name: "Acesso para caminhão" },
-                    // { name: "Solo fértil" },
-                    { name: "Topografia plana ou levemente inclinada" },
-                    // { name: "Área produtiva" },
-                    { name: "Sem restrições ambientais" }
-                ].map((item, i) => {
-                  return (
-                    <label
-                      key={item.name}
-                      className={`flex items-center justify-start gap-2 px-4 py-2 rounded-full border text-sm font-medium cursor-pointer select-none transition-all duration-200 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300hover:bg-neutral-100 dark:hover:bg-neutral-800 
-                      ${Object.hasOwn(post.features, item.name) && "bg-green-500 text-white"}`}
-                    >
-                      <input
-                        type="checkbox"
-                        name={item.name}
-                        className="hidden peer"
-                        checked={!!post.features[item.name]}
-                        onChange={handleInput}
-                      />
-                      {item.name}
-                    </label>
-                  );
-                })}
+                <MdClose className="hover:bg-gray-100" />
               </div>
             </div>
-          </form>
+            <div className="flex flex-col justify-between gap-3 p-2 pt-0">
+              {/* Header */}
+              <div className="flex items-center gap-3">
+                <img
+                  src={`${profile?.profile}` || "/place.webp"}
+                  alt="User avatar"
+                  className="w-10 h-10 rounded-full object-cover"
+                />
 
-          {/* Divider */}
-          {/* <div className="h-px bg-neutral-200 dark:bg-neutral-700" /> */}
+                <div className="flex flex-col">
+                  <span className="text-sm capitalize font-semibold text-neutral-900 dark:text-white">
+                    {profile?.name.split(/\s+/)[0]}
+                  </span>
+                  <span className="text-xs capitalize text-neutral-400 dark:text-white">
+                    {profile?.location}
+                  </span>
+                  {/* <span className="text-xs text-neutral-500">Público</span> */}
+                </div>
+              </div>
 
-          {/* Actions row */}
-          {/* <div className="flex items-center justify-between">
-            <span className="text-sm text-neutral-500">
-              Adicione informações ao anúncio
-            </span>
+              {/* Textarea */}
+              <form
+                id="postForm"
+                className="w-full space-y-2"
+                onSubmit={handlePostForm}
+              >
+                <div className="flex flex-col gap-2">
+                  <label
+                    htmlFor="title"
+                    className="text-sm font-semibold text-neutral-800 dark:text-neutral-200"
+                  >
+                    Título da busca
+                  </label>
 
-            <div className="flex gap-2">
-              <button className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800">
-                <MdMap className="text-green-500" />
-              </button>
+                  <input
+                    id="title"
+                    name="title"
+                    type="text"
+                    placeholder="Ex: Procuro terreno plano com acesso asfaltado"
+                    minLength={2}
+                    maxLength={70}
+                    className="
+                 border-gray-200 p-2 border-2 rounded-lg text-base bg-transparent outline-none placeholder:text-neutral-400 dark:text-white w-f borde dark:border-neutral-7 dark:bg-neutral-900 px-4 py text-neutral-8 focus:outline-none transition-all duration-200"
+                    onChange={handleInput}
+                  />
+                </div>
+                <div className="relative">
+                  <textarea
+                    name="description"
+                    rows={4}
+                    maxLength={charactereCount}
+                    onChange={handleInput}
+                    placeholder="Descreva o terreno que você está buscando"
+                    className="w-full h-25 resize-none border-2 border-gray-200 p-2 rounded-lg text-base bg-transparent outline-none placeholder:text-neutral-400 dark:text-white"
+                  />
+                  {error?.description && (
+                    <span className="mt-1 block text-xs text-red-500">
+                      {error.description}
+                    </span>
+                  )}
+                  <span className="absolute bottom-2 right-4 text-xs text-neutral-500 block text-end mb-2">
+                    {post.description.length} / {charactereCount} caracteres
+                    restantes
+                  </span>
+                </div>
 
-              <button className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800">
-                <MdSell className="text-orange-500"></MdSell>
-              </button>
+                <div>
+                  <h3 className="text-md font-bold text-neutral-900 dark:text-white mb-3">
+                    O que o terreno precisa ter?
+                  </h3>
+
+                  <div className="flex flex-wrap gap-2">
+                    {[
+                      { name: "Energia elétrica disponível" },
+                      { name: "Abastecimento de água" },
+                      { name: "Acesso asfaltado" },
+                      { name: "Documentação regularizada" },
+                      { name: "Próximo ao centro urbano" },
+                      // { name: "Boa incidência solar" },
+                      { name: "Área arborizada" },
+                      { name: "Cercado" },
+                      { name: "Sem taxa de condomínio" },
+                      { name: "Ideal para plantio" },
+                      // { name: "Ideal para construção" },
+                      // { name: "Fonte de água (rio, nascente ou poço)" },
+                      { name: "Acesso para caminhão" },
+                      // { name: "Solo fértil" },
+                      { name: "Topografia plana ou levemente inclinada" },
+                      // { name: "Área produtiva" },
+                      { name: "Sem restrições ambientais" },
+                    ].map((item, i) => {
+                      return (
+                        <label
+                          key={item.name}
+                          className={`flex items-center justify-start gap-2 px-4 py-2 rounded-full border text-sm font-medium cursor-pointer select-none transition-all duration-200 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300hover:bg-neutral-100 dark:hover:bg-neutral-800 
+                      ${Object.hasOwn(post.features, item.name) && "bg-green-500 text-white"}`}
+                        >
+                          <input
+                            type="checkbox"
+                            name={item.name}
+                            className="hidden peer"
+                            checked={!!post.features[item.name]}
+                            onChange={handleInput}
+                          />
+                          {item.name}
+                        </label>
+                      );
+                    })}
+                  </div>
+                </div>
+              </form>
+
+              {/* Footer */}
+              <div className="flex items-center gap-2 justify-end">
+                <button className="w-full py-2 text-sm hover:bg-neutral-100 rounded-lg md:max-w-50 text-nowrap  text-gray-600 font-semibold transition">
+                  Salvar como Rascunho
+                </button>
+                <button
+                  type="submit"
+                  form="postForm"
+                  className="w-full py-2 rounded-lg md:max-w-40 bg-green-500 text-white font-semibold hover:bg-green-700 transition"
+                >
+                  Publicar
+                </button>
+              </div>
             </div>
-          </div> */}
+          </>
+        ) : (
+          <>
+            <div className="flex justify-end">
+              <div
+                className="hover:bg-gray-100 p-2 rounded-lg"
+                onClick={() => setIsOpen(false)}
+              >
+                <MdClose />
+              </div>
+            </div>
 
-          {/* Footer */}
-          <div className="flex items-center gap-2 justify-end">
-            <button className="w-full py-2 text-sm hover:bg-neutral-100 rounded-lg md:max-w-50 text-nowrap  text-gray-600 font-semibold transition">
-              Salvar como Rascunho
-            </button>
-            <button
-              type="submit"
-              form="postForm"
-              className="w-full py-2 rounded-lg md:max-w-40 bg-green-500 text-white font-semibold hover:bg-green-700 transition"
-            >
-              Publicar
-            </button>
-          </div>
-        </div>
+            <div className="flex flex-col items-center text-center gap-4 p-4 pt-0">
+              {/* Avatar */}
+              <img
+                src="/place.webp"
+                alt="User avatar"
+                className="w-16 h-16 rounded-full object-cover"
+              />
+
+              {/* Text */}
+              <div className="flex flex-col gap-1">
+                <h2 className="text-lg font-semibold text-neutral-900 dark:text-white">
+                  Faça login para publicar
+                </h2>
+                <p className="text-sm text-neutral-500 dark:text-neutral-400 max-w-sm">
+                  Para publicar uma busca de terreno e interagir com outros
+                  usuários, você precisa estar conectado à sua conta.
+                </p>
+              </div>
+
+              {/* Benefits */}
+              <div className="flex flex-col gap-2 text-sm text-neutral-600 dark:text-neutral-300">
+                <span>✔ Publicar buscas de terrenos</span>
+                <span>✔ Salvar anúncios</span>
+                <span>✔ Conversar com proprietários</span>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex flex-col gap-2 w-full mt-2">
+                <button
+                  // onClick={handleLogin}
+                  className="w-full py-2 rounded-lg bg-green-500 text-white font-semibold hover:bg-green-700 transition"
+                >
+                  Entrar na minha conta
+                </button>
+
+                <button
+                  // onClick={handleRegister}
+                  className="w-full py-2 rounded-lg border border-neutral-300 text-neutral-700 dark:text-white font-semibold hover:bg-neutral-100 dark:hover:bg-neutral-800 transition"
+                >
+                  Criar conta
+                </button>
+              </div>
+            </div>
+          </>
+        )}
       </Modal>
 
       <div className="bg-white rounded-2xl border border-neutral-200 p-4">

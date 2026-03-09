@@ -174,7 +174,7 @@ export function LoginForm() {
             Aguarde...
           </>
         ) : (
-          "Cadastrar"
+          "Entrar"
         )}
       </button>
     </form>

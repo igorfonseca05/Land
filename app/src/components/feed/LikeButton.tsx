@@ -32,6 +32,7 @@ export function LikeButton({
 
     checkIfLiked();
   }, [postId, auth.currentUser]);
+  
 
   async function handleLike() {
     if (!auth.currentUser) return;

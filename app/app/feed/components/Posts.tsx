@@ -128,8 +128,10 @@ export function Posts() {
           <FeedCard
             key={i}
             postId={doc.id}
-            uid={owner[doc.userId].uid as string}
+            // uid={owner[doc.userId].uid as string}
             author={owner[doc.userId].name as string}
+            img={owner[doc.userId].profile as string}
+            publicId={owner[doc.userId].publicId as string}
             location={doc.location?.city ?? ""}
             time={doc.createdAt}
             description={doc.description}
@@ -137,8 +139,6 @@ export function Posts() {
             price={doc.details?.price ?? ""}
             size={doc.details?.landSize ?? ""}
             unit={doc.details?.unit ?? ""}
-            img={owner[doc.userId].profile as string}
-            publicId={owner[doc.userId].publicId as string}
             type={doc.type}
             title={doc.title}
             features={doc.features}

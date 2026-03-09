@@ -18,6 +18,8 @@ import { Navigation } from "swiper/modules";
 import Link from "next/link";
 import { LikeButton } from "./LikeButton";
 import { SavePost } from "./savePost";
+import { getAuth } from "firebase/auth";
+import { SearchCard } from "./SearchCard";
 
 export type PostProps = {
   author: string;
@@ -30,97 +32,31 @@ export type PostProps = {
   unit: string;
   img: string;
   type: string;
-  uid: string | undefined;
+  // uid: string | undefined;
   publicId: string | undefined;
   title: string;
   postId: string;
   features: object;
-  likesCount?: number | undefined
+  likesCount?: number | undefined;
 };
 
-export function FeedCard({
-  uid,
-  author,
-  location,
-  time,
-  description,
-  images,
-  price,
-  size,
-  unit,
-  img,
-  type,
-  publicId,
-  title,
-  postId,
-  features,
-  likesCount
-}: PostProps) {
-
-
+export function FeedCard({...props}: PostProps) {
   return (
     <article className="bg-white border border-neutral-200 rounded-2xl overflow-hidden">
-      {type === "search" ? (
-        <div className="p-2 md:p-6 space-y-2.5">
-          <div className=" flex justify-between ">
-            <div className="flex gap-3">
-              <Avatar src={img} fallback={author.split(/\s+/)[0]} />
-              <div>
-                <p className="font-bold text-sm capitalize">
-                  {author.split(/\s+/)[0]}
-                </p>
-                <p className="text-xs text-neutral-500 ">
-                  {/* <span className="capitalize">{location ? location : ""}</span> •{" "} */}
-                  Postado há {formatFirebaseTime(time)}
-                </p>
-              </div>
-            </div>
-            <span
-              className="inline-flex gap-x-1 items-center px-3 py-1 rounded-full text-sm 
-              font-semibold bg-green-50 text-green-800"
-            >
-              <MdSearch />
-              Busca
-            </span>
-          </div>
-
-          {title && (
-            <p className="text-xl font-semibold text-neutral-900">{title}</p>
-          )}
-          <p className="text-sm text-neutral-900 leading-relaxed ">
-            {description}
-          </p>
-          {/* <hr className="text-neutral-200"/> */}
-          <p className="text-neutral-700 text-sm font-semibold">Requisitos</p>
-          <div className=" grid grid-cols-2 gap-4 text-sm text-neutral-900">
-            {Object.keys(features).map((item, i) => (
-              <div className="flex items-center gap-2" key={i}>
-                <MdCheckCircle className="text-green-500" />
-                <span className="inline-block">{item}</span>
-              </div>
-            ))}
-          </div>
-          <hr className="text-neutral-200" />
-          <div className="flex justify-between items-center py-1">
-            <div className="flex gap-4 items-center">
-              <LikeButton postId={postId} likesCount={likesCount}/>
-              <MdShare />
-            </div>
-           <SavePost postId={postId}/>
-          </div>
-        </div>
+      {props.type === "search" ? (
+        <SearchCard props={props}/>
       ) : (
-        <Link href={`/app/feed/${`${title}-${postId}`}`}>
+        <Link href={`/app/feed/${`${props.title}-${props.postId}`}`}>
           <div className="p-2 md:p-4 flex justify-between ">
             <div className="flex gap-3">
-              <Avatar src={img} fallback={author.split(/\s+/)[0]} />
+              <Avatar src={props.img} fallback={props.author.split(/\s+/)[0]} />
               <div>
                 <p className="font-bold text-sm capitalize">
-                  {author.split(/\s+/)[0]}
+                  {props.author.split(/\s+/)[0]}
                 </p>
                 <p className="text-xs text-neutral-500 ">
                   {/* <span className="capitalize">{location ? location : ""}</span> •{" "} */}
-                  Postado há {formatFirebaseTime(time)}
+                  Postado há {formatFirebaseTime(props.time)}
                 </p>
               </div>
             </div>
@@ -128,7 +64,7 @@ export function FeedCard({
           </div>
 
           <p className="px-2 md:px-4 pb-3 text-sm text-neutral-700">
-            {description}
+            {props.description}
           </p>
 
           <div className="relative max-w-155">
@@ -140,8 +76,8 @@ export function FeedCard({
               spaceBetween={20}
               className="select-none"
             >
-              {Array.isArray(images) &&
-                images.map((url, i) => (
+              {Array.isArray(props.images) &&
+                props.images.map((url, i) => (
                   <SwiperSlide key={i}>
                     <div className="relative w-full aspect-video">
                       <Image
@@ -156,11 +92,11 @@ export function FeedCard({
             </Swiper>
 
             {/* Badges */}
-            {type === "sell" && (
+            {props.type === "sell" && (
               <div className="absolute bottom-3 left-3 flex gap-2 z-1">
                 <span className="bg-black/70 font-bold flex items-center gap-x-1 text-white text-sm px-3 py-1 rounded-lg">
                   <FaMoneyBill className="text-green-400" size={18} />
-                  {price.toLocaleString("pt-BR", {
+                  {props.price.toLocaleString("pt-BR", {
                     style: "currency",
                     currency: "BRL",
                     minimumFractionDigits: 0,
@@ -169,10 +105,10 @@ export function FeedCard({
 
                 <span className="bg-black/70 font-bold flex items-center text-white text-sm px-3 py-1 rounded-lg">
                   <BiSolidArea className="text-green-400" size={18} />
-                  {unit === "ha" && size === 1 && "1 hectare"}
-                  {unit === "ha" && size > 1 && `${size} hectares`}
-                  {unit === "acre" && size === 1 && "1 acre"}
-                  {unit === "sqm" && `${size}m²`}
+                  {props.unit === "ha" && props.size === 1 && "1 hectare"}
+                  {props.unit === "ha" && props.size > 1 && `${props.size} hectares`}
+                  {props.unit === "acre" && props.size === 1 && "1 acre"}
+                  {props.unit === "sqm" && `${props.size}m²`}
                 </span>
               </div>
             )}

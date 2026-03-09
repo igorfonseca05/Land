@@ -4,6 +4,7 @@ import RightSideCards from "@/app/app/profile/components/RightCards";
 import { usePathname } from "next/navigation";
 import { MdTrendingUp } from "react-icons/md";
 import { FeedRightSide } from "./feedRightSide";
+import { SavedItemsRightSide } from "./SavedItensRightSide";
 
 export function RightSidebar() {
   const path = usePathname();
@@ -15,11 +16,10 @@ export function RightSidebar() {
 
   return (
     <>
-      {hiddingRightSide ? (
-        <></>
-      ) : (
+      {hiddingRightSide ? ('') : (
         <aside className="hidden lg:block w-80 shrink-0 sticky top-24 space-y-6">
-          {showRightSide && <FeedRightSide />}
+          {path.includes('/feed') && <FeedRightSide />}
+          {path.includes('/salvos') && <SavedItemsRightSide />}
           {path.includes("/profile") && <RightSideCards />}
         </aside>
       )}
