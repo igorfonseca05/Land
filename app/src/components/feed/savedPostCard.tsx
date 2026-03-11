@@ -8,10 +8,14 @@ import { SavePost } from "./savePost";
 import { DocumentData } from "firebase/firestore";
 import { Profile } from "@/app/utils/zod";
 
-export function SavedPostCard({props}: {props: any | DocumentData}) {
+export function SavedPostCard({props}: {props: PostProps | DocumentData}) {
 
-  console.log(props)
-
+  console.log(formatFirebaseTime(props.createdAt).trim().toLowerCase() === new Date().toLocaleDateString('pt', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  }).trim().toLowerCase())
+  
   return (
     <div className="p-2 md:p-6 space-y-2.5">
       <div className=" flex justify-between ">
@@ -23,7 +27,7 @@ export function SavedPostCard({props}: {props: any | DocumentData}) {
             </p>
             <p className="text-xs text-neutral-500 ">
               {/* <span className="capitalize">{location ? location : ""}</span> •{" "} */}
-              Postado há {formatFirebaseTime(props.time)}
+              Postado {formatFirebaseTime(props.createdAt)}
             </p>
           </div>
         </div>

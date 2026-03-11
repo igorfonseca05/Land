@@ -6,6 +6,7 @@ import { LikeButton } from "@/app/src/components/feed/LikeButton";
 import { SavedPostCard } from "@/app/src/components/feed/savedPostCard";
 import { SavePost } from "@/app/src/components/feed/savePost";
 import { SearchCard } from "@/app/src/components/feed/SearchCard";
+import { SearchPostCard } from "@/app/src/components/feed/SearchPost";
 import { GlobalSpinner } from "@/app/src/components/globalSpinner/GlobalSpinner";
 import { Avatar } from "@/app/src/components/ui/Avatar";
 import { formatFirebaseTime } from "@/app/utils/functions";
@@ -85,7 +86,7 @@ export default function Page() {
       {loading && (
         <div className="flex flex-col gap-y-4 items-center justify-center h-50">
           <div className="w-10 h-10 border-4 border-gray-300 border-t-green-500 rounded-full animate-spin"></div>
-          <p>Buscando salvos</p>
+          {/* <p>Buscando salvos</p> */}
         </div>
       )}
       <div className="space-y-3">
@@ -100,7 +101,7 @@ export default function Page() {
             return (
               <article className="bg-white border border-neutral-200 rounded-2xl overflow-hidden space-y-4" key={i} >
                 {item.type === "search" ? (
-                  <SavedPostCard props={data} />
+                  <SearchCard props={data} />
                 ) : (
                   <p>oi</p>
                 )}

@@ -46,43 +46,4 @@ export function formatFirebaseTime(
   })
 }
 
-const testTime:any = 1768504662063
 
-function getTime() {
-
-  // if(!testTime || !(testTime instanceof Timestamp)) {
-  //   console.log('Agora')
-  // }
-
-  
-    const date = new Date(testTime)
-    const now = new Date()
-
-    const diff = now.getTime() - date.getTime()
-
-
-    // console.log(Math.floor(diff / 1000))
-    // console.log(Math.floor(diff / (1000 * 60)))
-
-  // const diffMs = now.getTime() - date.getDate()
-  // const diffSeg = Math.floor(diffMs / 1000)
-  // const diffMin = Math.floor(diffMs / 60)
-  // const diffHour = Math.floor(diffMs / 60)
-  // const diffDay = Math.floor(diffMs / 24)
-
-  // if(diffSeg < 60) return `${diffSeg} segundo${diffSeg !== 1 ? 's' : ''}`
-  // if(diffMin < 60) return `${diffMin} minuto${diffMin !== 1 ? 's' : ''}`
-  // if(diffHour < 24) return `${diffHour} hora${diffHour !== 1 ? 's' : ''}`
-  // if(diffDay === 1) return `ontem`
-
-
-  // return date.toLocaleDateString('pt-BR', {
-  //   day: '2-digit',
-  //   month: 'long',
-  //   year: 'numeric',
-  // })
-
-
-}
-// getTime()
-// console.log(getTime())

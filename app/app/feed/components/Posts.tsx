@@ -133,7 +133,7 @@ export function Posts() {
             img={owner[doc.userId].profile as string}
             publicId={owner[doc.userId].publicId as string}
             location={doc.location?.city ?? ""}
-            time={doc.createdAt}
+            createdAt={doc.createdAt}
             description={doc.description}
             images={doc.imgs}
             price={doc.details?.price ?? ""}

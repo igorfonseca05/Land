@@ -8,7 +8,20 @@ import { SavePost } from "./savePost";
 import { DocumentData } from "firebase/firestore";
 import { Profile } from "@/app/utils/zod";
 
-export function SearchCard({props}: {props: any | DocumentData}) {
+export function SearchCard({props}: {props: PostProps | DocumentData}) {
+
+  const convertedFirebaseDate = formatFirebaseTime(props.createdAt).trim().toLowerCase()
+  const today = new Date().toLocaleDateString('pt', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric'
+  }).trim().toLowerCase()
+
+  const hourLabelToTest = ['segundo', 'minuto', 'hora']
+
+  const isDiffentData =  convertedFirebaseDate === today 
+
+  // console.log(isDiffentData, convertedFirebaseDate, today)
 
 
   return (
@@ -22,7 +35,7 @@ export function SearchCard({props}: {props: any | DocumentData}) {
             </p>
             <p className="text-xs text-neutral-500 ">
               {/* <span className="capitalize">{location ? location : ""}</span> •{" "} */}
-              Postado há {formatFirebaseTime(props.time)}
+              Postado {`${isDiffentData ? 'há' : 'em'}`} {formatFirebaseTime(props.createdAt)}
             </p>
           </div>
         </div>

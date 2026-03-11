@@ -24,7 +24,7 @@ import { SearchCard } from "./SearchCard";
 export type PostProps = {
   author: string;
   location: string;
-  time: Timestamp | FieldValue;
+  createdAt: Timestamp | FieldValue;
   description: string;
   images: string[];
   price: number;
@@ -56,7 +56,7 @@ export function FeedCard({...props}: PostProps) {
                 </p>
                 <p className="text-xs text-neutral-500 ">
                   {/* <span className="capitalize">{location ? location : ""}</span> •{" "} */}
-                  Postado há {formatFirebaseTime(props.time)}
+                  Postado há {formatFirebaseTime(props.createdAt)}
                 </p>
               </div>
             </div>
