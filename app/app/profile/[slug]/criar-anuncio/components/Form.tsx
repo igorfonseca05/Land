@@ -17,8 +17,7 @@ import {
 import { auth, db } from "@/app/config/firebase";
 import { useProfileContext } from "@/app/src/context/userProfileContext";
 import { useRouter } from "next/navigation";
-import { Auth } from "firebase/auth";
-
+import { AdsMap } from "./AdsMap";
 type ErrorField = "imgs" | "details" | "location" | "description" | "features";
 
 const landDetailsInitialState = {
@@ -55,8 +54,8 @@ interface OwnerProps {
 }
 
 export interface PostProps {
-  id: string
-  uid?: string
+  id: string;
+  uid?: string;
   imgs: any[];
   userId: string;
   title: string;
@@ -90,7 +89,7 @@ export interface PostProps {
   owner: OwnerProps;
   status: string;
   type: string;
-  likesCount?: number
+  likesCount?: number;
 }
 
 export function Form() {
@@ -98,6 +97,7 @@ export function Form() {
   const router = useRouter();
 
   const inputFile = useRef<HTMLInputElement | null>(null);
+  const customMap = useRef<L.Map | null>(null);
 
   const [isDragging, setIsDragging] = useState(false);
   const [file, setFile] = useState<File[]>([]);
@@ -117,7 +117,7 @@ export function Form() {
   }
 
   function handleLandDetails(
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) {
     setLandDetails({
       ...landDetails,
@@ -131,7 +131,7 @@ export function Form() {
   }
 
   function handleLocationDetails(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) {
     setLocation({
       ...location,
@@ -229,12 +229,12 @@ export function Form() {
           }
 
           return res.json();
-        })
+        }),
       );
 
       const imageUrls = uploads.map((img) => img.url);
 
-      const postId = doc(collection(db, 'posts')).id
+      const postId = doc(collection(db, "posts")).id;
 
       // 2️⃣ Monta documento final
       const adData = {
@@ -248,8 +248,8 @@ export function Form() {
       // 3️⃣ Firestore batch
       const batch = writeBatch(db);
 
-      const userAdRef = doc(db, 'ads', postId);
-      const feedRef = doc(db, 'feeds', postId);
+      const userAdRef = doc(db, "ads", postId);
+      const feedRef = doc(db, "feeds", postId);
 
       batch.set(userAdRef, adData);
       batch.set(feedRef, {
@@ -302,6 +302,9 @@ export function Form() {
     });
   }, [file]);
 
+  console.log(location)
+
+  
 
   return (
     <form onSubmit={handleForm} className="space-y-6">
@@ -559,6 +562,19 @@ export function Form() {
 
           <div className="md:col-span-2">
             <label className="block text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-2">
+              Selecione seu terreno no mapa
+            </label>
+           <AdsMap/>
+            {/* <textarea
+              name="observation"
+              onChange={handleLocationDetails}
+              rows={4}
+              placeholder="Ex: Acesso por estrada de terra, próximo a fazenda X"
+              className="w-full rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white focus:ring-primary focus:border-primary py-3 resize-none"
+            /> */}
+          </div>
+          {/* <div className="md:col-span-2">
+            <label className="block text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-2">
               Observações de localização
             </label>
             <textarea
@@ -568,7 +584,7 @@ export function Form() {
               placeholder="Ex: Acesso por estrada de terra, próximo a fazenda X"
               className="w-full rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white focus:ring-primary focus:border-primary py-3 resize-none"
             />
-          </div>
+          </div> */}
         </div>
       </div>
 

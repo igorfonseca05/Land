@@ -2,53 +2,85 @@
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRef } from "react";
 
 export function Mapa() {
   const mapaContainer = useRef<L.Map | null>(null);
 
+  const [location, setLocation] = useState<{ lat: number; lng: number }>({
+    lat: -15.7806,
+    lng: -47.9297,
+  });
+
+
   useEffect(() => {
     if (mapaContainer.current) return;
 
-     const map = L.map("mapa").setView([-22.45, -44.45], 13);
+    const map = L.map("mapa").setView([location.lat, location.lng], 3.5);
 
-     mapaContainer.current = map
+    mapaContainer.current = map;
 
-    L.tileLayer(
+    // mapa de ruas
+    const streets = L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      { attribution: "© OpenStreetMap" },
+    );
+
+    // mapa satélite
+    const satellite = L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
       { attribution: "Tiles © Esri" },
-    ).addTo(mapaContainer.current);
+    );
 
-    // pegar localização do usuário
-    map.locate({ setView: true, maxZoom: 16 })
+    const terrain = L.tileLayer(
+      "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+      {
+        attribution: "© OpenTopoMap",
+      },
+    );
 
-    // quando a localização for encontrada
+    streets.addTo(map);
+
+    const baseMaps = {
+      Mapa: streets,
+      Satélite: satellite,
+      Terreno: terrain,
+    };
+
+    L.control.layers(baseMaps).addTo(map);
+
+    map.on("click", (e) => {
+      setLocation(e.latlng);
+    });
+
+    map.locate({ setView: true, maxZoom: 60 });
+
     map.on("locationfound", (e) => {
+      const customIcon = L.divIcon({
+        html: `
+    <svg width="25" height="25" viewBox="0 0 24 24">
+      <path 
+        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+        fill="#4285F4"
+      />
+      <circle cx="12" cy="9" r="3" fill="white"/>
+    </svg>
+  `,
+        className: "",
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+      });
 
-      const { lat, lng } = e.latlng
+      setLocation(e.latlng);
 
-      console.log("Latitude:", lat)
-      console.log("Longitude:", lng)
-
-      L.marker([lat, lng])
-        .addTo(map)
-        .bindPopup("Você está aqui")
-        .openPopup()
-
-      L.circle([lat, lng], {
-        radius: e.accuracy
-      }).addTo(map)
-
-    })
+      L.marker(e.latlng, { icon: customIcon }).addTo(map);
+    });
 
     map.on("locationerror", () => {
-      // alert("Não foi possível obter sua localização")
-    })
-
-    mapaContainer.current.on("click", (e) => {
-      console.log(e.latlng);
+      console.log("não encontrada");
     });
+
   }, []);
 
   return (
