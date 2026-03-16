@@ -56,7 +56,11 @@ const LocationSchema = z.object({
     .min(2, "Nome da cidade deve conter no minimo 2 caracteres")
     .trim(),
   state: z.string().trim().toUpperCase().length(2),
-  observation: z.string().trim().optional(),
+  // observation: z.string().trim().optional(),
+  coord: z.object({
+    lat: z.number(),
+    lng: z.number()
+  })
 });
 
 /* ========= Schema Normalizado ========= */

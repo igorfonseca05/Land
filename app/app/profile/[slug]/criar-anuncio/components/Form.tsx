@@ -33,7 +33,7 @@ const locationInitialState = {
   address: "",
   city: "",
   state: "",
-  observation: "",
+  coord: { lat: "", lng: "" },
 };
 
 const featuresInitialState = {
@@ -52,6 +52,13 @@ interface OwnerProps {
   author: string;
   email: string;
 }
+
+type event = {
+  target: {
+    name: string;
+    value: string;
+  };
+};
 
 export interface PostProps {
   id: string;
@@ -97,7 +104,6 @@ export function Form() {
   const router = useRouter();
 
   const inputFile = useRef<HTMLInputElement | null>(null);
-  const customMap = useRef<L.Map | null>(null);
 
   const [isDragging, setIsDragging] = useState(false);
   const [file, setFile] = useState<File[]>([]);
@@ -131,11 +137,14 @@ export function Form() {
   }
 
   function handleLocationDetails(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+    name: string,
+    value: string | { lat: number; lng: number },
   ) {
-    setLocation({
-      ...location,
-      [e.target.name]: e.target.value.toLocaleLowerCase(),
+    setLocation((prev) => {
+      return {
+        ...prev,
+        [name]: typeof value === "string" ? value.toLocaleLowerCase() : value,
+      };
     });
   }
 
@@ -196,10 +205,11 @@ export function Form() {
     const rawData = {
       imgs: file,
       details: landDetails,
-      location: { ...location },
+      location,
       description,
-      features: { ...features },
+      features,
     };
+
 
     const parsed = NormalizedAdSchema.safeParse(rawData);
 
@@ -209,7 +219,7 @@ export function Form() {
     }
 
     try {
-      // toast.loading("Publicando anúncio...");
+
       setLoading(true);
 
       // 1️⃣ Upload das imagens
@@ -249,12 +259,17 @@ export function Form() {
       const batch = writeBatch(db);
 
       const userAdRef = doc(db, "ads", postId);
-      const feedRef = doc(db, "feeds", postId);
+      const mapRef = doc(db, "mapMarkers", postId);
 
       batch.set(userAdRef, adData);
-      batch.set(feedRef, {
-        ...adData,
+      batch.set(mapRef, {
+        lat: parsed.data.location.coord.lat,
+        lng: parsed.data.location.coord.lng,
+        price: parsed.data.details.price,
+        title: parsed.data.details.title,
+        city: parsed.data.location.city,
         adId: userAdRef.id,
+        userId: auth.currentUser.uid,
         status: "active",
       });
 
@@ -302,9 +317,11 @@ export function Form() {
     });
   }, [file]);
 
-  console.log(location)
+  useEffect(() => {
+    console.log(location)
+  }, [location]);
 
-  
+  // console.log(location)
 
   return (
     <form onSubmit={handleForm} className="space-y-6">
@@ -519,7 +536,9 @@ export function Form() {
             </label>
             <input
               name="address"
-              onChange={handleLocationDetails}
+              onChange={(e) =>
+                handleLocationDetails(e.target.name, e.target.value)
+              }
               type="text"
               placeholder="Rua, estrada ou ponto de referência"
               className={` w-full pl-4 rounded-xl py-3 bg-neutral-50 dark:bg-neutral-800
@@ -542,7 +561,10 @@ export function Form() {
             </label>
             <input
               name="city"
-              onChange={handleLocationDetails}
+              placeholder="Digite uma cidade"
+              onChange={(e) =>
+                handleLocationDetails(e.target.name, e.target.value)
+              }
               type="text"
               className="w-full rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white focus:ring-primary focus:border-primary py-3"
             />
@@ -554,8 +576,11 @@ export function Form() {
             </label>
             <input
               name="state"
-              onChange={handleLocationDetails}
+              onChange={(e) =>
+                handleLocationDetails(e.target.name, e.target.value)
+              }
               type="text"
+              placeholder="Digite a sigla do estado (ex: SP)"
               className="w-full rounded-xl border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white focus:ring-primary focus:border-primary py-3"
             />
           </div>
@@ -564,7 +589,28 @@ export function Form() {
             <label className="block text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-2">
               Selecione seu terreno no mapa
             </label>
-           <AdsMap/>
+            <AdsMap handleLocationDetails={handleLocationDetails} />
+            <div className="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-700">
+              <h3 className="font-semibold mb-2">Como usar o mapa</h3>
+
+              <ul className="space-y-1">
+                <li>
+                  📍 <span className="font-medium">Clique no mapa</span> para
+                  adicionar um pin.
+                </li>
+                <li>
+                  🖱️ <span className="font-medium">Arraste o pin</span> para
+                  ajustar a localização.
+                </li>
+                <li>
+                  ❌{" "}
+                  <span className="font-medium">
+                    Clique com o botão direito no pin
+                  </span>{" "}
+                  para removê-lo.
+                </li>
+              </ul>
+            </div>
             {/* <textarea
               name="observation"
               onChange={handleLocationDetails}

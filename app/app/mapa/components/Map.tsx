@@ -1,5 +1,7 @@
 "use client";
 
+import { db } from "@/app/config/firebase";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from "react";
@@ -13,10 +15,37 @@ export function Mapa() {
     lng: -47.9297,
   });
 
+  const userPosition = L.divIcon({
+    html: `
+    <svg width="25" height="25" viewBox="0 0 24 24">
+      <path 
+        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+        fill="#4285F4"
+      />
+      <circle cx="12" cy="9" r="3" fill="white"/>
+    </svg>
+  `,
+    className: "",
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+  });
+  const customIcon = L.divIcon({
+    html: `
+    <svg width="25" height="25" viewBox="0 0 24 24">
+      <path 
+        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+        fill="#6add55"
+      />
+      <circle cx="12" cy="9" r="3" fill="white"/>
+    </svg>
+  `,
+    className: "",
+    iconSize: [40, 40],
+    iconAnchor: [20, 40],
+  });
 
-  useEffect(() => {
+  function handleMap() {
     if (mapaContainer.current) return;
-
     const map = L.map("mapa").setView([location.lat, location.lng], 3.5);
 
     mapaContainer.current = map;
@@ -57,30 +86,35 @@ export function Mapa() {
     map.locate({ setView: true, maxZoom: 60 });
 
     map.on("locationfound", (e) => {
-      const customIcon = L.divIcon({
-        html: `
-    <svg width="25" height="25" viewBox="0 0 24 24">
-      <path 
-        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-        fill="#4285F4"
-      />
-      <circle cx="12" cy="9" r="3" fill="white"/>
-    </svg>
-  `,
-        className: "",
-        iconSize: [40, 40],
-        iconAnchor: [20, 40],
-      });
-
       setLocation(e.latlng);
 
-      L.marker(e.latlng, { icon: customIcon }).addTo(map);
+      L.marker(e.latlng, { icon: userPosition }).addTo(map);
     });
 
     map.on("locationerror", () => {
       console.log("não encontrada");
     });
+  }
 
+  async function getLands() {
+    const snapshot = await getDocs(collection(db, "mapMarkers"));
+
+    const points = snapshot.docs.map((point) => {
+      if (!point.exists()) return;
+
+      const { lat, lng } = point.data();
+
+      if (!mapaContainer.current) return;
+
+      console.log(lat, lng)
+
+      L.marker([lat, lng], { icon: customIcon }).addTo(mapaContainer.current);
+    });
+  }
+
+  useEffect(() => {
+    handleMap();
+    getLands();
   }, []);
 
   return (
