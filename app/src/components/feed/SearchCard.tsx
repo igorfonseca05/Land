@@ -8,7 +8,7 @@ import { SavePost } from "./savePost";
 import { DocumentData } from "firebase/firestore";
 import { Profile } from "@/app/utils/zod";
 
-export function SearchCard({props}: {props: PostProps | DocumentData}) {
+export function SearchCard({props}: {props: PostProps}) {
 
   const convertedFirebaseDate = formatFirebaseTime(props.createdAt).trim().toLowerCase()
   const today = new Date().toLocaleDateString('pt', {
@@ -55,7 +55,7 @@ export function SearchCard({props}: {props: PostProps | DocumentData}) {
       {/* <hr className="text-neutral-200"/> */}
       <p className="text-neutral-700 text-sm font-semibold">Requisitos</p>
       <div className=" grid grid-cols-2 gap-4 text-sm text-neutral-900">
-        {Object.keys(props.features).map((item, i) => (
+        {props.features.map((item, i) => (
           <div className="flex items-center gap-2" key={i}>
             <MdCheckCircle className="text-green-500" />
             <span className="inline-block">{item}</span>

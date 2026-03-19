@@ -36,7 +36,24 @@ export type PostProps = {
   publicId: string | undefined;
   title: string;
   postId: string;
-  features: object;
+  features:[
+  "Energia elétrica disponível",
+  "Abastecimento de água",
+  "Acesso asfaltado",
+  "Documentação regularizada",
+  "Próximo ao centro urbano",
+  "Área arborizada",
+  "Cercado",
+  "Sem taxa de condomínio",
+  "Ideal para plantio",
+  "Ideal para construção",
+  "Fonte de água (rio, nascente ou poço)",
+  "Acesso para caminhão",
+  "Solo fértil",
+  "Topografia plana ou levemente inclinada",
+  "Área produtiva",
+  "Sem restrições ambientais",
+];
   likesCount?: number | undefined;
 };
 

@@ -81,7 +81,6 @@ export function Cards({ infos }: { infos: Ad }) {
       )}
     </article>
   );
-  // return (
   //   <div className="flex flex-col gap-4">
   //     {/* Exemplo de card */}
   //     <article className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden group hover:border-green-400 transition-colors">

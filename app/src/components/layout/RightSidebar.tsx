@@ -9,7 +9,7 @@ import { SavedItemsRightSide } from "./SavedItensRightSide";
 export function RightSidebar() {
   const path = usePathname();
 
-  const hiddingRightSide = ["feed/", "/criar-anuncio", '/mapa'].find((item) =>
+  const hiddingRightSide = ["ads/", "/criar-anuncio", '/mapa'].find((item) =>
     path.includes(item),
   );
   const showRightSide = ["/feed"].find((item) => path.includes(item));

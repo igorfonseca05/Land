@@ -2,17 +2,6 @@ import { z } from "zod";
 
 /* ========= Subschemas ========= */
 
-const FeatureSchema = z.object({
-  electricityNearby: z.boolean(),
-  waterNearby: z.boolean(),
-  needsWell: z.boolean(),
-  dirtRoadAccess: z.boolean(),
-  pavedRoadAccess: z.boolean(),
-  woodedArea: z.boolean(),
-  flatLand: z.boolean(),
-  fencedLand: z.boolean(),
-  noHoaFee: z.boolean(),
-});
 
 const ImageSchema = z.object({
   name: z.string().min(1),
@@ -59,28 +48,10 @@ const LocationSchema = z.object({
   // observation: z.string().trim().optional(),
   coord: z.object({
     lat: z.number(),
-    lng: z.number()
-  })
+    lng: z.number(),
+  }),
 });
 
-/* ========= Schema Normalizado ========= */
-
-export const NormalizedAdSchema = z.object({
-  imgs: z.array(ImageSchema).default([]),
-
-  details: DetailsSchema,
-
-  location: LocationSchema,
-
-  description: z
-    .string()
-    .trim()
-    .transform((v) => v.replace(/\s+/g, " ")),
-
-  features: FeatureSchema,
-});
-
-export type NormalizedAd = z.infer<typeof NormalizedAdSchema>;
 
 /* ========= Uso ========= */
 // const normalized = NormalizedAdSchema.parse(rawData)
@@ -128,6 +99,44 @@ export const ProfileInfoSchema = z.object({
 
 export type Profile = z.infer<typeof ProfileInfoSchema>;
 
+const featuresList = [
+  "Energia elétrica disponível",
+  "Abastecimento de água",
+  "Acesso asfaltado",
+  "Documentação regularizada",
+  "Próximo ao centro urbano",
+  "Área arborizada",
+  "Cercado",
+  "Sem taxa de condomínio",
+  "Ideal para plantio",
+  "Ideal para construção",
+  "Fonte de água (rio, nascente ou poço)",
+  "Acesso para caminhão",
+  "Solo fértil",
+  "Topografia plana ou levemente inclinada",
+  "Área produtiva",
+  "Sem restrições ambientais",
+] as const;
+
+/* ========= Schema Normalizado ========= */
+
+export const NormalizedAdSchema = z.object({
+  imgs: z.array(ImageSchema).default([]),
+
+  details: DetailsSchema,
+
+  location: LocationSchema,
+
+  description: z
+    .string()
+    .trim()
+    .transform((v) => v.replace(/\s+/g, " ")),
+
+  features: featuresList,
+});
+
+export type NormalizedAd = z.infer<typeof NormalizedAdSchema>;
+
 export const PostSearchSchema = z.object({
   title: z.string().trim().min(2, "Insira um titulo para o post"),
   description: z
@@ -135,47 +144,18 @@ export const PostSearchSchema = z.object({
     .trim()
     .min(1, "O post não pode estar vazio")
     .max(2000, "O post pode ter no máximo 2000 caracteres"),
-  features: z.object({
-    "Energia elétrica": z.literal("on").optional(),
-    "Água próxima": z.literal("on").optional(),
-    "Necessita poço": z.literal("on").optional(),
-    "Estrada de terra": z.literal("on").optional(),
-    "Acesso asfaltado": z.literal("on").optional(),
-    "Área arborizada": z.literal("on").optional(),
-    "Terreno plano": z.literal("on").optional(),
-    "Terreno cercado": z.literal("on").optional(),
-    "Sem condomínio": z.literal("on").optional(),
-  }),
+  features: z.array(z.enum(featuresList)),
   status: z.string(),
   createdAt: z.any().optional(),
   type: z.string().optional(),
   userId: z.string().optional(),
-  likesCount: z.number().optional()
+  likesCount: z.number().optional(),
 });
 
 export const propertySchema = z.object({
   title: z.string().min(1, "Título é obrigatório"),
   description: z.string().min(1, "Descrição é obrigatória"),
-  features: z.object({
-    "Energia elétrica disponível": z.literal("on").optional(),
-    "Abastecimento de água": z.literal("on").optional(),
-    "Acesso asfaltado": z.literal("on").optional(),
-    // "Acesso por estrada em boas condições": z.literal("on").optional(),
-    "Documentação regularizada": z.literal("on").optional(),
-    "Próximo ao centro urbano": z.literal("on").optional(),
-    // "Boa incidência solar": z.literal("on").optional(),
-    "Área arborizada": z.literal("on").optional(),
-    Cercado: z.literal("on").optional(),
-    "Sem taxa de condomínio": z.literal("on").optional(),
-    "Ideal para plantio": z.literal("on").optional(),
-    "Ideal para construção": z.literal("on").optional(),
-    "Fonte de água (rio, nascente ou poço)": z.literal("on").optional(),
-    "Acesso para caminhão": z.literal("on").optional(),
-    "Solo fértil": z.literal("on").optional(),
-    "Topografia plana ou levemente inclinada": z.literal("on").optional(),
-    "Área produtiva": z.literal("on").optional(),
-    "Sem restrições ambientais": z.literal("on").optional(),
-  }),
+  features: z.array(z.enum(featuresList)),
 });
 
 export type PostSchema = z.infer<typeof PostSearchSchema>;

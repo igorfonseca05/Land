@@ -7,6 +7,17 @@ import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 
+type Ad = {
+  adId: string;
+  city: string;
+  lat: number;
+  lng: number;
+  price: number;
+  status: "active" | "inactive" | "sold";
+  title: string;
+  image: string
+};
+
 export function Mapa() {
   const mapaContainer = useRef<L.Map | null>(null);
 
@@ -29,6 +40,7 @@ export function Mapa() {
     iconSize: [40, 40],
     iconAnchor: [20, 40],
   });
+
   const customIcon = L.divIcon({
     html: `
     <svg width="25" height="25" viewBox="0 0 24 24">
@@ -50,12 +62,6 @@ export function Mapa() {
 
     mapaContainer.current = map;
 
-    // mapa de ruas
-    const streets = L.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      { attribution: "© OpenStreetMap" },
-    );
-
     // mapa satélite
     const satellite = L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -69,13 +75,20 @@ export function Mapa() {
       },
     );
 
-    streets.addTo(map);
+    const googleStreets = L.tileLayer(
+      "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+      {
+        subdomains: ["mt0", "mt1", "mt2", "mt3"],
+      },
+    );
 
     const baseMaps = {
-      Mapa: streets,
       Satélite: satellite,
       Terreno: terrain,
+      Ruas: googleStreets,
     };
+
+    satellite.addTo(map);
 
     L.control.layers(baseMaps).addTo(map);
 
@@ -83,12 +96,17 @@ export function Mapa() {
       setLocation(e.latlng);
     });
 
+    // Buscando localização do usuário
     map.locate({ setView: true, maxZoom: 60 });
 
     map.on("locationfound", (e) => {
       setLocation(e.latlng);
 
-      L.marker(e.latlng, { icon: userPosition }).addTo(map);
+      const userLocationMarker = L.marker(e.latlng, {
+        icon: userPosition,
+      }).addTo(map);
+
+      userLocationMarker.bindPopup("Sua localização.");
     });
 
     map.on("locationerror", () => {
@@ -96,19 +114,71 @@ export function Mapa() {
     });
   }
 
+  function createAdPopup(ad: {
+    id: string;
+    title: string;
+    price: string;
+    city: string;
+    image: string;
+  }) {
+    return `
+    <div class="w-56">
+      
+      <img 
+        src="${ad.image}" 
+        alt="${ad.title}" 
+        class="w-full h-28 object-cover rounded-lg"
+      />
+
+      <h3 class="font-semibold text-sm capitalize">
+        ${ad.title}
+      </h3>
+
+      <p class="text-green-600 font-bold text-sm m-0 ">
+        ${ad.price.toLocaleString()}
+      </p>
+
+      <p class="text-xs text-gray-500  capitalize">
+        ${ad.city}
+      </p>
+
+      <a 
+        href="/app/ads/${ad.id}" 
+        class="block text-center bg-green-600 text-white text-xs py-1.5 rounded-md hover:bg-green-700 transition"
+      >
+        <span class="text-center text-white text-xs py-1.5">Ver anúncio</span>
+      </a>
+
+    </div>
+  `;
+  }
+
+  // Buscando terrenos cadastrados e renderizando pins no mapa
   async function getLands() {
     const snapshot = await getDocs(collection(db, "mapMarkers"));
 
     const points = snapshot.docs.map((point) => {
       if (!point.exists()) return;
 
+      const postData = point.data() as Ad;
+
       const { lat, lng } = point.data();
 
       if (!mapaContainer.current) return;
 
-      console.log(lat, lng)
+      const availableLandmarker = L.marker([lat, lng], {
+        icon: customIcon,
+      }).addTo(mapaContainer.current);
 
-      L.marker([lat, lng], { icon: customIcon }).addTo(mapaContainer.current);
+      availableLandmarker.bindPopup(
+        createAdPopup({
+          id: postData.adId,
+          title: postData.title,
+          price: `R$: ${postData.price}`,
+          city: `${postData.city}`,
+          image: postData.image,
+        }),
+      );
     });
   }
 

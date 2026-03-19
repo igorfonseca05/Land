@@ -78,9 +78,6 @@ export function Posts() {
     setInlinePost(searchPost);
   }, [searchPost]);
 
-  // console.log(postLoading)
-
-  console.log(posts);
 
   return (
     <div className="space-y-4">

@@ -37,15 +37,18 @@ const locationInitialState = {
 };
 
 const featuresInitialState = {
-  electricityNearby: false,
-  waterNearby: false,
-  needsWell: false,
-  dirtRoadAccess: false,
-  pavedRoadAccess: false,
-  woodedArea: false,
-  flatLand: false,
-  fencedLand: false,
-  noHoaFee: false,
+  "Energia elétrica disponível": false,
+  "Abastecimento de água": false,
+  "Acesso asfaltado": false,
+  "Documentação regularizada": false,
+  "Próximo ao centro urbano": false,
+  "Área arborizada": false,
+  Cercado: false,
+  "Sem taxa de condomínio": false,
+  "Ideal para plantio": false,
+  "Acesso para caminhão": false,
+  "Topografia plana ou levemente inclinada": false,
+  "Sem restrições ambientais": false,
 };
 
 interface OwnerProps {
@@ -82,17 +85,24 @@ export interface PostProps {
     observation?: string | undefined;
   };
   description: string;
-  features: {
-    electricityNearby: boolean;
-    waterNearby: boolean;
-    needsWell: boolean;
-    dirtRoadAccess: boolean;
-    pavedRoadAccess: boolean;
-    woodedArea: boolean;
-    flatLand: boolean;
-    fencedLand: boolean;
-    noHoaFee: boolean;
-  };
+  features: [
+    "Energia elétrica disponível",
+    "Abastecimento de água",
+    "Acesso asfaltado",
+    "Documentação regularizada",
+    "Próximo ao centro urbano",
+    "Área arborizada",
+    "Cercado",
+    "Sem taxa de condomínio",
+    "Ideal para plantio",
+    "Ideal para construção",
+    "Fonte de água (rio, nascente ou poço)",
+    "Acesso para caminhão",
+    "Solo fértil",
+    "Topografia plana ou levemente inclinada",
+    "Área produtiva",
+    "Sem restrições ambientais",
+  ];
   owner: OwnerProps;
   status: string;
   type: string;
@@ -110,8 +120,7 @@ export function Form() {
   const [landDetails, setLandDetails] = useState(landDetailsInitialState);
   const [location, setLocation] = useState(locationInitialState);
   const [description, setDescription] = useState("");
-  const [features, setFeatures] =
-    useState<Record<string, boolean>>(featuresInitialState);
+  const [features, setFeatures] = useState<string[]>([]);
   const [errors, setErrors] = useState<
     ZodFlattenedError<NormalizedAd>["fieldErrors"] | null
   >(null);
@@ -148,13 +157,31 @@ export function Form() {
     });
   }
 
-  function handleFeatureChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { name, checked } = e.target;
+  function handleFeatureChange(e: React.MouseEvent<HTMLLabelElement>) {
+    const item = e.currentTarget.innerText;
+    setFeatures((prev) => {
+      const itemIsAdded = prev.includes(item);
 
-    setFeatures((prev) => ({
-      ...prev,
-      [name]: checked,
-    }));
+      if (itemIsAdded) {
+        return prev.filter((selectedItem) => selectedItem !== item);
+      }
+
+      return [...prev, item];
+    });
+
+    // setFeatures((prev) => {
+
+    //   if(!checked) {
+    //     console.log(name, checked)
+    //     const newObj = Object.entries(prev).filter(item => item[0] !== name)
+    //     return Object.fromEntries(newObj)
+    //   }
+
+    //   return {
+    //     ...prev,
+    //     [name]: checked,
+    //   };
+    // });
   }
 
   // ---- funções de DragAndDrop ----
@@ -210,6 +237,7 @@ export function Form() {
       features,
     };
 
+    console.log(rawData);
 
     const parsed = NormalizedAdSchema.safeParse(rawData);
 
@@ -253,6 +281,7 @@ export function Form() {
         userId: auth.currentUser.uid,
         createdAt: serverTimestamp(),
         status: "active",
+        type: 'sale'
       };
 
       // 3️⃣ Firestore batch
@@ -271,6 +300,7 @@ export function Form() {
         adId: userAdRef.id,
         userId: auth.currentUser.uid,
         status: "active",
+        image: imageUrls[0]
       });
 
       await batch.commit();
@@ -283,7 +313,7 @@ export function Form() {
       setFile([]);
       setDescription("");
       setErrors({});
-      setFeatures({});
+      setFeatures([]);
       router.push(`/app/profile/${profile?.slug}`);
     } catch (err) {
       setLoading(false);
@@ -318,10 +348,8 @@ export function Form() {
   }, [file]);
 
   useEffect(() => {
-    console.log(location)
+    console.log(location);
   }, [location]);
-
-  // console.log(location)
 
   return (
     <form onSubmit={handleForm} className="space-y-6">
@@ -676,35 +704,29 @@ export function Form() {
           Características & comodidades
         </h3>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+        <div className="flex flex-wrap gap-2">
           {[
-            { name: "electricityNearby", label: "Energia elétrica" },
-            { name: "waterNearby", label: "Água próxima" },
-            { name: "needsWell", label: "Necessita poço" },
-            { name: "dirtRoadAccess", label: "Estrada de terra" },
-            { name: "pavedRoadAccess", label: "Acesso asfaltado" },
-            { name: "woodedArea", label: "Área arborizada" },
-            { name: "flatLand", label: "Terreno plano" },
-            { name: "fencedLand", label: "Terreno cercado" },
-            { name: "noHoaFee", label: "Sem condomínio" },
+            { name: "Energia elétrica disponível" },
+            { name: "Abastecimento de água" },
+            { name: "Acesso asfaltado" },
+            { name: "Documentação regularizada" },
+            { name: "Próximo ao centro urbano" },
+            { name: "Área arborizada" },
+            { name: "Cercado" },
+            { name: "Sem taxa de condomínio" },
+            { name: "Ideal para plantio" },
+            { name: "Acesso para caminhão" },
+            { name: "Topografia plana ou levemente inclinada" },
+            { name: "Sem restrições ambientais" },
           ].map((item, i) => {
             return (
               <label
                 key={item.name}
-                className={`flex truncate items-center justify-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium cursor-pointer select-none transition-a border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300
-                  ${
-                    features[item.name]
-                      ? "bg-primary/10 border-primary font-semibold bg-green-400"
-                      : "hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                  }`}
+                onClick={handleFeatureChange}
+                className={`flex items-center justify-start gap-2 px-4 py-2 rounded-full border text-sm font-medium cursor-pointer select-none transition-all duration-200 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 
+                        ${features.includes(item.name) && "bg-green-500 text-white"}`}
               >
-                <input
-                  type="checkbox"
-                  name={item.name}
-                  onChange={handleFeatureChange}
-                  className="hidden"
-                />
-                {item.label}
+                {item.name}
               </label>
             );
           })}

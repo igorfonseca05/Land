@@ -34,7 +34,7 @@ import { SearchPostCard } from "./SearchPost";
 type Post = {
   title: string;
   description: string;
-  features: Record<string, string>;
+  features: string[];
 };
 
 export function HeroSearch() {
@@ -44,7 +44,7 @@ export function HeroSearch() {
   const [post, setPost] = useState<Post>({
     title: "",
     description: "",
-    features: {},
+    features: [],
   });
   const [charactereCount, setCharacterCount] = useState(2000);
   const [error, setError] = useState<
@@ -52,45 +52,84 @@ export function HeroSearch() {
   >(null);
   const [loading, setLoading] = useState(false);
 
-  const isLoggedIn = getAuth().currentUser
+  const isLoggedIn = getAuth().currentUser;
 
-  function handleInput(
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) {
+  function handleTitle(e: React.ChangeEvent<HTMLInputElement>) {
     setPost((prev) => {
-      const isNotTitleAndDescription =
-        e.target.name !== "title" && e.target.name !== "description";
-      const itemAdded = Object.keys(prev.features);
-
-      if (itemAdded.includes(e.target.name)) {
-        const item = e.target.name;
-
-        const { [`${item}`]: _, ...dados } = prev.features;
-
-        return {
-          ...prev,
-          features: {
-            ...dados,
-          },
-        };
-      }
-
-      if (isNotTitleAndDescription) {
-        return {
-          ...prev,
-          features: {
-            ...prev.features,
-            [e.target.name]: e.target.value,
-          },
-        };
-      } else {
-        return {
-          ...prev,
-          [e.target.name]: e.target.value,
-        };
-      }
+      return {
+        ...prev,
+        title: e.target.value,
+      };
     });
   }
+  function handlePostBody(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setPost((prev) => {
+      return {
+        ...prev,
+        description: e.target.value,
+      };
+    });
+  }
+
+  function handleFeatures(e: React.MouseEvent<HTMLLabelElement>) {
+    const selectedItem = e.currentTarget.innerText;
+
+    setPost((prev) => {
+      const includeItem = post.features.includes(selectedItem);
+
+      if(includeItem) {
+        return {
+          ...prev, 
+          features: post.features.filter(item => item !== selectedItem)
+        }
+      }
+
+      return {
+        ...prev,
+        features: [...prev.features, selectedItem],
+      };
+    });
+  }
+
+
+  // function handleInput(
+  //   e: React.MouseEvent<HTMLInputElement | HTMLTextAreaElement>,
+  // ) {
+  //   setPost((prev) => {
+  //     const isNotTitleAndDescription =
+  //       e.target.name !== "title" && e.target.name !== "description";
+
+  //     const itemAdded = Object.keys(prev.features);
+
+  //     if (itemAdded.includes(e.target.name)) {
+  //       const item = e.target.name;
+
+  //       const { [`${item}`]: _, ...dados } = prev.features;
+
+  //       return {
+  //         ...prev,
+  //         features: {
+  //           ...dados,
+  //         },
+  //       };
+  //     }
+
+  //     if (isNotTitleAndDescription) {
+  //       return {
+  //         ...prev,
+  //         features: {
+  //           ...prev.features,
+  //           [e.target.name]: e.target.value,
+  //         },
+  //       };
+  //     } else {
+  //       return {
+  //         ...prev,
+  //         [e.target.name]: e.target.value,
+  //       };
+  //     }
+  //   });
+  // }
 
   async function handlePostForm(e: FormEvent) {
     e.preventDefault();
@@ -100,6 +139,8 @@ export function HeroSearch() {
     if (!isValidPost.success) {
       return setError(isValidPost.error.flatten().fieldErrors);
     }
+
+    console.log(isValidPost.data);
 
     try {
       setLoading(true);
@@ -137,14 +178,18 @@ export function HeroSearch() {
       setPost({
         title: "",
         description: "",
-        features: {},
+        features: [],
       });
     }
   }, [isOpen]);
 
   return (
     <>
-      <Modal isOpen={isOpen} setIsOpen={setIsOpen} style={`${isLoggedIn ? `sm:w-[70%]` : 'sm:w-[40%]'}`}>
+      <Modal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        style={`${isLoggedIn ? `sm:w-[70%]` : "sm:w-[40%]"}`}
+      >
         {isLoggedIn ? (
           <>
             <div className="flex justify-end">
@@ -198,7 +243,7 @@ export function HeroSearch() {
                     maxLength={70}
                     className="
                  border-gray-200 p-2 border-2 rounded-lg text-base bg-transparent outline-none placeholder:text-neutral-400 dark:text-white w-f borde dark:border-neutral-7 dark:bg-neutral-900 px-4 py text-neutral-8 focus:outline-none transition-all duration-200"
-                    onChange={handleInput}
+                    onChange={handleTitle}
                   />
                 </div>
                 <div className="relative">
@@ -206,7 +251,7 @@ export function HeroSearch() {
                     name="description"
                     rows={4}
                     maxLength={charactereCount}
-                    onChange={handleInput}
+                    onChange={handlePostBody}
                     placeholder="Descreva o terreno que você está buscando"
                     className="w-full h-25 resize-none border-2 border-gray-200 p-2 rounded-lg text-base bg-transparent outline-none placeholder:text-neutral-400 dark:text-white"
                   />
@@ -233,32 +278,21 @@ export function HeroSearch() {
                       { name: "Acesso asfaltado" },
                       { name: "Documentação regularizada" },
                       { name: "Próximo ao centro urbano" },
-                      // { name: "Boa incidência solar" },
                       { name: "Área arborizada" },
                       { name: "Cercado" },
                       { name: "Sem taxa de condomínio" },
                       { name: "Ideal para plantio" },
-                      // { name: "Ideal para construção" },
-                      // { name: "Fonte de água (rio, nascente ou poço)" },
                       { name: "Acesso para caminhão" },
-                      // { name: "Solo fértil" },
                       { name: "Topografia plana ou levemente inclinada" },
-                      // { name: "Área produtiva" },
                       { name: "Sem restrições ambientais" },
                     ].map((item, i) => {
                       return (
                         <label
                           key={item.name}
-                          className={`flex items-center justify-start gap-2 px-4 py-2 rounded-full border text-sm font-medium cursor-pointer select-none transition-all duration-200 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300hover:bg-neutral-100 dark:hover:bg-neutral-800 
-                      ${Object.hasOwn(post.features, item.name) && "bg-green-500 text-white"}`}
+                          onClick={handleFeatures}
+                          className={`flex items-center justify-start gap-2 px-4 py-2 rounded-full border text-sm font-medium cursor-pointer select-none transition-all duration-200 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 
+                      ${post.features.includes(item.name) && "bg-green-500 text-white"}`}
                         >
-                          <input
-                            type="checkbox"
-                            name={item.name}
-                            className="hidden peer"
-                            checked={!!post.features[item.name]}
-                            onChange={handleInput}
-                          />
                           {item.name}
                         </label>
                       );
