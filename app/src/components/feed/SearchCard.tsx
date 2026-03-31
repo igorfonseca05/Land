@@ -8,7 +8,7 @@ import { SavePost } from "./savePost";
 import { DocumentData } from "firebase/firestore";
 import { Profile } from "@/app/utils/zod";
 
-export function SearchCard({props}: {props: PostProps}) {
+export function SearchCard({...props}: PostProps) {
 
   const convertedFirebaseDate = formatFirebaseTime(props.createdAt).trim().toLowerCase()
   const today = new Date().toLocaleDateString('pt', {

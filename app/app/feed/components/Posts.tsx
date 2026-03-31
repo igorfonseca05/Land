@@ -22,6 +22,8 @@ import { SearchPostCard } from "@/app/src/components/feed/SearchPost";
 import NoFeedItem from "./NoFeedItem";
 import Link from "next/link";
 import { PostSchema } from "@/app/utils/zod";
+import { SearchCard } from "@/app/src/components/feed/SearchCard";
+import { LoadingCards } from "./LoadingCards";
 
 export function Posts() {
   // if(!auth.currentUser) return
@@ -30,6 +32,8 @@ export function Posts() {
   const [owner, setOwner] = useState<{ [key: string]: UserProfile }>({});
   const [inlinePost, setInlinePost] = useState<PostSchema | null>(null);
   const [loading, setLoading] = useState(false);
+  
+  const thereIsNoFeedItem = !inlinePost && posts.length === 0
 
   useEffect(() => {
     async function getPosts() {
@@ -78,10 +82,10 @@ export function Posts() {
     setInlinePost(searchPost);
   }, [searchPost]);
 
-
   return (
     <div className="space-y-4">
       {/* Arrows */}
+
       {inlinePost && (
         <SearchPostCard
           post={inlinePost}
@@ -90,58 +94,64 @@ export function Posts() {
         />
       )}
 
+
       {loading ? (
-        <div className="space-y-4">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <article
-              key={i}
-              className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 overflow-hidden animate-pulse"
-            >
-              {/* Header */}
-              <div className="flex items-center gap-3 p-4">
-                <div className="w-10 h-10 rounded-full bg-neutral-200 dark:bg-neutral-700" />
-                <div className="flex flex-col gap-2">
-                  <div className="w-32 h-3 rounded bg-neutral-200 dark:bg-neutral-700" />
-                  <div className="w-24 h-2 rounded bg-neutral-100 dark:bg-neutral-800" />
-                </div>
-              </div>
-
-              {/* Text */}
-              <div className="px-4 pb-3 space-y-2">
-                <div className="w-full h-3 rounded bg-neutral-200 dark:bg-neutral-700" />
-                <div className="w-5/6 h-3 rounded bg-neutral-200 dark:bg-neutral-700" />
-                <div className="w-2/3 h-3 rounded bg-neutral-200 dark:bg-neutral-700" />
-              </div>
-
-              {/* Image */}
-              <div className="w-full h-64 bg-neutral-200 dark:bg-neutral-800" />
-            </article>
-          ))}
-        </div>
-      ) : !inlinePost && posts.length === 0 ? (
+        <LoadingCards />
+      ) : thereIsNoFeedItem ? (
         <NoFeedItem />
       ) : (
-        posts.map((doc, i) => (
-          <FeedCard
-            key={i}
-            postId={doc.id}
-            uid={owner[doc.userId].uid as string}
-            author={owner[doc.userId].name as string}
-            img={owner[doc.userId].profile as string}
-            publicId={owner[doc.userId].publicId as string}
-            location={doc.location?.city ?? ""}
-            createdAt={doc.createdAt}
-            description={doc.description}
-            images={doc.imgs}
-            price={doc.details?.price ?? ""}
-            size={doc.details?.landSize ?? ""}
-            unit={doc.details?.unit ?? ""}
-            type={doc.type}
-            title={doc.title}
-            features={doc.features}
-            likesCount = {doc.likesCount}
-          />
-        ))
+        posts.map((doc, i) => {
+
+          console.log(doc)
+
+          return doc.type === "search" ? (
+            <article  key={i} className="bg-white border border-neutral-200 rounded-2xl overflow-hidden">
+              <SearchCard
+                key={i}
+                postId={doc.id}
+                uid={owner[doc.userId].uid as string}
+                author={owner[doc.userId].name as string}
+                img={owner[doc.userId].profile as string}
+                publicId={owner[doc.userId].publicId as string}
+                location={doc.location?.city ?? ""}
+                createdAt={doc.createdAt}
+                description={doc.description}
+                images={doc.imgs}
+                price={doc.details?.price ?? 0}
+                size={doc.details?.landSize ?? 0}
+                unit={doc.details?.unit ?? ""}
+                type={doc.type}
+                title={doc.title}
+                features={doc.features}
+                likesCount={doc.likesCount}
+              />
+            </article>
+          ) : (
+            <article
+              key={i}
+              className="bg-white border border-neutral-200 rounded-2xl overflow-hidden"
+            >
+              <FeedCard
+                postId={doc.id}
+                uid={owner[doc.userId].uid as string}
+                author={owner[doc.userId].name as string}
+                img={owner[doc.userId].profile as string}
+                publicId={owner[doc.userId].publicId as string}
+                location={doc.location?.city ?? ""}
+                createdAt={doc.createdAt}
+                description={doc.description}
+                images={doc.imgs}
+                price={doc.details?.price}
+                size={doc.details?.landSize ?? 0}
+                unit={doc.details?.unit ?? ""}
+                type={doc.type}
+                title={doc.title}
+                features={doc.features}
+                likesCount={doc.likesCount}
+              />
+            </article>
+          );
+        })
       )}
 
       {/* <SponsoredCard /> */}

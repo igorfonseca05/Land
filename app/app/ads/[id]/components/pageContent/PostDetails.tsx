@@ -9,6 +9,7 @@ import {
   MdAddHomeWork,
   MdAddRoad,
   MdAspectRatio,
+  MdCheckCircle,
   MdElectricalServices,
   MdEmail,
   MdFavorite,
@@ -26,30 +27,32 @@ import { GiPathDistance } from "react-icons/gi";
 import { useEffect, useState } from "react";
 import { PostProps } from "@/app/app/profile/[slug]/criar-anuncio/components/Form";
 import { NormalizedAd, PostSchema } from "@/app/utils/zod";
+import { useRef } from "react";
+import L from "leaflet";
 
-type Unit = "ha" | "acre" | "sqm"
-
+type Unit = "ha" | "acre" | "sqm";
 
 export function PostDetails({ uid }: { uid: string | undefined }) {
-  const [post, setPost] = useState<DocumentData | null | NormalizedAd>(null);
+  const mapRef = useRef<L.Map | null>(null);
+
+  const [post, setPost] = useState<NormalizedAd | null>(null);
   const [loading, setLoading] = useState(false);
 
+  function formatSize(size: number, unit: Unit): string {
+    if (unit === "ha") {
+      return size === 1 ? "1 hectare" : `${size} hectares`;
+    }
 
-function formatSize(size: number, unit: Unit): string {
-  if (unit === "ha") {
-    return size === 1 ? "1 hectare" : `${size} hectares`
+    if (unit === "acre") {
+      return size === 1 ? "1 acre" : `${size} acres`;
+    }
+
+    if (unit === "sqm") {
+      return `${size} m²`;
+    }
+
+    return "";
   }
-
-  if (unit === "acre") {
-    return size === 1 ? "1 acre" : `${size} acres`
-  }
-
-  if (unit === "sqm") {
-    return `${size} m²`
-  }
-
-  return ""
-}
 
   function getUpperCaseLatter(text: string = "") {
     return text.slice(0, 1).toUpperCase() + text.slice(1);
@@ -66,16 +69,43 @@ function formatSize(size: number, unit: Unit): string {
       setLoading(false);
 
       if (docSnap.exists()) {
-        setPost(docSnap.data());
+        setPost(docSnap.data() as NormalizedAd);
       }
     }
 
     getDocument();
   }, []);
 
-  console.log(uid);
+  useEffect(() => {     
+    if (!mapRef.current || !post?.location?.coord) return;
 
-  useEffect(() => console.log(post), []);
+    const { lat, lng } = post?.location.coord;
+
+    const map = L.map('mapa').setView([-15, -22], 13);
+
+    const satellite = L.tileLayer(
+      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+      { attribution: "Tiles © Esri" },
+    );
+
+    const googleStreets = L.tileLayer(
+      "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+      {
+        subdomains: ["mt0", "mt1", "mt2", "mt3"],
+      },
+    );
+
+    const baseMaps = {
+      Satélite: satellite,
+      Ruas: googleStreets,
+    };
+
+    satellite.addTo(map);
+
+    L.control.layers(baseMaps).addTo(map);
+  }, [post]);
+
+
 
   return (
     <>
@@ -83,13 +113,7 @@ function formatSize(size: number, unit: Unit): string {
         <p>Carregando</p>
       ) : (
         <div className="space-y-4 px-1 md:px-0">
-          <div className="hidden md:grid grid-cols-3 gap-2 w-full h-80 rounded-lg overflow-hidden">
-            <div className="bg-amber-200 col-span-2 row-span-2 w-full h-full"></div>
-            <div className="bg-blue-200 w-full h-full"></div>
-            <div className="bg-red-200 w-full h-full"></div>
-          </div>
-
-          <div className="clock md:hidden relative w-full h-100">
+          <div className="relative h-100">
             <Swiper
               modules={[Navigation]}
               navigation
@@ -99,14 +123,16 @@ function formatSize(size: number, unit: Unit): string {
               className="select-none"
             >
               <SwiperSlide className="h-100">
-                <div className="relative w-full h-full aspect-video">
-                  <Image
-                    src={`/terreno.jpg`}
-                    alt="Slide"
-                    fill
-                    className="object-cover rounded-xl sm:rounded-sm"
-                  />
-                </div>
+                {post?.imgs.map((link, i) => (
+                  <div key={i} className="relative w-full h-full aspect-video">
+                    <Image
+                      src={`${link}`}
+                      alt="Slide"
+                      fill
+                      className="object-cover rounded-xl sm:rounded-sm"
+                    />
+                  </div>
+                ))}
               </SwiperSlide>
             </Swiper>
           </div>
@@ -145,7 +171,10 @@ function formatSize(size: number, unit: Unit): string {
                         Tamanho terreno
                       </p>
                       <p className="text-zinc-900 dark:text-white font-bold">
-                        {formatSize(post?.details.landSize, post?.details.unit)} 
+                        {formatSize(
+                          post?.details.landSize as number,
+                          post?.details.unit as Unit,
+                        )}
                       </p>
                     </div>
                   </div>
@@ -213,9 +242,12 @@ function formatSize(size: number, unit: Unit): string {
                 <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-6">
                   Features & Amenities
                 </h3>
-                {/* {post?.features.map(item => {
-                  return <>{item}</>
-                })} */}
+                {post?.features.map((item, i) => (
+                  <div className="flex flex-wrap items-center gap-2" key={i}>
+                    <MdCheckCircle className="text-green-500" />
+                    <span className="inline-block">{item}</span>
+                  </div>
+                ))}
                 {/* <div className="grid grid-cols-2 sm:grid-cols-3 gap-y-4 gap-x-8">
                   <div className="flex items-center gap-2 text-zinc-700 dark:text-zinc-300">
                     <MdElectricalServices className="text-zinc-400" />
@@ -248,16 +280,11 @@ function formatSize(size: number, unit: Unit): string {
                 <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-4">
                   Location
                 </h3>
-                <div className="rounded-2xl overflow-hidden h-64 w-full bg-zinc-100 dark:bg-zinc-800 relative group cursor-pointer border border-zinc-200 dark:border-zinc-700">
-                  <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <div className="bg-green-500/20 p-4 rounded-full">
-                      <div className="bg-green-500 border-2 border-white size-4 rounded-full shadow-lg"></div>
-                    </div>
-                    <span className="mt-2 font-bold text-zinc-900 dark:text-white bg-white/80 dark:bg-black/80 px-4 py-1.5 rounded-full shadow-sm backdrop-blur-sm">
-                      Explore Map
-                    </span>
-                  </div>
-                </div>
+                 <div>
+                  <div id="mapa" style={{ height: '180px', zIndex: 1 }}  />
+                 </div>
+                {/* <div className="rounded-2xl overflow-hidden h-64 w-full bg-zinc-100 cursor-pointer border border-zinc-200">
+                </div> */}
                 <div className="mt-4 flex flex-col sm:flex-row gap-4 text-sm text-zinc-500">
                   <div className="flex items-start gap-2">
                     <GiPathDistance className="text-zinc-400" />
@@ -277,11 +304,17 @@ function formatSize(size: number, unit: Unit): string {
                 <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-lg border border-zinc-200 dark:border-zinc-800 p-6">
                   <div className="mb-6">
                     <span className="text-3xl font-bold text-zinc-900 dark:text-white">
-                      $45,000
+                      R${" "}
+                      {post?.details.price.toLocaleString("pt-BR", {
+                        currency: "BRL",
+                      })}
                     </span>
-                    <span className="text-zinc-500 text-sm"> / Cash Price</span>
+                    <span className="text-zinc-500 text-sm">
+                      {" "}
+                      / preço à vista
+                    </span>
                   </div>
-                  <div className="space-y-3 mb-6">
+                  {/* <div className="space-y-3 mb-6">
                     <div className="flex justify-between text-sm py-2 border-b border-zinc-100 dark:border-zinc-800">
                       <span className="text-zinc-500">Doc Fee</span>
                       <span className="font-medium text-zinc-900 dark:text-white">
@@ -294,19 +327,19 @@ function formatSize(size: number, unit: Unit): string {
                         ~$120 / yr
                       </span>
                     </div>
-                  </div>
+                  </div> */}
                   <div className="space-y-3">
                     <button className="w-full bg-green-500 hover:bg-green-400 text-zinc-900 font-bold py-3.5 rounded-xl shadow-sm transition-all flex items-center justify-center gap-2">
                       <MdEmail />
-                      Contact Seller
+                      Fale com vendedor
                     </button>
                     <button className="w-full bg-transparent border-2 border-zinc-200 dark:border-zinc-700 hover:border-zinc-900 dark:hover:border-white text-zinc-900 dark:text-white font-bold py-3.5 rounded-xl transition-all flex items-center justify-center gap-2">
                       <MdWavingHand />
-                      Show Interest
+                      Mostrar interesse
                     </button>
                   </div>
                   <p className="text-center text-xs text-zinc-400 mt-4">
-                    No commitment required. Ask questions directly.
+                    Sem compromisso. Tire suas dúvidas diretamente.
                   </p>
                 </div>
 

@@ -2,20 +2,15 @@ import { z } from "zod";
 
 /* ========= Subschemas ========= */
 
-
 const ImageSchema = z.object({
   name: z.string().min(1),
   size: z.coerce.number().positive(),
   type: z.string().min(1),
 });
 
-const DetailsSchema = z.object({
-  title: z
-    .string("Título é obrigatório")
-    .trim()
-    .min(1, "Título não pode ser vazio")
-    .transform((v) => v.toLowerCase()),
+// co Unit = "ha" | "acre" | "sqm";
 
+const DetailsSchema = z.object({
   price: z.coerce
     .number("Preço deve ser um número válido")
     .positive("Preço deve ser maior que zero"),
@@ -25,8 +20,9 @@ const DetailsSchema = z.object({
     .positive("Tamanho do terreno deve ser maior que zero"),
 
   unit: z
-    .string("Unidade de medida é obrigatória")
-    .transform((v) => v.toLowerCase()),
+    .string()
+    .transform((v) => v.toLowerCase())
+    .pipe(z.enum(["ha", "acre", "sqm"])),
 
   type: z
     .string("Tipo do terreno é obrigatório")
@@ -51,7 +47,6 @@ const LocationSchema = z.object({
     lng: z.number(),
   }),
 });
-
 
 /* ========= Uso ========= */
 // const normalized = NormalizedAdSchema.parse(rawData)
@@ -110,7 +105,7 @@ const featuresList = [
   "Sem taxa de condomínio",
   "Ideal para plantio",
   "Ideal para construção",
-  "Fonte de água (rio, nascente ou poço)",
+  // "Fonte de água (rio, nascente ou poço)",
   "Acesso para caminhão",
   "Solo fértil",
   "Topografia plana ou levemente inclinada",
@@ -121,19 +116,37 @@ const featuresList = [
 /* ========= Schema Normalizado ========= */
 
 export const NormalizedAdSchema = z.object({
-  imgs: z.array(ImageSchema).default([]),
-
-  details: DetailsSchema,
-
-  location: LocationSchema,
-
+  imgs: z.array(ImageSchema).default([]).nullable().default(null),
+  type: z.enum(["search", "sale"]),
+  details: DetailsSchema.nullable().default(null),
+  location: LocationSchema.nullable().default(null),
+  title: z
+    .string("Título é obrigatório")
+    .trim()
+    .min(1, "Título não pode ser vazio")
+    .transform((v) => v.toLowerCase()),
   description: z
     .string()
     .trim()
     .transform((v) => v.replace(/\s+/g, " ")),
-
-  features: featuresList,
+  features: z.array(z.enum(featuresList)),
+  // createdAt: z.union([z.date(), z.string().datetime()]),
+  status: z.enum(["active", "inactive", "reserved", "sold"]),
 });
+// export const NormalizedAdSchema = z.object({
+//   imgs: z.array(ImageSchema).default([]),
+
+//   details: DetailsSchema,
+
+//   location: LocationSchema,
+
+//   description: z
+//     .string()
+//     .trim()
+//     .transform((v) => v.replace(/\s+/g, " ")),
+
+//   features: z.array(z.enum(featuresList)),
+// });
 
 export type NormalizedAd = z.infer<typeof NormalizedAdSchema>;
 

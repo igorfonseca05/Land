@@ -56,17 +56,10 @@ interface OwnerProps {
   email: string;
 }
 
-type event = {
-  target: {
-    name: string;
-    value: string;
-  };
-};
-
 export interface PostProps {
   id: string;
   uid?: string;
-  imgs: any[];
+  imgs: string[] | null;
   userId: string;
   title: string;
   createdAt: FieldValue;
@@ -77,13 +70,13 @@ export interface PostProps {
     unit: string;
     type: string;
     landRegistryNumber?: string | undefined;
-  };
+  } | null;
   location: {
     address: string;
     city: string;
     state: string;
     observation?: string | undefined;
-  };
+  } | null;
   description: string;
   features: [
     "Energia elétrica disponível",
@@ -283,6 +276,8 @@ export function Form() {
         status: "active",
         type: 'sale'
       };
+
+      console.log(adData)
 
       // 3️⃣ Firestore batch
       const batch = writeBatch(db);
