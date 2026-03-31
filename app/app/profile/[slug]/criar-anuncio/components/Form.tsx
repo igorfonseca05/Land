@@ -18,7 +18,7 @@ import { auth, db } from "@/app/config/firebase";
 import { useProfileContext } from "@/app/src/context/userProfileContext";
 import { useRouter } from "next/navigation";
 import { AdsMap } from "./AdsMap";
-type ErrorField = "imgs" | "details" | "location" | "description" | "features";
+type ErrorField = "images" | "details" | "location" | "description" | "features";
 
 const landDetailsInitialState = {
   title: "",
@@ -111,6 +111,7 @@ export function Form() {
   const [isDragging, setIsDragging] = useState(false);
   const [file, setFile] = useState<File[]>([]);
   const [landDetails, setLandDetails] = useState(landDetailsInitialState);
+  const [title, setTitle] = useState("");
   const [location, setLocation] = useState(locationInitialState);
   const [description, setDescription] = useState("");
   const [features, setFeatures] = useState<string[]>([]);
@@ -223,14 +224,16 @@ export function Form() {
     }
 
     const rawData = {
-      imgs: file,
+      images: file,
+      type: "sale",
       details: landDetails,
       location,
+      title,
       description,
       features,
+      status: "active",
+      userId: auth.currentUser.uid
     };
-
-    console.log(rawData);
 
     const parsed = NormalizedAdSchema.safeParse(rawData);
 
@@ -270,14 +273,9 @@ export function Form() {
       // 2️⃣ Monta documento final
       const adData = {
         ...parsed.data,
-        imgs: imageUrls,
-        userId: auth.currentUser.uid,
+        images: imageUrls,
         createdAt: serverTimestamp(),
-        status: "active",
-        type: 'sale'
       };
-
-      console.log(adData)
 
       // 3️⃣ Firestore batch
       const batch = writeBatch(db);
@@ -287,11 +285,11 @@ export function Form() {
 
       batch.set(userAdRef, adData);
       batch.set(mapRef, {
-        lat: parsed.data.location.coord.lat,
-        lng: parsed.data.location.coord.lng,
-        price: parsed.data.details.price,
-        title: parsed.data.details.title,
-        city: parsed.data.location.city,
+        lat: parsed.data.location?.coord.lat,
+        lng: parsed.data.location?.coord.lng,
+        price: parsed.data.details?.price,
+        title: parsed.data.title,
+        city: parsed.data.location?.city,
         adId: userAdRef.id,
         userId: auth.currentUser.uid,
         status: "active",
@@ -442,7 +440,7 @@ export function Form() {
               Título do anúncio <span className="text-red-500">*</span>
             </label>
             <input
-              onChange={handleLandDetails}
+              onChange={(e) => setTitle(e.target.value)}
               name="title"
               type="text"
               placeholder="Ex: Terreno de 5 hectares pronto para construir"

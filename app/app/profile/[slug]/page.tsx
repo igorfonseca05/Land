@@ -18,10 +18,11 @@ import { auth, db } from "@/app/config/firebase";
 import { GlobalSpinner } from "@/app/src/components/globalSpinner/GlobalSpinner";
 import { Modal } from "@/app/src/components/GlobalModal/Modal";
 import { useParams } from "next/navigation";
+import { PostSchemaType } from "@/app/utils/zod";
 
 export type Ad = {
   id: string;
-  imgs: string[];
+  images: string[];
   details: {
     title: string;
     price: number;
@@ -48,6 +49,7 @@ export type Ad = {
     fencedLand: boolean;
     noHoaFee: boolean;
   };
+  title: string;
   userId: string;
   createdAt: Timestamp;
   status: string
@@ -55,7 +57,7 @@ export type Ad = {
 
 export default function profile() {
   const uid = useParams()
-  const [ads, setAds] = useState<Ad[]>([]);
+  const [ads, setAds] = useState<PostSchemaType[]>([]);
   const [loading, setLoading] = useState(false);
 
   // console.log(uid)
@@ -81,7 +83,7 @@ export default function profile() {
       const snapshot = await getDocs(q);
       const ads = snapshot.docs.map((doc) => ({
         id: doc.id,
-        ...(doc.data() as Omit<Ad, "id">),
+        ...(doc.data() as Omit<PostSchemaType, "id">),
       }));
 
       setAds(ads);

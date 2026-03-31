@@ -1,3 +1,4 @@
+import { FieldValue, Timestamp } from "firebase/firestore";
 import { z } from "zod";
 
 /* ========= Subschemas ========= */
@@ -116,10 +117,10 @@ const featuresList = [
 /* ========= Schema Normalizado ========= */
 
 export const NormalizedAdSchema = z.object({
-  imgs: z.array(ImageSchema).default([]).nullable().default(null),
+  images: z.array(ImageSchema).default([]).optional(),
   type: z.enum(["search", "sale"]),
-  details: DetailsSchema.nullable().default(null),
-  location: LocationSchema.nullable().default(null),
+  details: DetailsSchema.optional(),
+  location: LocationSchema.optional(),
   title: z
     .string("Título é obrigatório")
     .trim()
@@ -130,25 +131,37 @@ export const NormalizedAdSchema = z.object({
     .trim()
     .transform((v) => v.replace(/\s+/g, " ")),
   features: z.array(z.enum(featuresList)),
-  // createdAt: z.union([z.date(), z.string().datetime()]),
+  userId: z.string().min(10),
   status: z.enum(["active", "inactive", "reserved", "sold"]),
 });
-// export const NormalizedAdSchema = z.object({
-//   imgs: z.array(ImageSchema).default([]),
-
-//   details: DetailsSchema,
-
-//   location: LocationSchema,
-
-//   description: z
-//     .string()
-//     .trim()
-//     .transform((v) => v.replace(/\s+/g, " ")),
-
-//   features: z.array(z.enum(featuresList)),
-// });
 
 export type NormalizedAd = z.infer<typeof NormalizedAdSchema>;
+
+
+export const PostSchema = z.object({
+  images: z.array(z.string()).default([]).optional(),
+  type: z.enum(["search", "sale"]),
+  details: DetailsSchema.optional(),
+  location: LocationSchema.optional(),
+  title: z
+    .string("Título é obrigatório")
+    .trim()
+    .min(1, "Título não pode ser vazio")
+    .transform((v) => v.toLowerCase()),
+  description: z
+    .string()
+    .trim()
+    .transform((v) => v.replace(/\s+/g, " ")),
+  features: z.array(z.enum(featuresList)),
+  userId: z.string().min(10),
+  status: z.enum(["active", "inactive", "reserved", "sold"]),
+});
+
+export type PostSchemaType = z.infer<typeof PostSchema> & {
+  createdAt: Timestamp | FieldValue;
+  id: string;
+};
+
 
 export const PostSearchSchema = z.object({
   title: z.string().trim().min(2, "Insira um titulo para o post"),

@@ -17,9 +17,15 @@ import { useProfileContext } from "@/app/src/context/userProfileContext";
 import { form } from "framer-motion/m";
 import Image from "next/image";
 import { Dropdown } from "./dropdown";
+import {PostSchemaType } from "@/app/utils/zod";
+// import { FirebaseDocSchema } from "@/app/utils/zod";
 
-export function Cards({ infos }: { infos: Ad }) {
+
+
+export function Cards({ infos }: { infos: PostSchemaType }) {
   const { profile } = useProfileContext();
+
+  console.log(infos)
 
   return (
     <article className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 ">
@@ -37,7 +43,7 @@ export function Cards({ infos }: { infos: Ad }) {
               {profile?.name.trim().split(/\s+/)[0]}
             </span>
             <span className="text-xs text-neutral-500">
-              {formatFirebaseTime(infos.createdAt)} ·{" "}
+              {infos.createdAt && formatFirebaseTime(infos.createdAt)} ·{" "}
               <span className="capitalize">{infos.location?.city ?? ""}</span>,{" "}
               {infos.location?.state ?? ""}
             </span>
@@ -57,10 +63,10 @@ export function Cards({ infos }: { infos: Ad }) {
         </p>
       </div>
       {/* Image */}
-      {Array.isArray(infos.imgs) && (
+      {Array.isArray(infos.images) && (
         <div className="w-full bg-neutral-100 relative dark:bg-neutral-800">
           <Image
-            src={infos.imgs[0]}
+            src={infos.images[0]}
             alt="Post image"
             width={1200}
             height={400}
@@ -70,11 +76,11 @@ export function Cards({ infos }: { infos: Ad }) {
           <div className="absolute bottom-2 left-2 flex gap-1">
             {" "}
             <div className="bg-black/70 text-white px-2 py-1 rounded-md text-xs font-bold shadow-sm">
-              R$ {infos.details.price.toLocaleString("pt-BR")}{" "}
+              R$ {infos.details?.price.toLocaleString("pt-BR")}{" "}
             </div>{" "}
             <div className="bg-black/70 text-white px-2 py-1 rounded-md text-xs font-bold shadow-sm flex items-center gap-1">
               <MdAspectRatio className="text-green-400" />{" "}
-              {infos.details.landSize} {infos.details.unit}{" "}
+              {infos.details?.landSize} {infos.details?.unit}{" "}
             </div>{" "}
           </div>
         </div>

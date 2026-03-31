@@ -14,13 +14,13 @@ import {
   MdSell,
 } from "react-icons/md";
 import { Ad } from "../[slug]/page";
-import { PostSchema, PostSearchSchema } from "@/app/utils/zod";
+import { PostSchema, PostSchemaType, PostSearchSchema } from "@/app/utils/zod";
 import z, { ZodFlattenedError } from "zod";
 import { serverTimestamp } from "firebase/firestore";
 
 type Post = z.infer<typeof PostSearchSchema>
 
-export function Dropdown({ infos }: { infos: Ad }) {
+export function Dropdown({ infos }: { infos: PostSchemaType }) {
   const { profile } = useProfileContext();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);

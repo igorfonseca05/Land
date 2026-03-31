@@ -123,7 +123,7 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
               className="select-none"
             >
               <SwiperSlide className="h-100">
-                {post?.imgs.map((link, i) => (
+                {post?.images?.map((link, i) => (
                   <div key={i} className="relative w-full h-full aspect-video">
                     <Image
                       src={`${link}`}
@@ -144,11 +144,11 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div>
                     <h1 className="text-3xl font-bold text-zinc-900 dark:text-white mb-2">
-                      {getUpperCaseLatter(post?.details.title)}
+                      {getUpperCaseLatter(post?.title)}
                     </h1>
                     <p className="text-zinc-500 flex items-center gap-1">
                       <MdLocationOn />
-                      {`${getUpperCaseLatter(post?.location.city)}, ${post?.location.state}`}
+                      {`${getUpperCaseLatter(post?.location?.city)}, ${post?.location?.state}`}
                     </p>
                   </div>
                   <div className="flex gap-2">
@@ -172,8 +172,8 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
                       </p>
                       <p className="text-zinc-900 dark:text-white font-bold">
                         {formatSize(
-                          post?.details.landSize as number,
-                          post?.details.unit as Unit,
+                          post?.details?.landSize as number,
+                          post?.details?.unit as Unit,
                         )}
                       </p>
                     </div>
@@ -200,7 +200,7 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
                         Zona
                       </p>
                       <p className="text-zinc-900 dark:text-white font-bold">
-                        {getUpperCaseLatter(post?.details.type)}
+                        {getUpperCaseLatter(post?.details?.type)}
                       </p>
                     </div>
                   </div>
@@ -305,7 +305,7 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
                   <div className="mb-6">
                     <span className="text-3xl font-bold text-zinc-900 dark:text-white">
                       R${" "}
-                      {post?.details.price.toLocaleString("pt-BR", {
+                      {post?.details?.price.toLocaleString("pt-BR", {
                         currency: "BRL",
                       })}
                     </span>
