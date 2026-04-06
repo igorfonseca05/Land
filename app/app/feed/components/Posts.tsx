@@ -21,19 +21,19 @@ import { useSearchPost } from "@/app/src/context/usePostContext";
 import { SearchPostCard } from "@/app/src/components/feed/SearchPost";
 import NoFeedItem from "./NoFeedItem";
 import Link from "next/link";
-import { PostSchema } from "@/app/utils/zod";
+import { PostSchema, PostSchemaType } from "@/app/utils/zod";
 import { SearchCard } from "@/app/src/components/feed/SearchCard";
 import { LoadingCards } from "./LoadingCards";
 
 export function Posts() {
   // if(!auth.currentUser) return
   const { searchPost, postLoading } = useSearchPost();
-  const [posts, setPosts] = useState<PostProps[]>([]);
+  const [posts, setPosts] = useState<PostSchemaType[]>([]);
   const [owner, setOwner] = useState<{ [key: string]: UserProfile }>({});
   const [inlinePost, setInlinePost] = useState<PostSchema | null>(null);
   const [loading, setLoading] = useState(false);
-  
-  const thereIsNoFeedItem = !inlinePost && posts.length === 0
+
+  const thereIsNoFeedItem = !inlinePost && posts.length === 0;
 
   useEffect(() => {
     async function getPosts() {
@@ -50,7 +50,7 @@ export function Posts() {
 
       const posts = allDocs.docs.map((doc) => ({
         id: doc.id,
-        ...(doc.data() as Omit<PostProps, "id">),
+        ...(doc.data() as Omit<PostSchemaType, "id">),
       }));
 
       const userIds = [...new Set(posts.map((f) => f.userId))];
@@ -94,64 +94,35 @@ export function Posts() {
         />
       )}
 
-
       {loading ? (
         <LoadingCards />
       ) : thereIsNoFeedItem ? (
         <NoFeedItem />
       ) : (
-        posts.map((doc, i) => {
-
-          console.log(doc)
-
-          return doc.type === "search" ? (
-            <article  key={i} className="bg-white border border-neutral-200 rounded-2xl overflow-hidden">
-              <SearchCard
-                key={i}
-                postId={doc.id}
-                uid={owner[doc.userId].uid as string}
-                author={owner[doc.userId].name as string}
-                img={owner[doc.userId].profile as string}
-                publicId={owner[doc.userId].publicId as string}
-                location={doc.location?.city ?? ""}
-                createdAt={doc.createdAt}
-                description={doc.description}
-                images={doc.imgs}
-                price={doc.details?.price ?? 0}
-                size={doc.details?.landSize ?? 0}
-                unit={doc.details?.unit ?? ""}
-                type={doc.type}
-                title={doc.title}
-                features={doc.features}
-                likesCount={doc.likesCount}
-              />
-            </article>
-          ) : (
+        posts.map((doc, i) => (
             <article
               key={i}
               className="bg-white border border-neutral-200 rounded-2xl overflow-hidden"
             >
               <FeedCard
-                postId={doc.id}
-                uid={owner[doc.userId].uid as string}
+                id={doc.id}
+                userId={owner[doc.userId].uid as string}
                 author={owner[doc.userId].name as string}
                 img={owner[doc.userId].profile as string}
                 publicId={owner[doc.userId].publicId as string}
-                location={doc.location?.city ?? ""}
+                location={doc.location}
                 createdAt={doc.createdAt}
                 description={doc.description}
-                images={doc.imgs}
-                price={doc.details?.price}
-                size={doc.details?.landSize ?? 0}
-                unit={doc.details?.unit ?? ""}
+                images={doc.images}
+                details={doc.details}
                 type={doc.type}
                 title={doc.title}
                 features={doc.features}
                 likesCount={doc.likesCount}
+                status={doc.status}
               />
             </article>
-          );
-        })
+        ))
       )}
 
       {/* <SponsoredCard /> */}

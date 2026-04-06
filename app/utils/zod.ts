@@ -95,7 +95,7 @@ export const ProfileInfoSchema = z.object({
 
 export type Profile = z.infer<typeof ProfileInfoSchema>;
 
-const featuresList = [
+export const featuresList = [
   "Energia elétrica disponível",
   "Abastecimento de água",
   "Acesso asfaltado",
@@ -139,10 +139,10 @@ export type NormalizedAd = z.infer<typeof NormalizedAdSchema>;
 
 
 export const PostSchema = z.object({
-  images: z.array(z.string()).default([]).optional(),
+  images: z.array(z.string()).nullable().default([]),
   type: z.enum(["search", "sale"]),
-  details: DetailsSchema.optional(),
-  location: LocationSchema.optional(),
+  details: DetailsSchema.nullable().default(null),
+  location: LocationSchema.nullable().default(null),
   title: z
     .string("Título é obrigatório")
     .trim()
@@ -151,10 +151,12 @@ export const PostSchema = z.object({
   description: z
     .string()
     .trim()
+    .min(1, "Descrição é obrigatória")
     .transform((v) => v.replace(/\s+/g, " ")),
   features: z.array(z.enum(featuresList)),
   userId: z.string().min(10),
   status: z.enum(["active", "inactive", "reserved", "sold"]),
+  likesCount: z.number().default(0).optional()
 });
 
 export type PostSchemaType = z.infer<typeof PostSchema> & {

@@ -17,7 +17,6 @@ export function PostActions({uid}: {uid?: string | undefined}) {
             const feedDoc = doc(db, 'feeds', uid)
         })
 
-
     }   
 
 

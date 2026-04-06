@@ -37,15 +37,41 @@ type Post = {
   features: string[];
 };
 
+type featuresList =
+    | "Energia elétrica disponível"
+    | "Abastecimento de água"
+    | "Acesso asfaltado"
+    | "Documentação regularizada"
+    | "Próximo ao centro urbano"
+    | "Área arborizada"
+    | "Cercado"
+    | "Sem taxa de condomínio"
+    | "Ideal para plantio"
+    | "Ideal para construção"
+    // "Fonte de água (rio | nascente ou poço)" |
+    | "Acesso para caminhão"
+    | "Solo fértil"
+    | "Topografia plana ou levemente inclinada"
+    | "Área produtiva"
+    | "Sem restrições ambientais";
+
 export function HeroSearch() {
   const { profile } = useProfileContext();
   const { setSearchPost } = useSearchPost();
   const [isOpen, setIsOpen] = useState(false);
-  const [post, setPost] = useState<Post>({
+  const [post, setPost] = useState<z.infer<typeof PostSchema>>({
     title: "",
     description: "",
     features: [],
+    images: [],
+    type: "search",
+    details: null,
+    location: null,
+    status: "active",
+    userId: auth.currentUser?.uid ? auth.currentUser.uid : "",
+    likesCount: 0,
   });
+
   const [charactereCount, setCharacterCount] = useState(2000);
   const [error, setError] = useState<
     ZodFlattenedError<Post>["fieldErrors"] | null
@@ -62,6 +88,7 @@ export function HeroSearch() {
       };
     });
   }
+
   function handlePostBody(e: React.ChangeEvent<HTMLTextAreaElement>) {
     setPost((prev) => {
       return {
@@ -72,16 +99,16 @@ export function HeroSearch() {
   }
 
   function handleFeatures(e: React.MouseEvent<HTMLLabelElement>) {
-    const selectedItem = e.currentTarget.innerText;
+    const selectedItem = e.currentTarget.innerText as featuresList;
 
     setPost((prev) => {
       const includeItem = post.features.includes(selectedItem);
 
-      if(includeItem) {
+      if (includeItem) {
         return {
-          ...prev, 
-          features: post.features.filter(item => item !== selectedItem)
-        }
+          ...prev,
+          features: post.features.filter((item) => item !== selectedItem),
+        };
       }
 
       return {
@@ -91,56 +118,15 @@ export function HeroSearch() {
     });
   }
 
-
-  // function handleInput(
-  //   e: React.MouseEvent<HTMLInputElement | HTMLTextAreaElement>,
-  // ) {
-  //   setPost((prev) => {
-  //     const isNotTitleAndDescription =
-  //       e.target.name !== "title" && e.target.name !== "description";
-
-  //     const itemAdded = Object.keys(prev.features);
-
-  //     if (itemAdded.includes(e.target.name)) {
-  //       const item = e.target.name;
-
-  //       const { [`${item}`]: _, ...dados } = prev.features;
-
-  //       return {
-  //         ...prev,
-  //         features: {
-  //           ...dados,
-  //         },
-  //       };
-  //     }
-
-  //     if (isNotTitleAndDescription) {
-  //       return {
-  //         ...prev,
-  //         features: {
-  //           ...prev.features,
-  //           [e.target.name]: e.target.value,
-  //         },
-  //       };
-  //     } else {
-  //       return {
-  //         ...prev,
-  //         [e.target.name]: e.target.value,
-  //       };
-  //     }
-  //   });
-  // }
-
   async function handlePostForm(e: FormEvent) {
     e.preventDefault();
 
-    const isValidPost = propertySchema.safeParse(post);
+    const isValidPost = PostSchema.safeParse(post);
 
     if (!isValidPost.success) {
       return setError(isValidPost.error.flatten().fieldErrors);
     }
 
-    console.log(isValidPost.data);
 
     try {
       setLoading(true);
@@ -154,7 +140,7 @@ export function HeroSearch() {
         type: "search",
         status: "active",
         createdAt: serverTimestamp(),
-        likeCount: 0,
+        likesCount: 0,
       };
 
       await addDoc(collection(db, "ads"), newPost);
@@ -179,6 +165,13 @@ export function HeroSearch() {
         title: "",
         description: "",
         features: [],
+        images: [],
+        type: "search",
+        details: null,
+        location: null,
+        status: "active",
+        userId: auth.currentUser?.uid ? auth.currentUser.uid : "",
+        likesCount: 0,
       });
     }
   }, [isOpen]);
@@ -291,7 +284,7 @@ export function HeroSearch() {
                           key={item.name}
                           onClick={handleFeatures}
                           className={`flex items-center justify-start gap-2 px-4 py-2 rounded-full border text-sm font-medium cursor-pointer select-none transition-all duration-200 border-neutral-200 dark:border-neutral-700 text-neutral-700 dark:text-neutral-300 
-                      ${post.features.includes(item.name) && "bg-green-500 text-white"}`}
+                      ${post.features.includes(item.name as featuresList) && "bg-green-500 text-white"}`}
                         >
                           {item.name}
                         </label>

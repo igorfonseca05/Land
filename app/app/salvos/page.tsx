@@ -10,7 +10,7 @@ import { SearchPostCard } from "@/app/src/components/feed/SearchPost";
 import { GlobalSpinner } from "@/app/src/components/globalSpinner/GlobalSpinner";
 import { Avatar } from "@/app/src/components/ui/Avatar";
 import { formatFirebaseTime } from "@/app/utils/functions";
-import { PostSchema, Profile } from "@/app/utils/zod";
+import { PostSchema, PostSchemaType, Profile } from "@/app/utils/zod";
 import {
   collection,
   doc,
@@ -27,7 +27,7 @@ import { useEffect, useState } from "react";
 import { MdSearch } from "react-icons/md";
 
 export default function Page() {
-  const [saved, setSaved] = useState<DocumentData[] | PostSchema[]>([]);
+  const [saved, setSaved] = useState<DocumentData[] | PostSchemaType[]>([]);
   const [users, setUser] = useState<{ [key: string]: DocumentData }>({});
   const [loading, setLoading] = useState(false);
 
@@ -51,7 +51,7 @@ export default function Page() {
         .filter((doc) => doc.exists())
         .map((doc) => ({
           postId: doc.id,
-          ...(doc.data() as Omit<PostSchema, "id">),
+          ...(doc.data() as Omit<PostSchemaType, "id">),
         }));
 
       const users = [...new Set(ads.map((post) => post.userId))];
@@ -92,16 +92,19 @@ export default function Page() {
       <div className="space-y-3">
         {Array.isArray(saved) && saved.length !== 0 ? (
           saved.map((item, i) => {
+            
             const data = {
               ...item,
               author: users[item.userId].name,
               img: users[item.userId].profile,
               publicId: users[item.userId].publicId,
+              userId: users[item.userId],
             };
             return (
               <article className="bg-white border border-neutral-200 rounded-2xl overflow-hidden space-y-4" key={i} >
                 {item.type === "search" ? (
-                  <SearchCard props={data} />
+                  <p>oi</p>
+                  // <SearchCard props={data} />
                 ) : (
                   <p>oi</p>
                 )}

@@ -28,10 +28,10 @@ export function SearchCard({...props}: PostProps) {
     <div className="p-2 md:p-6 space-y-2.5">
       <div className=" flex justify-between ">
         <div className="flex gap-3">
-          <Avatar src={props.img} fallback={props.author.split(/\s+/)[0]} />
+          <Avatar src={props.img} fallback={props?.author} />
           <div>
             <p className="font-bold text-sm capitalize">
-              {props.author.split(/\s+/)[0]}
+              {props.author}
             </p>
             <p className="text-xs text-neutral-500 ">
               {/* <span className="capitalize">{location ? location : ""}</span> •{" "} */}
@@ -55,7 +55,7 @@ export function SearchCard({...props}: PostProps) {
       {/* <hr className="text-neutral-200"/> */}
       <p className="text-neutral-700 text-sm font-semibold">Requisitos</p>
       <div className=" grid grid-cols-2 gap-4 text-sm text-neutral-900">
-        {props.features.map((item, i) => (
+        {props.features?.map((item, i) => (
           <div className="flex items-center gap-2" key={i}>
             <MdCheckCircle className="text-green-500" />
             <span className="inline-block">{item}</span>
@@ -67,10 +67,10 @@ export function SearchCard({...props}: PostProps) {
           <hr className="text-neutral-200" />
           <div className="flex justify-between items-center py-1">
             <div className="flex gap-4 items-center">
-              <LikeButton postId={props.postId} likesCount={props.likesCount} />
+              <LikeButton postId={props.id} likesCount={props.likesCount} />
               <MdShare />
             </div>
-            <SavePost postId={props.postId} />
+            <SavePost postId={props.id} />
           </div>
         </>
       )}
