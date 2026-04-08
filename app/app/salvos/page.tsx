@@ -3,7 +3,7 @@
 import { auth, db } from "@/app/config/firebase";
 import { PostProps } from "@/app/src/components/feed/FeedCard";
 import { LikeButton } from "@/app/src/components/feed/LikeButton";
-import { SavedPostCard } from "@/app/src/components/feed/savedPostCard";
+// import { SavedPostCard } from "@/app/src/components/feed/savedPostCard";
 import { SavePost } from "@/app/src/components/feed/savePost";
 import { SearchCard } from "@/app/src/components/feed/SearchCard";
 import { SearchPostCard } from "@/app/src/components/feed/SearchPost";
