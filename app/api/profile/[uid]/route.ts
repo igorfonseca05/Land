@@ -3,10 +3,11 @@ import crypto, { createHash } from "crypto";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { uid: string } },
+  context: { params: Promise<{ uid: string }> },
 ) {
   // uid para adicionar imagens na pasta com id do usuário
-  const { uid } = await params;
+  const { uid } = await context.params;
+
   const MAX_SIZE = 1 * 1024 * 1024; // 5MB
 
   if (!/^[a-zA-Z0-9_-]+$/.test(uid)) {
