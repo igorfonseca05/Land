@@ -8,7 +8,7 @@ import { auth } from "@/app/config/firebase";
 import { FcGoogle } from "react-icons/fc";
 import { BsApple } from "react-icons/bs";
 import { Logo } from "../ui/Logo";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { FirebaseError } from "firebase/app";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import z from "zod";
