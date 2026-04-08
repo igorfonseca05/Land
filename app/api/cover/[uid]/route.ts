@@ -3,9 +3,9 @@ import crypto from "crypto";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { uid: string } },
+  context: { params: Promise<{ uid: string }> },
 ) {
-  const { uid } = await params;
+  const { uid } = await context.params;
   const formData = await req.formData();
   const cover = formData.get("cover") as File | null;
 
