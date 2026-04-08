@@ -70,6 +70,8 @@ export default function profile() {
 
     const {uid} = isLoggedIn
 
+    console.log(uid)
+
     const adsCollectionRef = collection(db, "ads");
 
     const q = query(
@@ -103,7 +105,7 @@ export default function profile() {
       {loading ? (
         <div className="flex p-8 flex-col items-center justify-center bg-white/80 z-50 rounded-lg shadow">
           <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-[#84C60B]" />
-          <p className="pt-2">Carregando seus anuncions</p>
+          <p className="pt-2">Carregando seus anúncios</p>
         </div>
       ) : (Array.isArray(ads) && ads.length > 0) ? (
         <>

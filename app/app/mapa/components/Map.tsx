@@ -15,7 +15,7 @@ type Ad = {
   price: number;
   status: "active" | "inactive" | "sold";
   title: string;
-  image: string
+  image: string;
 };
 
 export function Mapa() {
@@ -157,10 +157,12 @@ export function Mapa() {
   async function getLands() {
     const snapshot = await getDocs(collection(db, "mapMarkers"));
 
-    const points = snapshot.docs.map((point) => {
+    snapshot.docs.map((point) => {
       if (!point.exists()) return;
 
       const postData = point.data() as Ad;
+
+      console.log(postData)
 
       const { lat, lng } = point.data();
 

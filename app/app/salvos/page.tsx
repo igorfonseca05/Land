@@ -45,13 +45,15 @@ export default function Page() {
         return await getDoc(posts);
       });
 
-      const adsSnapshots = await Promise.all(posts);
+      const adsSnapshots = await Promise.all(
+        posts.map((p) => p.catch(() => null)),
+      );
 
       const ads = adsSnapshots
-        .filter((doc) => doc.exists())
+        .filter((doc) => doc && doc.exists())
         .map((doc) => ({
-          postId: doc.id,
-          ...(doc.data() as Omit<PostSchemaType, "id">),
+          postId: doc && doc.id,
+          ...(doc && doc.data() as Omit<PostSchemaType, "id">),
         }));
 
       const users = [...new Set(ads.map((post) => post.userId))];
@@ -80,19 +82,22 @@ export default function Page() {
     getSavedDocs();
   }, []);
 
+  console.log(saved);
+
   return (
     <div className="space-y-4">
       {/* <h1 classNa:Sme="bg-white border border-neutral-200 rounded-2xl text-3xl text-neutral-500">Salvos</h1> */}
       {loading && (
         <div className="flex flex-col gap-y-4 items-center justify-center h-50">
           <div className="w-10 h-10 border-4 border-gray-300 border-t-green-500 rounded-full animate-spin"></div>
-          {/* <p>Buscando salvos</p> */}
+          <p>Buscando salvos</p>
         </div>
       )}
+
       <div className="space-y-3">
-        {Array.isArray(saved) && saved.length !== 0 ? (
+        {Array.isArray(saved) &&
+          saved.length !== 0 &&
           saved.map((item, i) => {
-            
             const data = {
               ...item,
               author: users[item.userId].name,
@@ -101,19 +106,23 @@ export default function Page() {
               userId: users[item.userId],
             };
             return (
-              <article className="bg-white border border-neutral-200 rounded-2xl overflow-hidden space-y-4" key={i} >
+              <article
+                className="bg-white border border-neutral-200 rounded-2xl overflow-hidden space-y-4"
+                key={i}
+              >
                 {item.type === "search" ? (
                   <p>oi</p>
-                  // <SearchCard props={data} />
                 ) : (
+                  // <SearchCard props={data} />
                   <p>oi</p>
                 )}
               </article>
             );
-          })
-        ) : (
+          })}
+
+        {!saved.length && !loading && (
           <>
-            <div className="p-6 flex flex-col items-center justify-center text-center space-y-4">
+            <div className="p-6 flex flex-col items-center justify-center text-center space-y-4 bg-white rounded-lg h-[50vh]">
               <div className="w-14 h-14 rounded-full bg-neutral-100 flex items-center justify-center">
                 <MdSearch className="text-neutral-500 text-2xl" />
               </div>
@@ -128,7 +137,10 @@ export default function Page() {
                 </p>
               </div>
 
-              <Link href={'/app/feed'} className="mt-2 px-4 py-2 rounded-lg bg-[#84C60B] text-white text-sm font-semibold hover:bg-[#84C60B] transition">
+              <Link
+                href={"/app/feed"}
+                className="mt-2 px-4 py-2 rounded-lg bg-[#84C60B] text-white text-sm font-semibold hover:bg-[#84C60B] transition"
+              >
                 Explorar posts
               </Link>
             </div>

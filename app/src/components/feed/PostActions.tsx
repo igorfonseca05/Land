@@ -1,34 +1,31 @@
-'use client'
+"use client";
 
 import { doc, runTransaction, writeBatch } from "firebase/firestore";
 import { useState } from "react";
-import { MdChatBubble, MdFavorite } from "react-icons/md";
+import { MdChatBubble, MdFavorite, MdShare } from "react-icons/md";
 import { auth, db } from "@/app/config/firebase";
+import { LikeButton } from "./LikeButton";
+import { SavePost } from "./savePost";
+import { getAuth } from "firebase/auth";
+import { PostProps } from "./FeedCard";
+import { PostSchemaType } from "@/app/utils/zod";
 
-export function PostActions({uid}: {uid?: string | undefined}) {
-
-    const [likes, setLikes] = useState(2)
-
-    async function handleLike() {
-        if(!uid) return
-
-        await runTransaction(db, async (transation) => {
-            const docAds = doc(db, 'ads', uid)
-            const feedDoc = doc(db, 'feeds', uid)
-        })
-
-    }   
-
+export function PostActions({ ...props }: {id: string, likesCount: number | undefined } ) {
 
   return (
-    <div className="flex gap-2 text-neutral-500">
-      <button className="flex items-center gap-1">
-        <MdFavorite />
-        {likes}
-      </button>
-      <button className="flex items-center gap-1">
-        <MdChatBubble />5
-      </button>
-    </div>
+    <>
+      {getAuth().currentUser && (
+        <>
+          <hr className="text-neutral-200" />
+          <div className="flex justify-between items-center py-1 p-2 md:p-4">
+            <div className="flex gap-4 items-center">
+              <LikeButton postId={props.id} likesCount={props.likesCount} />
+              <MdShare />
+            </div>
+            <SavePost postId={props.id} />
+          </div>
+        </>
+      )}
+    </>
   );
 }

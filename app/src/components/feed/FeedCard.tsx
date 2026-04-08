@@ -21,6 +21,7 @@ import { SavePost } from "./savePost";
 import { getAuth } from "firebase/auth";
 import { SearchCard } from "./SearchCard";
 import { PostSchemaType } from "@/app/utils/zod";
+import { PostActions } from "./PostActions";
 export type PostProps = PostSchemaType & {
   author: string;
   img: string;
@@ -173,18 +174,10 @@ export function FeedCard({ ...props }: PostProps) {
             </span>
           </div>
         )}
-        {getAuth().currentUser && (
-          <>
-            <hr className="text-neutral-200" />
-            <div className="flex justify-between items-center py-1 p-2 md:p-4">
-              <div className="flex gap-4 items-center">
-                <LikeButton postId={props.id} likesCount={props.likesCount} />
-                <MdShare />
-              </div>
-              <SavePost postId={props.id} />
-            </div>
-          </>
-        )}
+        <PostActions
+               id={props.id}
+               likesCount={props.likesCount}
+             />
       </div>
     </Link>
   );
