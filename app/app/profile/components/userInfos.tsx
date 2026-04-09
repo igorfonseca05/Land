@@ -59,9 +59,6 @@ export function UserProfile() {
   >(null);
   const [loading, setLoading] = useState(false);
 
-  if (profileLoading) return <p>Carregando...</p>;
-  if (!profile) return null;
-
   function hasError(field: ErrorField) {
     return Boolean(error?.[field]?.length);
   }
@@ -297,9 +294,11 @@ export function UserProfile() {
       }
     }
   }
+  
+  if (profileLoading) return <p>Carregando...</p>;
 
   // Calculando caracteres restantes
-
+  
   useEffect(() => {
     if (profile) {
       setProfileInfo({
@@ -312,13 +311,18 @@ export function UserProfile() {
     }
   }, [profile]);
 
+  
+
+
   // useEffect(() => {
   //   setSizeDescription(215 - profileInfo.description.length);
   // }, [profileInfo.description]);
 
   return (
     <>
-      <Modal
+     {profile && (
+      <>
+         <Modal
         isOpen={editModalIsOpen}
         setIsOpen={setEditModalIsOpen}
         style="w-[70%] h-[97%]"
@@ -736,6 +740,8 @@ export function UserProfile() {
         </div> */}
         </div>
       </div>
+      </>
+    )}
     </>
   );
 }
