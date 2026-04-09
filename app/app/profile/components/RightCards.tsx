@@ -56,37 +56,37 @@ const RightSideCards = () => {
     {
       id: 1,
       message: "Foto de perfil",
-      condition: profile?.profile,
+      condition: profile?.profile || '',
       icon: MdCheckCircle,
     },
     {
       id: 2,
       message: "Endereço de email verificado",
-      condition: user?.emailVerified,
+      condition: user?.emailVerified || '',
       icon: MdCheckCircle,
     },
     {
       id: 3,
       message: "Adicionar número para contato",
-      condition: profile?.phone,
+      condition: profile?.phone || "",
       icon: MdCheckCircle,
     },
     {
       id: 4,
       message: "Adicionar localização",
-      condition: profile?.location,
+      condition: profile?.location || "",
       icon: MdCheckCircle,
     },
     {
       id: 5,
       message: "Adicionar bios",
-      condition: profile?.description,
+      condition: profile?.description || "",
       icon: MdCheckCircle,
     },
     {
       id: 6,
       message: "Conta Verificada",
-      condition: profile?.profileVerified,
+      condition: profile?.profileVerified || "",
       icon: MdCheckCircle,
     },
   ];

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import "leaflet/dist/leaflet-src.esm"
+import "leaflet/dist/leaflet.css";
 
 
 export default function Home() {
