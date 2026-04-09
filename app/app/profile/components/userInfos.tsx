@@ -295,8 +295,7 @@ export function UserProfile() {
     }
   }
   
-  if (profileLoading) return <p>Carregando...</p>;
-
+  
   // Calculando caracteres restantes
   
   useEffect(() => {
@@ -310,9 +309,9 @@ export function UserProfile() {
       });
     }
   }, [profile]);
-
   
-
+  if (profileLoading) return <p>Carregando...</p>;
+  
 
   // useEffect(() => {
   //   setSizeDescription(215 - profileInfo.description.length);
