@@ -1,19 +1,22 @@
 "use client";
 
 import { auth } from "@/app/config/firebase";
+import { useAuth } from "@/app/src/context/useAuthContext";
 import { useProfileContext } from "@/app/src/context/userProfileContext";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 export function UserInfoContainer() {
+  const {user} = useAuth()
   const { profile } = useProfileContext();
-
   const path = usePathname();
+  
+  if (!profile) return null;
 
   return (
     <>
-      {auth.currentUser ? (
+      {user ? (
         <Link href={`/app/profile/${profile?.slug}`}>
           <div
             className={`flex items-center gap-3 p-3 rounded-xl ${

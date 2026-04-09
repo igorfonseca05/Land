@@ -2,18 +2,19 @@
 
 import { useState, useRef, useEffect } from "react";
 import { MdNotifications, MdLogout, MdAccountCircle } from "react-icons/md";
-import { Avatar } from "../ui/Avatar";
+import { Avatar } from "../../ui/Avatar";
 import { signOut } from "firebase/auth";
 import { auth } from "@/app/config/firebase";
 import { redirect, useRouter } from "next/navigation";
-import { useProfileContext } from "../../context/userProfileContext";
+import { useProfileContext } from "../../../context/userProfileContext";
 
 export function UserMenu() {
-  const {profile} = useProfileContext()
+  const { profile } = useProfileContext();
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
+  
   // Fecha ao clicar fora
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -21,22 +22,24 @@ export function UserMenu() {
         setOpen(false);
       }
     }
-
+    
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  if(!profile) return null;
+  
   return (
     <div ref={ref} className="relative flex items-center gap-3">
       <MdNotifications className="text-neutral-800 text-[20px] cursor-pointer" />
 
       {/* Avatar */}
-      <div onClick={() => setOpen((prev) => !prev)} className="cursor-pointer flex items-center gap-2  rounded-lg hover:bg-gray-100">
+      <div
+        onClick={() => setOpen((prev) => !prev)}
+        className="cursor-pointer flex items-center gap-2  rounded-lg hover:bg-gray-100"
+      >
         {/* <span className="capitalize">{profile?.name.split(/\s+/)[0]}</span> */}
-        <Avatar
-          src={profile?.profile}
-          fallback="IG"
-        />
+        <Avatar src={profile?.profile} fallback="IG" />
       </div>
 
       {/* Dropdown */}
@@ -46,7 +49,7 @@ export function UserMenu() {
             className="flex w-full items-center gap-2 px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100"
             onClick={async () => {
               router.replace(`/app/profile/${profile?.slug}`);
-              setOpen(false)
+              setOpen(false);
             }}
           >
             <MdAccountCircle className="text-[18px]" />

@@ -13,6 +13,8 @@ const NoFeedItem: React.FC<NoFeedItem> = ({ onAddProduct }) => {
 
   const {profile} = useProfileContext()
 
+  if (!profile) return null;
+
   return (
     <div className="flex flex-col items-center justify-center py-16 px-6 bg-white rounded-2xl shadow border-gray-200">
       <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center mb-6">

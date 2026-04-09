@@ -20,7 +20,10 @@ export function SearchPostCard({
   userLocation,
   isPosting,
 }: SearchPostProps) {
+
   const { profile } = useProfileContext();
+  
+  if (!profile) return null;
 
   return (
     <div

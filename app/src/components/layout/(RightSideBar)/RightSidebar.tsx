@@ -12,6 +12,7 @@ export function RightSidebar() {
   const hiddingRightSide = ["ads/", "/criar-anuncio", '/mapa'].find((item) =>
     path.includes(item),
   );
+  
   const showRightSide = ["/feed"].find((item) => path.includes(item));
 
   return (

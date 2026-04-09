@@ -37,6 +37,7 @@ const formInitialState = {
 };
 
 export function Modal({ isOpen, onClose }: ModalProps) {
+  const {user} = useAuth()
   const path = usePathname();
   const [open, setIsOpen] = useState<boolean | undefined>(false);
 
@@ -44,12 +45,12 @@ export function Modal({ isOpen, onClose }: ModalProps) {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
-  const [user, setUser] = useState(formInitialState);
+  const [userData, setUserData] = useState(formInitialState);
   const [error, setError] = useState<ErrorProps>({});
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setUser({
-      ...user,
+    setUserData({
+      ...userData,
       [e.target.name]: e.target.value,
     });
 
@@ -92,7 +93,7 @@ export function Modal({ isOpen, onClose }: ModalProps) {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    if (path === "/app/feed" && !auth.currentUser) {
+    if (path === "/app/feed" && !user) {
       return setIsOpen(true);
     }
 

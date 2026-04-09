@@ -2,6 +2,7 @@
 
 import { auth, db } from "@/app/config/firebase";
 import { Modal } from "@/app/src/components/GlobalModal/Modal";
+import { useAuth } from "@/app/src/context/useAuthContext";
 // UserProfile.jsx
 import { useProfileContext } from "@/app/src/context/userProfileContext";
 import { Profile, ProfileInfoSchema } from "@/app/utils/zod";
@@ -29,6 +30,7 @@ interface ImageProps {
 }
 
 export function UserProfile() {
+  const {user} = useAuth()
   const { profile } = useProfileContext();
 
   const formInitialState = {
@@ -80,7 +82,7 @@ export function UserProfile() {
   async function handleForm(e: FormEvent) {
     e.preventDefault();
 
-    if (!auth.currentUser) return;
+    if (!user) return;
 
     const isValidData = ProfileInfoSchema.safeParse(profileInfo);
     if (!isValidData.success) {
@@ -112,7 +114,7 @@ export function UserProfile() {
           await updateFirebasePhoto();
         }
 
-        await setDoc(doc(db, "users", auth.currentUser.uid), userInfo, {
+        await setDoc(doc(db, "users", user.uid), userInfo, {
           merge: true,
         });
 
@@ -141,7 +143,7 @@ export function UserProfile() {
     description?: string | undefined;
     phone?: string | undefined;
   }) {
-    if (!auth.currentUser) return;
+    if (!user) return;
 
     try {
       const userInfo = {
@@ -152,7 +154,7 @@ export function UserProfile() {
       // console.log(userInfo);
 
       await setDoc(
-        doc(db, "users", auth.currentUser.uid),
+        doc(db, "users", user.uid),
         { ...userInfo },
         {
           merge: true,
@@ -212,7 +214,7 @@ export function UserProfile() {
       ]
         .filter(({ key, formData }) => formData.get(key))
         .map(async ({ formData, endpoint }) => {
-          const res = await fetch(`${endpoint}/${auth.currentUser?.uid}`, {
+          const res = await fetch(`${endpoint}/${user?.uid}`, {
             method: "POST",
             body: formData,
           });
@@ -237,9 +239,9 @@ export function UserProfile() {
   }
 
   async function updateFirebasePhoto() {
-    if (!auth.currentUser) return;
+    if (!user) return;
 
-    await updateProfile(auth.currentUser, {
+    await updateProfile(user, {
       photoURL: null,
     });
   }
@@ -276,10 +278,10 @@ export function UserProfile() {
   }
 
   async function handleVerifyEmail() {
-    if (auth.currentUser && !auth.currentUser.emailVerified) {
+    if (user && !user.emailVerified) {
       try {
         // toast.loading('Enviando email, aguarde!')
-        await sendEmailVerification(auth.currentUser);
+        await sendEmailVerification(user);
         toast.success(
           "Enviamos um link de verificação para o seu email. Verifique sua caixa de entrada (e o spam).",
         );
@@ -306,6 +308,8 @@ export function UserProfile() {
       });
     }
   }, [profile]);
+
+    if (!profile) return null;
 
   // useEffect(() => {
   //   setSizeDescription(215 - profileInfo.description.length);
@@ -453,7 +457,7 @@ export function UserProfile() {
               <div className="space-y-1.5">
                 <label className="text-sm flex justify-between font-bold text-neutral-700 dark:text-neutral-300">
                   Email
-                  {!auth.currentUser?.emailVerified && (
+                  {!user?.emailVerified && (
                     <span className="ml-2 inline-flex items-center rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
                       Email não verificado
                     </span>
@@ -470,7 +474,7 @@ export function UserProfile() {
                     value={profile?.email}
                     onChange={handleChange}
                   />
-                  {auth.currentUser?.emailVerified ? (
+                  {user?.emailVerified ? (
                     <MdVerified
                       size={18}
                       className="absolute text-green-500 right-4 top-1/2 -translate-y-1/2 text-xs font-medium focus:outline-none "

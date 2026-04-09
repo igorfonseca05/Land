@@ -1,6 +1,6 @@
 import { ReactNode } from "react"
 import { LeftSidebar } from "./(LeftSidebar)/LeftSidebar"
-import { RightSidebar } from "./RightSidebar"
+import { RightSidebar } from "./(RightSideBar)/RightSidebar"
 import { headers } from "next/headers"
 
 interface PageContainerProps {

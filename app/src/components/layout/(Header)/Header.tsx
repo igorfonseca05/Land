@@ -1,7 +1,5 @@
 'use client'
 
-import { IconButton } from "../ui/IconButton";
-import { Avatar } from "../ui/Avatar";
 import {
   MdExplore,
   MdGroup,
@@ -13,8 +11,11 @@ import Image from "next/image";
 import { UserMenu } from "./ProfileDropDown";
 import Link from "next/link";
 import { auth } from "@/app/config/firebase";
+import { useAuth } from "@/app/src/context/useAuthContext";
 
 export function Header() {
+
+  const {user} = useAuth()
 
 
   return (
@@ -43,7 +44,7 @@ export function Header() {
           </div>
         </nav>
 
-        {auth.currentUser ? (
+        {user ? (
           <UserMenu/>
         ) : (
           <div className="space-x-2">

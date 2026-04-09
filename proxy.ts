@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "./app/config/firebase";
 
-// console.log(auth.currentUser)
 
 export default function proxy(req: NextRequest) {
   const { pathname } = req.nextUrl;

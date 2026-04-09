@@ -25,7 +25,6 @@ import {
 } from "react-icons/md";
 import { GiPathDistance } from "react-icons/gi";
 import { useEffect, useState } from "react";
-import { PostProps } from "@/app/app/profile/[slug]/criar-anuncio/components/Form";
 import { NormalizedAd, PostSchema } from "@/app/utils/zod";
 import { useRef } from "react";
 import L from "leaflet";

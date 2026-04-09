@@ -19,6 +19,7 @@ import { GlobalSpinner } from "@/app/src/components/globalSpinner/GlobalSpinner"
 import { Modal } from "@/app/src/components/GlobalModal/Modal";
 import { useParams } from "next/navigation";
 import { PostSchemaType } from "@/app/utils/zod";
+import { useAuth } from "@/app/src/context/useAuthContext";
 
 export type Ad = {
   id: string;
@@ -56,7 +57,7 @@ export type Ad = {
 };
 
 export default function profile() {
-  const uid = useParams()
+  const {user} = useAuth()
   const [ads, setAds] = useState<PostSchemaType[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -65,7 +66,7 @@ export default function profile() {
 
   useEffect(() => {
     setLoading(true);
-    const isLoggedIn = auth.currentUser
+    const isLoggedIn = user
     if (!isLoggedIn) return;
 
     const {uid} = isLoggedIn

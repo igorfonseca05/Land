@@ -10,6 +10,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { auth, db } from "@/app/config/firebase";
+import { useAuth } from "../../context/useAuthContext";
 
 export function LikeButton({
   postId,
@@ -18,27 +19,28 @@ export function LikeButton({
   postId: string;
   likesCount?: number;
 }) {
+  const {user} = useAuth()
   const [likes, setLikes] = useState(likesCount);
   const [hasLiked, setHasLiked] = useState(false);
 
   useEffect(() => {
-    if (!auth.currentUser) return;
+    if (!user) return;
 
     async function checkIfLiked() {
-      const likeRef = doc(db, "ads", postId, "likes", auth.currentUser?.uid!);
+      const likeRef = doc(db, "ads", postId, "likes", user?.uid!);
       const snap = await getDoc(likeRef);
       setHasLiked(snap.exists());
     }
 
     checkIfLiked();
-  }, [postId, auth.currentUser]);
+  }, [postId, user]);
   
 
   async function handleLike() {
-    if (!auth.currentUser) return;
+    if (!user) return;
 
     const postRef = doc(db, "ads", postId);
-    const likeRef = doc(db, "ads", postId, "likes", auth.currentUser.uid);
+    const likeRef = doc(db, "ads", postId, "likes", user.uid);
 
     await runTransaction(db, async (transaction) => {
       const likeDoc = await transaction.get(likeRef);

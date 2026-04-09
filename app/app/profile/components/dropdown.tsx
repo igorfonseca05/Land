@@ -13,23 +13,23 @@ import {
   MdMap,
   MdSell,
 } from "react-icons/md";
-import { Ad } from "../[slug]/page";
 import { PostSchema, PostSchemaType, PostSearchSchema } from "@/app/utils/zod";
 import z, { ZodFlattenedError } from "zod";
 import { serverTimestamp } from "firebase/firestore";
+import Image from "next/image";
 
-type Post = z.infer<typeof PostSearchSchema>
+type Post = z.infer<typeof PostSearchSchema>;
 
-export function Dropdown({ infos }: { infos: PostSchemaType }) {
+export function EditPostModal({ infos }: { infos: PostSchemaType }) {
   const { profile } = useProfileContext();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [post, setPost] = useState("");
   const charactereCount = 2000;
-   const [error, setError] = useState<
-      ZodFlattenedError<Post>["fieldErrors"] | null
-    >(null);
+  const [error, setError] = useState<
+    ZodFlattenedError<Post>["fieldErrors"] | null
+  >(null);
 
   // Fecha ao clicar fora
   useEffect(() => {
@@ -61,14 +61,13 @@ export function Dropdown({ infos }: { infos: PostSchemaType }) {
       description,
       updatedAt: serverTimestamp(),
     } as const;
-
-    // console.log(postInfos)
-
   }
 
   useEffect(() => {
     setPost(infos.description);
   }, [infos]);
+
+  if (!profile) return <p>Not authenticated</p>;
 
   return (
     <>
@@ -84,9 +83,11 @@ export function Dropdown({ infos }: { infos: PostSchemaType }) {
         <div className="flex flex-col justify-between gap-3 p-2 pt-0">
           {/* Header */}
           <div className="flex items-center gap-3">
-            <img
-              src={`${profile?.profile}` || "/place.webp"}
+            <Image
+              src={profile?.profile || "/place.webp"}
               alt="User avatar"
+              width={40}
+              height={40}
               className="w-10 h-10 rounded-full object-cover"
             />
 
@@ -156,6 +157,7 @@ export function Dropdown({ infos }: { infos: PostSchemaType }) {
           </div>
         </div>
       </Modal>
+      
       <div className="flex justify-between relative">
         {/* Actions */}
         <div className="relative" ref={dropdownRef}>

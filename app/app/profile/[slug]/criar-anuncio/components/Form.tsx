@@ -18,7 +18,13 @@ import { auth, db } from "@/app/config/firebase";
 import { useProfileContext } from "@/app/src/context/userProfileContext";
 import { useRouter } from "next/navigation";
 import { AdsMap } from "./AdsMap";
-type ErrorField = "images" | "details" | "location" | "description" | "features";
+import { useAuth } from "@/app/src/context/useAuthContext";
+type ErrorField =
+  | "images"
+  | "details"
+  | "location"
+  | "description"
+  | "features";
 
 const landDetailsInitialState = {
   title: "",
@@ -103,6 +109,7 @@ export interface PostProps {
 }
 
 export function Form() {
+  const {user} = useAuth()
   const { profile } = useProfileContext();
   const router = useRouter();
 
@@ -218,7 +225,7 @@ export function Form() {
       return;
     }
 
-    if (!auth.currentUser) {
+    if (!user) {
       toast.error("Usuário não autenticado");
       return;
     }
@@ -232,7 +239,7 @@ export function Form() {
       description,
       features,
       status: "active",
-      userId: auth.currentUser.uid
+      userId: user.uid,
     };
 
     const parsed = NormalizedAdSchema.safeParse(rawData);
@@ -243,7 +250,6 @@ export function Form() {
     }
 
     try {
-
       setLoading(true);
 
       // 1️⃣ Upload das imagens
@@ -291,9 +297,9 @@ export function Form() {
         title: parsed.data.title,
         city: parsed.data.location?.city,
         adId: userAdRef.id,
-        userId: auth.currentUser.uid,
+        userId: user.uid,
         status: "active",
-        image: imageUrls[0]
+        image: imageUrls[0],
       });
 
       await batch.commit();
@@ -343,6 +349,8 @@ export function Form() {
   useEffect(() => {
     console.log(location);
   }, [location]);
+
+  if (!profile) return null;
 
   return (
     <form onSubmit={handleForm} className="space-y-6">

@@ -1,12 +1,5 @@
-import { Header } from "../../src/components/layout/Header";
-import { FeedCard } from "../../src/components/feed/FeedCard";
-import { SponsoredCard } from "../../src/components/feed/SponsoredCard";
-import { PageContainer } from "../../src/components/layout/PageContainer";
-import { FeedFilter } from "../../src/components/feed/FeedFilters";
-import { FeedTabs } from "../../src/components/feed/FeedTabs";
+
 import { HeroSearch } from "../../src/components/feed/SearchBox";
-import { Modal } from "@/app/src/components/Modal/Modal";
-import Link from "next/link";
 import { Posts } from "./components/Posts";
 import { MdExpandMore, MdTune } from "react-icons/md";
 

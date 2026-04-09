@@ -9,6 +9,7 @@ import { SearchCard } from "@/app/src/components/feed/SearchCard";
 import { SearchPostCard } from "@/app/src/components/feed/SearchPost";
 import { GlobalSpinner } from "@/app/src/components/globalSpinner/GlobalSpinner";
 import { Avatar } from "@/app/src/components/ui/Avatar";
+import { useAuth } from "@/app/src/context/useAuthContext";
 import { formatFirebaseTime } from "@/app/utils/functions";
 import { PostSchema, PostSchemaType, Profile } from "@/app/utils/zod";
 import {
@@ -27,6 +28,7 @@ import { useEffect, useState } from "react";
 import { MdSearch } from "react-icons/md";
 
 export default function Page() {
+  const {user} = useAuth()
   const [saved, setSaved] = useState<DocumentData[] | PostSchemaType[]>([]);
   const [users, setUser] = useState<{ [key: string]: DocumentData }>({});
   const [loading, setLoading] = useState(false);
@@ -35,9 +37,9 @@ export default function Page() {
     async function getSavedDocs() {
       setLoading(true);
 
-      if (!auth.currentUser?.uid) return;
+      if (!user?.uid) return;
 
-      const savedPosts = collection(db, "users", auth.currentUser.uid, "saved");
+      const savedPosts = collection(db, "users", user.uid, "saved");
       const saved = await getDocs(savedPosts);
 
       const posts = saved.docs.map(async (item) => {

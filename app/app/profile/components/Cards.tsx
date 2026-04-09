@@ -9,22 +9,17 @@ import {
   MdMoreHoriz,
   MdMoreVert,
 } from "react-icons/md";
-import { Ad } from "../[slug]/page";
 import { formatFirebaseTime } from "@/app/utils/functions";
-import { PostProps } from "../[slug]/criar-anuncio/components/Form";
-import { auth } from "@/app/config/firebase";
 import { useProfileContext } from "@/app/src/context/userProfileContext";
-import { form } from "framer-motion/m";
 import Image from "next/image";
-import { Dropdown } from "./dropdown";
+import { EditPostModal } from "./dropdown";
 import { PostSchemaType } from "@/app/utils/zod";
 import { PostActions } from "@/app/src/components/feed/PostActions";
-// import { FirebaseDocSchema } from "@/app/utils/zod";
 
 export function Cards({ infos }: { infos: PostSchemaType }) {
   const { profile } = useProfileContext();
 
-  console.log(infos);
+  if (!profile) return null;
 
   return (
     <article className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 ">
@@ -53,7 +48,7 @@ export function Cards({ infos }: { infos: PostSchemaType }) {
         {/* <button className="flex h-full">
           <MdMoreHoriz size={18} />
         </button> */}
-        <Dropdown infos={infos} />
+        <EditPostModal infos={infos} />
       </div>
       {/* Content */}
       <div className="px-4 pb-3">

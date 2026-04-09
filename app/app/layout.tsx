@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { PageContainer } from "../src/components/layout/PageContainer";
-import { Header } from "../src/components/layout/Header";
-import { RightSidebar } from "../src/components/layout/RightSidebar";
+import { Header } from "../src/components/layout/(Header)/Header";
+import { RightSidebar } from "../src/components/layout/(RightSideBar)/RightSidebar";
 
 export default function AppLayout({children}: {children: ReactNode}) {
     return (

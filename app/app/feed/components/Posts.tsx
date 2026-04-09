@@ -24,9 +24,10 @@ import Link from "next/link";
 import { PostSchema, PostSchemaType } from "@/app/utils/zod";
 import { SearchCard } from "@/app/src/components/feed/SearchCard";
 import { LoadingCards } from "./LoadingCards";
+import { useAuth } from "@/app/src/context/useAuthContext";
 
 export function Posts() {
-  // if(!auth.currentUser) return
+  const {user} = useAuth()
   const { searchPost, postLoading } = useSearchPost();
   const [posts, setPosts] = useState<PostSchemaType[]>([]);
   const [owner, setOwner] = useState<{ [key: string]: UserProfile }>({});
@@ -82,6 +83,7 @@ export function Posts() {
     setInlinePost(searchPost);
   }, [searchPost]);
 
+
   return (
     <div className="space-y-4">
       {/* Arrows */}
@@ -89,7 +91,7 @@ export function Posts() {
       {inlinePost && (
         <SearchPostCard
           post={inlinePost}
-          userName={auth.currentUser?.displayName}
+          userName={user?.displayName}
           isPosting={postLoading} // vindo do contexto
         />
       )}
@@ -99,17 +101,22 @@ export function Posts() {
       ) : thereIsNoFeedItem ? (
         <NoFeedItem />
       ) : (
-        posts.map((doc, i) => (
+        posts.map((doc, i) => {
+          const userData = owner[doc.userId];
+
+          if (!userData) return null;
+
+          return (
             <article
-              key={i}
+              key={doc.id}
               className="bg-white border border-neutral-200 rounded-2xl overflow-hidden"
             >
               <FeedCard
                 id={doc.id}
-                userId={owner[doc.userId].uid as string}
-                author={owner[doc.userId].name as string}
-                img={owner[doc.userId].profile as string}
-                publicId={owner[doc.userId].publicId as string}
+                userId={userData?.uid as string}
+                author={userData?.name as string}
+                img={userData?.profile as string}
+                publicId={userData?.publicId as string}
                 location={doc.location}
                 createdAt={doc.createdAt}
                 description={doc.description}
@@ -122,7 +129,8 @@ export function Posts() {
                 status={doc.status}
               />
             </article>
-        ))
+          );
+        })
       )}
 
       {/* <SponsoredCard /> */}

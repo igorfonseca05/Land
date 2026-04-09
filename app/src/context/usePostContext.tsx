@@ -7,15 +7,6 @@ import { PostSchema } from "@/app/utils/zod";
 export type PostType = 'search' | 'sell'
 export type PostStatus = 'active' | 'closed' | 'deleted'
 
-// export interface PostSchema {
-//   description: string
-//   createdAt: any // Firebase serverTimestamp()
-//   userId: string | undefined
-//   type: PostType
-//   status: PostStatus
-//   title: string,
-//   features: object
-// }
 
 type SearchPostContextType = {
   searchPost: PostSchema | null;
@@ -34,11 +25,6 @@ export function SearchPostProvider({
 }) {
   const [searchPost, setSearchPost] = useState<PostSchema | null>(null);
   const [postLoading, setPostLoading] = useState(false);
-
-  useEffect(() => {
-    // console.log(postLoading)
-    // console.log('oi')
-  }, [postLoading])
 
   function clearSearchPost() {
     setSearchPost(null);

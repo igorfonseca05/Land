@@ -1,6 +1,7 @@
 "use client";
 import { auth } from "@/app/config/firebase";
 import { Modal } from "@/app/src/components/GlobalModal/Modal";
+import { useAuth } from "@/app/src/context/useAuthContext";
 import { useProfileContext } from "@/app/src/context/userProfileContext";
 import React, { useEffect, useState } from "react";
 import {
@@ -47,18 +48,10 @@ const profileLevels = {
 };
 
 const RightSideCards = () => {
-
-  
-  const [user, setUser] = useState<typeof auth.currentUser>(null);
+  const {user} = useAuth()
   const { profile } = useProfileContext();
   const [isOpen, setIsOpen] = useState(false);
 
-
-  if (!profile) return null;
-
-  console.log("USER:", user);
-console.log("PROFILE:", profile);
-  
   const itensToVerify = [
     {
       id: 1,
@@ -111,13 +104,7 @@ console.log("PROFILE:", profile);
   else if (marker < 84) level = profileLevels.good;
   else level = profileLevels.excellent;
 
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((u) => {
-      setUser(u);
-    });
-
-    return () => unsubscribe();
-  }, []);
+  if (!profile) return null;
 
   return (
     <>

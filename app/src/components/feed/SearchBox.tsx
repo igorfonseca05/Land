@@ -30,6 +30,7 @@ import { details, pre } from "framer-motion/client";
 import { getAuth } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { SearchPostCard } from "./SearchPost";
+import { useAuth } from "../../context/useAuthContext";
 
 type Post = {
   title: string;
@@ -38,24 +39,25 @@ type Post = {
 };
 
 type featuresList =
-    | "Energia elétrica disponível"
-    | "Abastecimento de água"
-    | "Acesso asfaltado"
-    | "Documentação regularizada"
-    | "Próximo ao centro urbano"
-    | "Área arborizada"
-    | "Cercado"
-    | "Sem taxa de condomínio"
-    | "Ideal para plantio"
-    | "Ideal para construção"
-    // "Fonte de água (rio | nascente ou poço)" |
-    | "Acesso para caminhão"
-    | "Solo fértil"
-    | "Topografia plana ou levemente inclinada"
-    | "Área produtiva"
-    | "Sem restrições ambientais";
+  | "Energia elétrica disponível"
+  | "Abastecimento de água"
+  | "Acesso asfaltado"
+  | "Documentação regularizada"
+  | "Próximo ao centro urbano"
+  | "Área arborizada"
+  | "Cercado"
+  | "Sem taxa de condomínio"
+  | "Ideal para plantio"
+  | "Ideal para construção"
+  // "Fonte de água (rio | nascente ou poço)" |
+  | "Acesso para caminhão"
+  | "Solo fértil"
+  | "Topografia plana ou levemente inclinada"
+  | "Área produtiva"
+  | "Sem restrições ambientais";
 
 export function HeroSearch() {
+  const {user} = useAuth()
   const { profile } = useProfileContext();
   const { setSearchPost } = useSearchPost();
   const [isOpen, setIsOpen] = useState(false);
@@ -68,7 +70,7 @@ export function HeroSearch() {
     details: null,
     location: null,
     status: "active",
-    userId: auth.currentUser?.uid ? auth.currentUser.uid : "",
+    userId: user?.uid ? user.uid : "",
     likesCount: 0,
   });
 
@@ -78,7 +80,7 @@ export function HeroSearch() {
   >(null);
   const [loading, setLoading] = useState(false);
 
-  const isLoggedIn = getAuth().currentUser;
+  const isLoggedIn = user;
 
   function handleTitle(e: React.ChangeEvent<HTMLInputElement>) {
     setPost((prev) => {
@@ -127,16 +129,15 @@ export function HeroSearch() {
       return setError(isValidPost.error.flatten().fieldErrors);
     }
 
-
     try {
       setLoading(true);
       setError(null);
 
-      if (!auth.currentUser?.uid) return;
+      if (!user?.uid) return;
 
       const newPost = {
         ...isValidPost.data,
-        userId: auth.currentUser?.uid,
+        userId: user?.uid,
         type: "search",
         status: "active",
         createdAt: serverTimestamp(),
@@ -170,7 +171,7 @@ export function HeroSearch() {
         details: null,
         location: null,
         status: "active",
-        userId: auth.currentUser?.uid ? auth.currentUser.uid : "",
+        userId: user?.uid ? user.uid : "",
         likesCount: 0,
       });
     }

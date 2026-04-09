@@ -35,19 +35,22 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const publicRoutes = ['/login', '/signup', '/feed', '/como-funciona']
     
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
 
-      if(!firebaseUser && !publicRoutes.find(route => path.includes(route))) {
+      const isPublicRoute = publicRoutes.find(route => path.includes(route))
+      const isNotAuthorized = !user && !isPublicRoute
+
+      if(isNotAuthorized) {
         router.replace('/auth/login')
         return setLoading(false);
       }
       
-      setUser(firebaseUser);
+      setUser(user);
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [router, path]);
 
   return (
     <AuthContext.Provider

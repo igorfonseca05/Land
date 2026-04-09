@@ -14,15 +14,17 @@ import {
   Timestamp,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../context/useAuthContext";
 
 
 export function SavePost({ postId }: { postId: string }) {
+  const {user} = useAuth()
   const [postMarker, setPostMarker] = useState(false);
 
   useEffect(() => {
     async function getSavedDocs() {
-      if (!auth.currentUser?.uid) return;
-      const postRef = doc(db, "users", auth.currentUser.uid, "saved", postId);
+      if (!user?.uid) return;
+      const postRef = doc(db, "users", user.uid, "saved", postId);
 
       const isSaved = await getDoc(postRef);
 
@@ -35,8 +37,8 @@ export function SavePost({ postId }: { postId: string }) {
   }, []);
 
   async function handleSavePost() {
-    if (!auth.currentUser?.uid) return;
-    const postRef = doc(db, "users", auth.currentUser.uid, "saved", postId);
+    if (!user?.uid) return;
+    const postRef = doc(db, "users", user.uid, "saved", postId);
 
     const post = await getDoc(postRef);
 
