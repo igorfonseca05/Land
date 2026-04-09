@@ -2,7 +2,7 @@
 import { auth } from "@/app/config/firebase";
 import { Modal } from "@/app/src/components/GlobalModal/Modal";
 import { useProfileContext } from "@/app/src/context/userProfileContext";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MdAccountCircle,
   MdAttachMoney,
@@ -47,10 +47,18 @@ const profileLevels = {
 };
 
 const RightSideCards = () => {
-  const [user, setUser] = useState(auth.currentUser);
+
+  
+  const [user, setUser] = useState<typeof auth.currentUser>(null);
   const { profile } = useProfileContext();
   const [isOpen, setIsOpen] = useState(false);
 
+
+  if (!profile) return null;
+
+  console.log("USER:", user);
+console.log("PROFILE:", profile);
+  
   const itensToVerify = [
     {
       id: 1,
@@ -90,21 +98,18 @@ const RightSideCards = () => {
     },
   ];
 
-const conditions = itensToVerify.map(item => item.condition);
+  const conditions = itensToVerify.map((item) => item.condition);
 
-  const marker = useMemo(() => {
-    return Math.floor(
-      (conditions.filter(Boolean).length / conditions.length) * 100,
-    );
-  }, [conditions]);
+  const marker = Math.floor(
+    (conditions.filter(Boolean).length / conditions.length) * 100,
+  );
 
-  const level = useMemo(() => {
-    if (marker < 20) return profileLevels.veryWeak;
-    if (marker < 40) return profileLevels.weak;
-    if (marker < 60) return profileLevels.regular;
-    if (marker < 84) return profileLevels.good;
-    return profileLevels.excellent;
-  }, [marker]);
+  let level;
+  if (marker < 20) level = profileLevels.veryWeak;
+  else if (marker < 40) level = profileLevels.weak;
+  else if (marker < 60) level = profileLevels.regular;
+  else if (marker < 84) level = profileLevels.good;
+  else level = profileLevels.excellent;
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((u) => {
