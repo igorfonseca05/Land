@@ -21,9 +21,11 @@ import Image from "next/image";
 type Post = z.infer<typeof PostSearchSchema>;
 
 export function EditPostModal({ infos }: { infos: PostSchemaType }) {
-  const { profile } = useProfileContext();
-  const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  const { profile } = useProfileContext();
+  
+  const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [post, setPost] = useState("");
   const charactereCount = 2000;

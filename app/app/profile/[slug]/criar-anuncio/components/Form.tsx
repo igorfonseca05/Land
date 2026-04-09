@@ -1,6 +1,6 @@
 "use client";
 
-import React, { FormEvent, useCallback, useEffect, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import { MdAddAPhoto, MdClose } from "react-icons/md";
 import { useRef } from "react";
 import { details, pre } from "framer-motion/client";
@@ -109,11 +109,12 @@ export interface PostProps {
 }
 
 export function Form() {
+  const inputFile = useRef<HTMLInputElement | null>(null);
+  
   const {user} = useAuth()
   const { profile } = useProfileContext();
   const router = useRouter();
 
-  const inputFile = useRef<HTMLInputElement | null>(null);
 
   const [isDragging, setIsDragging] = useState(false);
   const [file, setFile] = useState<File[]>([]);

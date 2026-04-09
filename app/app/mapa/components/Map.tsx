@@ -3,7 +3,7 @@
 import { db } from "@/app/config/firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import "leaflet/dist/leaflet-src.esm";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 
@@ -161,8 +161,6 @@ export function Mapa() {
       if (!point.exists()) return;
 
       const postData = point.data() as Ad;
-
-      console.log(postData)
 
       const { lat, lng } = point.data();
 

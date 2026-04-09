@@ -10,7 +10,7 @@ import { FirebaseError } from "firebase/app";
 import { sendEmailVerification, updateProfile } from "firebase/auth";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 import Image from "next/image";
-import React, { FormEvent, useEffect, useRef, useState } from "react";
+import React, { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   MdClose,
   MdEdit,
@@ -30,19 +30,19 @@ interface ImageProps {
 }
 
 export function UserProfile() {
-  const {user} = useAuth()
-  const { profile } = useProfileContext();
-
-  const formInitialState = {
-    name: profile?.name || "",
-    profession: profile?.profession || "",
-    location: profile?.location || "",
-    description: profile?.description || "",
-    phone: profile?.phone || "",
-  };
-
   const inputFile = useRef<HTMLInputElement | null>(null);
   const inputPhotoProfileRef = useRef<HTMLInputElement | null>(null);
+
+  const { user } = useAuth();
+  const { profile, loading: profileLoading } = useProfileContext();
+
+ const formInitialState = useMemo(() => ({
+  name: profile?.name || "",
+  profession: profile?.profession || "",
+  location: profile?.location || "",
+  description: profile?.description || "",
+  phone: profile?.phone || "",
+}), [profile]);
 
   const [profileImage, setProfileImage] = useState<ImageProps | null>(null);
   const [profileCover, setProfileCover] = useState<ImageProps | null>(null);
@@ -58,6 +58,9 @@ export function UserProfile() {
     ZodFlattenedError<Profile>["fieldErrors"] | null
   >(null);
   const [loading, setLoading] = useState(false);
+
+  if (profileLoading) return <p>Carregando...</p>;
+  if (!profile) return null;
 
   function hasError(field: ErrorField) {
     return Boolean(error?.[field]?.length);
@@ -308,8 +311,6 @@ export function UserProfile() {
       });
     }
   }, [profile]);
-
-    if (!profile) return null;
 
   // useEffect(() => {
   //   setSizeDescription(215 - profileInfo.description.length);
@@ -579,7 +580,7 @@ export function UserProfile() {
                   error?.profession?.length && "ring-2 ring-red-500"
                 }`}
                 placeholder="Cria uma bios para seu perfil"
-                defaultValue={profileInfo?.description}
+                value={profileInfo?.description}
                 onChange={handleChange}
               />
             </div>

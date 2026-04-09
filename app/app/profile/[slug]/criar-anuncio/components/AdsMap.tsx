@@ -2,23 +2,12 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
+import "leaflet/dist/leaflet-src.esm";
 import "leaflet-control-geocoder";
-import "leaflet-control-geocoder/dist/Control.Geocoder.css";
+import "leaflet-control-geocoder";
 declare module "leaflet-control-geocoder";
 // import {geocoder} from "leaflet-control-geocoder"; "leaflet-control-geocoder";
 
-interface MapProps {
-  lat: number;
-  lng: number;
-}
-
-type event = {
-  target: {
-    name: string;
-    value: { lat: number; lng: number };
-  };
-};
 
 export function AdsMap({
   handleLocationDetails,

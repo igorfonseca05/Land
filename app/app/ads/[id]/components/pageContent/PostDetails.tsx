@@ -105,7 +105,6 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
   }, [post]);
 
 
-
   return (
     <>
       {loading ? (
