@@ -13,7 +13,6 @@ const NoProducts: React.FC<NoProductsProps> = ({ onAddProduct }) => {
 
   const {profile} = useProfileContext()
 
-  
   if (!profile) return null;
 
   return (

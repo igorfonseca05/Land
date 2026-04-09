@@ -104,11 +104,11 @@ const RightSideCards = () => {
   else if (marker < 84) level = profileLevels.good;
   else level = profileLevels.excellent;
 
-  if (!profile) return null;
 
   return (
     <>
-      <div className="flex flex-col gap-6 w-full sticky -top-57">
+     {!profile ? null : (
+       <div className="flex flex-col gap-6 w-full sticky -top-57">
         {/* Card 1: Profile Strength */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
           <div className="flex items-center justify-between mb-4">
@@ -221,6 +221,7 @@ const RightSideCards = () => {
           </div>
         </div>
       </div>
+    )}
     </>
   );
 };
