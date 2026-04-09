@@ -47,9 +47,9 @@ const profileLevels = {
 };
 
 const RightSideCards = () => {
-  const user = auth.currentUser;
-  const {profile} = useProfileContext()
-    const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState(auth.currentUser);
+  const { profile } = useProfileContext();
+  const [isOpen, setIsOpen] = useState(false);
 
   const itensToVerify = [
     {
@@ -90,13 +90,13 @@ const RightSideCards = () => {
     },
   ];
 
-  const conditions = useMemo(() => itensToVerify.map(item => item.condition), [user, profile]);
+const conditions = itensToVerify.map(item => item.condition);
 
   const marker = useMemo(() => {
-    return Math.floor((conditions.filter(Boolean).length / conditions.length) * 100)
+    return Math.floor(
+      (conditions.filter(Boolean).length / conditions.length) * 100,
+    );
   }, [conditions]);
-
-
 
   const level = useMemo(() => {
     if (marker < 20) return profileLevels.veryWeak;
@@ -105,6 +105,14 @@ const RightSideCards = () => {
     if (marker < 84) return profileLevels.good;
     return profileLevels.excellent;
   }, [marker]);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((u) => {
+      setUser(u);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <>
@@ -128,8 +136,11 @@ const RightSideCards = () => {
           </div>
 
           <div className="space-y-3">
-            {itensToVerify.map(({condition, message, icon: Icon, id}) => (
-              <div key={id} className={`flex items-center gap-3 text-sm ${condition && 'line-through text-gray-500 decoration-gray-400'}`}>
+            {itensToVerify.map(({ condition, message, icon: Icon, id }) => (
+              <div
+                key={id}
+                className={`flex items-center gap-3 text-sm ${condition && "line-through text-gray-500 decoration-gray-400"}`}
+              >
                 {condition ? (
                   <Icon className="text-green-500 text-[18px]" />
                 ) : (
