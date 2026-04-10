@@ -18,7 +18,7 @@ const loginSchema = z.object({
 });
 
 export function LoginForm() {
- const {isAuthenticated} = useAuth()
+ const {user: isAuthenticated} = useAuth()
  const router = useRouter()
  
   const [user, setUser] = useState({

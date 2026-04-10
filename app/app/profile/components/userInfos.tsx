@@ -312,7 +312,6 @@ export function UserProfile() {
   
   if (profileLoading) return <p>Carregando...</p>;
   
-
   // useEffect(() => {
   //   setSizeDescription(215 - profileInfo.description.length);
   // }, [profileInfo.description]);

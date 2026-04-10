@@ -40,8 +40,6 @@ export function Modal({ isOpen, onClose }: ModalProps) {
   const {user} = useAuth()
   const path = usePathname();
   const [open, setIsOpen] = useState<boolean | undefined>(false);
-
-  const { isAuthenticated } = useAuth();
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
@@ -86,11 +84,11 @@ export function Modal({ isOpen, onClose }: ModalProps) {
   }
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (user) {
       router.push("/app/feed");
       setIsOpen(false);
     }
-  }, [isAuthenticated]);
+  }, [user]);
 
   useEffect(() => {
     if (path === "/app/feed" && !user) {

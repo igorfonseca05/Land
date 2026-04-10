@@ -8,8 +8,7 @@ const UserListings = () => {
 
   const {profile} = useProfileContext()
 
-  
-  if (!profile) return null;
+    if (!profile) return null;
 
   return (
     <div className="flex flex-col gap-4 mt-4">

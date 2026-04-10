@@ -83,8 +83,7 @@ export default function Page() {
 
     getSavedDocs();
   }, []);
-
-  console.log(saved);
+  
 
   return (
     <div className="space-y-4">

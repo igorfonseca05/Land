@@ -21,21 +21,6 @@ export function SavePost({ postId }: { postId: string }) {
   const {user} = useAuth()
   const [postMarker, setPostMarker] = useState(false);
 
-  useEffect(() => {
-    async function getSavedDocs() {
-      if (!user?.uid) return;
-      const postRef = doc(db, "users", user.uid, "saved", postId);
-
-      const isSaved = await getDoc(postRef);
-
-      if (isSaved.exists()) {
-        setPostMarker(true);
-      }
-    }
-
-    getSavedDocs()
-  }, []);
-
   async function handleSavePost() {
     if (!user?.uid) return;
     const postRef = doc(db, "users", user.uid, "saved", postId);
@@ -53,6 +38,22 @@ export function SavePost({ postId }: { postId: string }) {
       setPostMarker(true);
     }
   }
+
+  useEffect(() => {
+    async function getSavedDocs() {
+      if (!user?.uid) return;
+      const postRef = doc(db, "users", user.uid, "saved", postId);
+
+      const isSaved = await getDoc(postRef);
+
+      if (isSaved.exists()) {
+        setPostMarker(true);
+      }
+    }
+
+    getSavedDocs()
+  }, []);
+
 
   return (
     <div>

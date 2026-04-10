@@ -60,7 +60,7 @@ type SignupErrors = {
 };
 
 export function Form() {
-  const { isAuthenticated } = useAuth();
+  const { user: isAuthenticated } = useAuth();
   const router = useRouter();
 
   const [form, setForm] = useState({
