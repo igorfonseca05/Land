@@ -26,6 +26,7 @@ type AuthProviderProps = {
   children: ReactNode;
 };
 
+
 export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
   const path = usePathname();
@@ -70,9 +71,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => unsubscribe();
   }, [router]);
   
-  if(loading) {
-    return <GlobalSpinner/>
-  }
 
   return (
     <AuthContext.Provider
@@ -82,7 +80,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         isAuthenticated: !!user,
       }}
     >
-      {children}
+      {loading === true ? <p className="h-screen w-full bg-white">Carregando</p> : children}
     </AuthContext.Provider>
   );
 }
