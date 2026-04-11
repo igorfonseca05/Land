@@ -17,7 +17,7 @@ import {
 import { auth, db } from "@/app/config/firebase";
 import { useProfileContext } from "@/app/src/context/userProfileContext";
 import { useRouter } from "next/navigation";
-// import { AdsMap } from "./AdsMap";
+import { AdsMap } from "./AdsMap";
 
 // const AdsMap = dynamic(() => import("./AdsMap"), {
 //   ssr: false,
@@ -116,7 +116,6 @@ export interface PostProps {
 }
 
 export function Form() {
-  
   const inputFile = useRef<HTMLInputElement | null>(null);
 
   const { user } = useAuth();
@@ -348,34 +347,13 @@ export function Form() {
     };
   }, [file]);
 
-  // useEffect(() => {
-  //   if (!file.length) return;
-  //   const fileUrl = file.map((item) => URL.createObjectURL(item));
-  //   setURL(fileUrl);
-
-  //   return () => {
-  //     if (file) file.map((item) => URL.createObjectURL(item));
-  //   };
-  // }, [file]);
-
-  // useEffect(() => {
-  //   if (!file.length) return;
-
-  //   const maxValue = 2;
-
-  //   file.forEach((item) => {
-  //     if (item.size > maxValue * 1024 * 1024) {
-  //       setFile((prev) => prev.filter((file) => file.name !== item.name));
-  //       return toast.error(`As imagens devem ter no máximo ${maxValue}MB`);
-  //     }
-  //   });
-  // }, [file]);
-
   useEffect(() => {
     console.log(location);
   }, [location]);
 
-  if (!profile) return null;
+  if (!profile) {
+    return <div className="p-8 text-center">Carregando...</div>;
+  }
 
   return (
     <form onSubmit={handleForm} className="space-y-6">
@@ -399,7 +377,7 @@ export function Form() {
 
             const validFiles = selectedFiles.filter((file) => {
               if (file.size > 2 * 1024 * 1024) {
-                 toast.error("Máximo 2MB");
+                toast.error("Máximo 2MB");
                 return false;
               }
               return true;
@@ -652,7 +630,7 @@ export function Form() {
             <label className="block text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-2">
               Selecione seu terreno no mapa
             </label>
-            {/* <AdsMap handleLocationDetails={handleLocationDetails} /> */}
+            <AdsMap handleLocationDetails={handleLocationDetails} />
             <div className="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-700">
               <h3 className="font-semibold mb-2">Como usar o mapa</h3>
 

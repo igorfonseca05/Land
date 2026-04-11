@@ -181,7 +181,7 @@ const RightSideCards = () => {
           </h3>
           <div className="flex flex-col gap-4">
             <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
                 <MdVisibility size={16} />
               </div>
               <div>
@@ -193,7 +193,7 @@ const RightSideCards = () => {
               </div>
             </div>
             <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-red-50 text-red-600 flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-red-50 text-red-600 flex items-center justify-center shrink-0">
                 <MdFavorite size={16} />
               </div>
               <div>
@@ -204,7 +204,7 @@ const RightSideCards = () => {
               </div>
             </div>
             <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-green-50 text-green-600 flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 rounded-full bg-green-50 text-green-600 flex items-center justify-center shrink-0">
                 <MdAttachMoney size={16} />
               </div>
               <div>

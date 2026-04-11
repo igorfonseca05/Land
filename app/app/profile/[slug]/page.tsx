@@ -15,9 +15,6 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { auth, db } from "@/app/config/firebase";
-import { GlobalSpinner } from "@/app/src/components/globalSpinner/GlobalSpinner";
-import { Modal } from "@/app/src/components/GlobalModal/Modal";
-import { useParams } from "next/navigation";
 import { PostSchemaType } from "@/app/utils/zod";
 import { useAuth } from "@/app/src/context/useAuthContext";
 
@@ -61,13 +58,11 @@ export default function profile() {
   const [ads, setAds] = useState<PostSchemaType[]>([]);
   const [loading, setLoading] = useState(false);
 
-  // console.log(uid)
-
 
   useEffect(() => {
     const isLoggedIn = user
     if (!isLoggedIn) return;
-    
+
     setLoading(true);
 
     const {uid} = isLoggedIn
