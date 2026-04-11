@@ -12,6 +12,7 @@ import { auth } from "@/app/config/firebase";
 import { GlobalSpinner } from "../components/globalSpinner/GlobalSpinner";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
+import { mockUser } from "./mockuser";
 
 type AuthContextData = {
   user: User | null;
@@ -66,7 +67,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 }
 
 export function useAuth() {
-  return {user: null, loading: false}
+  return {user: mockUser, loading: false}
   // const context = useContext(AuthContext);
 
   // if (!context) {
