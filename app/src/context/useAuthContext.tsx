@@ -92,7 +92,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         isAuthenticated: !!user,
       }}
     >
-      {loading === true ? <GlobalSpinner /> : children}
+      {children}
     </AuthContext.Provider>
   );
 }
