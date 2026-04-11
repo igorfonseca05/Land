@@ -36,13 +36,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Toaster richColors position="top-right" />
-        {/* <AuthProvider> */}
+        <AuthProvider>
           <ProfileProvider>
               <SearchPostProvider>
                 {children}
               </SearchPostProvider>
           </ProfileProvider>
-        {/* </AuthProvider> */}
+        </AuthProvider>
       </body>
     </html>
   );
