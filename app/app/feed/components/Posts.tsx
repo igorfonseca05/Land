@@ -19,7 +19,7 @@ import { PostProps } from "../../profile/[slug]/criar-anuncio/components/Form";
 import { UserProfile } from "firebase/auth";
 import { useSearchPost } from "@/app/src/context/usePostContext";
 import { SearchPostCard } from "@/app/src/components/feed/SearchPost";
-import NoFeedItem from "./NoFeedItem";
+import { NoFeedItem } from "./NoFeedItem";
 import Link from "next/link";
 import { PostSchema, PostSchemaType } from "@/app/utils/zod";
 import { SearchCard } from "@/app/src/components/feed/SearchCard";
