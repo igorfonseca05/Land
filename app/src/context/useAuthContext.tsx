@@ -26,14 +26,25 @@ type AuthProviderProps = {
   children: ReactNode;
 };
 
+function useMounted() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  return mounted;
+}
+
 export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
   const path = usePathname();
-
+  const mounted = useMounted();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   // useEffect(() => {
+  
   //   const publicRoutes = ['/login', '/signup', '/feed', '/como-funciona']
 
   //   const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -69,6 +80,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     return () => unsubscribe();
   }, [router]);
+
+  
+  if (!mounted) return null;
 
   return (
     <AuthContext.Provider
