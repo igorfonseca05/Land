@@ -6,7 +6,7 @@ import { MdExpandMore, MdTune } from "react-icons/md";
 export default function FeedPage() {
   return (
     <section className="space-y-4">
-      {/* <HeroSearch /> */}
+      <HeroSearch />
       <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-2">
           <div className="h-px w-8 bg-neutral-300" />
@@ -24,7 +24,7 @@ export default function FeedPage() {
           <MdTune className="text-xl"/>
         </button>
       </div>
-      {/* <Posts /> */}
+      <Posts />
     </section>
   );
 }

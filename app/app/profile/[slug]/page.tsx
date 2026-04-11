@@ -95,7 +95,7 @@ export default function profile() {
 
   return (
    <>
-    {/* <div className="space-y-4">
+    <div className="space-y-4">
       <UserProfile />
       <UserListings />
 
@@ -113,7 +113,7 @@ export default function profile() {
       ) : (
         <NoProducts />
       )}
-    </div> */}
+    </div>
    </>
   );
 }

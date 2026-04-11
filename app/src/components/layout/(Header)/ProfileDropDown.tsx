@@ -37,42 +37,41 @@ export function UserMenu() {
   }
 
   return (
-    <></>
-    // <div ref={ref} className="relative flex items-center gap-3">
-    //   <MdNotifications className="text-neutral-800 text-[20px] cursor-pointer" />
+    <div ref={ref} className="relative flex items-center gap-3">
+      <MdNotifications className="text-neutral-800 text-[20px] cursor-pointer" />
 
-    //   <div
-    //     onClick={() => setOpen((prev) => !prev)}
-    //     className="cursor-pointer flex items-center gap-2 rounded-lg hover:bg-gray-100"
-    //   >
-    //     {/* Verifique se profile.profile é uma STRING (URL). Se for objeto, o erro 310 ocorre aqui */}
-    //     <Avatar src={typeof profile.profile === 'string' ? profile.profile : ""} fallback="U" />
-    //   </div>
+      <div
+        onClick={() => setOpen((prev) => !prev)}
+        className="cursor-pointer flex items-center gap-2 rounded-lg hover:bg-gray-100"
+      >
+        {/* Verifique se profile.profile é uma STRING (URL). Se for objeto, o erro 310 ocorre aqui */}
+        <Avatar src={typeof profile.profile === 'string' ? profile.profile : ""} fallback="U" />
+      </div>
 
-    //   {open && (
-    //     <div className="absolute right-0 top-12 w-48 rounded-xl border border-neutral-200 bg-white shadow-lg overflow-hidden z-50">
-    //       <button
-    //         className="flex w-full items-center gap-2 px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
-    //         onClick={() => {
-    //           router.push(`/app/profile/${profile?.slug}`);
-    //           setOpen(false);
-    //         }}
-    //       >
-    //         <MdAccountCircle className="text-[18px]" />
-    //         Meu Perfil
-    //       </button>
-    //       <button
-    //         className="flex w-full items-center gap-2 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
-    //         onClick={async () => {
-    //           await signOut(auth);
-    //           router.replace("/auth/login");
-    //         }}
-    //       >
-    //         <MdLogout className="text-[18px]" />
-    //         Sair
-    //       </button>
-    //     </div>
-    //   )}
-    // </div>
+      {open && (
+        <div className="absolute right-0 top-12 w-48 rounded-xl border border-neutral-200 bg-white shadow-lg overflow-hidden z-50">
+          <button
+            className="flex w-full items-center gap-2 px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
+            onClick={() => {
+              router.push(`/app/profile/${profile?.slug}`);
+              setOpen(false);
+            }}
+          >
+            <MdAccountCircle className="text-[18px]" />
+            Meu Perfil
+          </button>
+          <button
+            className="flex w-full items-center gap-2 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
+            onClick={async () => {
+              await signOut(auth);
+              router.replace("/auth/login");
+            }}
+          >
+            <MdLogout className="text-[18px]" />
+            Sair
+          </button>
+        </div>
+      )}
+    </div>
   );
 }

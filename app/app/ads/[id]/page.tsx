@@ -5,7 +5,7 @@ export default async function page({params} : {params: Promise<{id: string}>}) {
 
   return (
      <div>
-         {/* <PostDetails uid={uid}/> */}
+         <PostDetails uid={uid}/>
      </div>
   )
 }
