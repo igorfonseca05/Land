@@ -4,8 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet-control-geocoder";
 import "leaflet-control-geocoder";
+import "leaflet/dist/leaflet.css";
 declare module "leaflet-control-geocoder";
-
 
 export function AdsMap({
   handleLocationDetails,
@@ -22,6 +22,7 @@ export function AdsMap({
   });
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
     if (customMap.current) return;
 
     const map = L.map("mapa").setView(userLocation, 15);

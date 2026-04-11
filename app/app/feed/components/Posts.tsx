@@ -27,7 +27,7 @@ import { LoadingCards } from "./LoadingCards";
 import { useAuth } from "@/app/src/context/useAuthContext";
 
 export function Posts() {
-  const {user} = useAuth()
+  const {user, loading: userLoading} = useAuth()
   const { searchPost, postLoading } = useSearchPost();
   const [posts, setPosts] = useState<PostSchemaType[]>([]);
   const [owner, setOwner] = useState<{ [key: string]: UserProfile }>({});
@@ -83,6 +83,8 @@ export function Posts() {
     setInlinePost(searchPost);
   }, [searchPost]);
 
+  if (userLoading) return null;
+
 
   return (
     <div className="space-y-4">
@@ -103,9 +105,6 @@ export function Posts() {
       ) : (
         posts.map((doc, i) => {
           const userData = owner[doc.userId];
-
-          if (!userData) return null;
-
           return (
             <article
               key={doc.id}

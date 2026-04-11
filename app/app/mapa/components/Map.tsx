@@ -1,5 +1,7 @@
 "use client";
 
+import "leaflet/dist/leaflet.css";
+
 import { db } from "@/app/config/firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import L from "leaflet";
@@ -56,6 +58,7 @@ export function Mapa() {
   });
 
   function handleMap() {
+      if (typeof window === "undefined") return;
     if (mapaContainer.current) return;
     const map = L.map("mapa").setView([location.lat, location.lng], 3.5);
 

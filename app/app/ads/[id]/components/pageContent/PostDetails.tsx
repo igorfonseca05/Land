@@ -75,12 +75,13 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
     getDocument();
   }, []);
 
-  useEffect(() => {     
+  useEffect(() => {
+    if (typeof window === "undefined") return;
     if (!mapRef.current || !post?.location?.coord) return;
 
     const { lat, lng } = post?.location.coord;
 
-    const map = L.map('mapa').setView([-15, -22], 13);
+    const map = L.map("mapa").setView([-15, -22], 13);
 
     const satellite = L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
@@ -103,7 +104,6 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
 
     L.control.layers(baseMaps).addTo(map);
   }, [post]);
-
 
   return (
     <>
@@ -278,9 +278,9 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
                 <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-4">
                   Location
                 </h3>
-                 <div>
-                  <div id="mapa" style={{ height: '180px', zIndex: 1 }}  />
-                 </div>
+                <div>
+                  <div id="mapa" style={{ height: "180px", zIndex: 1 }} />
+                </div>
                 {/* <div className="rounded-2xl overflow-hidden h-64 w-full bg-zinc-100 cursor-pointer border border-zinc-200">
                 </div> */}
                 <div className="mt-4 flex flex-col sm:flex-row gap-4 text-sm text-zinc-500">

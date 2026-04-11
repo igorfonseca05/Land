@@ -54,7 +54,7 @@ export type Ad = {
 };
 
 export default function profile() {
-  const {user} = useAuth()
+   const {user, loading: userLoading} = useAuth()
   const [ads, setAds] = useState<PostSchemaType[]>([]);
   const [loading, setLoading] = useState(false);
 
