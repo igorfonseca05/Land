@@ -50,7 +50,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
 
     return () => unsubscribe();
-  }, [router, path]);
+  }, [router]);
 
   return (
     <AuthContext.Provider

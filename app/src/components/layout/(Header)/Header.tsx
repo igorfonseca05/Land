@@ -4,19 +4,16 @@ import {
   MdExplore,
   MdGroup,
   MdHome,
-  MdNotifications,
   MdStorefront,
 } from "react-icons/md";
 import Image from "next/image";
 import { UserMenu } from "./ProfileDropDown";
 import Link from "next/link";
-import { auth } from "@/app/config/firebase";
 import { useAuth } from "@/app/src/context/useAuthContext";
 
 export function Header() {
 
   const {user} = useAuth()
-
 
   return (
     <header className="fixed top-0 w-full bg-white border-b border-neutral-200 z-10">
