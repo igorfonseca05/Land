@@ -14,7 +14,7 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { Ad } from "../../profile/[slug]/page";
+// import { Ad } from "../../profile/[slug]/page";
 import { PostProps } from "../../profile/[slug]/criar-anuncio/components/Form";
 import { UserProfile } from "firebase/auth";
 import { useSearchPost } from "@/app/src/context/usePostContext";
