@@ -66,7 +66,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 }
 
 export function useAuth() {
-  return {user: null}
+  return {user: null, loading: false}
   // const context = useContext(AuthContext);
 
   // if (!context) {
