@@ -80,7 +80,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         isAuthenticated: !!user,
       }}
     >
-      {loading === true ? <p className="h-screen w-full bg-white">Carregando</p> : children}
+      {children}
     </AuthContext.Provider>
   );
 }
