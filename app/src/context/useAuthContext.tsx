@@ -70,6 +70,9 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return () => unsubscribe();
   }, [router]);
   
+  if(loading) {
+    return <GlobalSpinner/>
+  }
 
   return (
     <AuthContext.Provider
