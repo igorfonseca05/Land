@@ -26,33 +26,11 @@ type AuthProviderProps = {
   children: ReactNode;
 };
 
-
 export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
   const path = usePathname();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  
-  //   const publicRoutes = ['/login', '/signup', '/feed', '/como-funciona']
-
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-
-  //     const isPublicRoute = publicRoutes.find(route => path.includes(route))
-  //     const isNotAuthorized = !user && !isPublicRoute
-
-  //     if(isNotAuthorized) {
-  //       router.replace('/auth/login')
-  //       return setLoading(false);
-  //     }
-
-  //     setUser(user);
-  //     setLoading(false);
-  //   });
-
-  //   return () => unsubscribe();
-  // }, [router]);
 
   useEffect(() => {
     const publicRoutes = ["/login", "/signup", "/feed", "/como-funciona"];
@@ -70,7 +48,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     return () => unsubscribe();
   }, [router]);
-  
 
   return (
     <AuthContext.Provider

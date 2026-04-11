@@ -9,6 +9,7 @@ import { ProfileProvider } from "./src/context/userProfileContext";
 import { Toaster } from "sonner";
 
 import { SearchPostProvider } from "./src/context/usePostContext";
+import { AuthGate } from "./src/components/GateAuth/AuthGate";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,11 +38,13 @@ export default function RootLayout({
       >
         <Toaster richColors position="top-right" />
         <AuthProvider>
-          <ProfileProvider>
+          <AuthGate>
+            <ProfileProvider>
               <SearchPostProvider>
                 {children}
               </SearchPostProvider>
           </ProfileProvider>
+          </AuthGate>
         </AuthProvider>
       </body>
     </html>

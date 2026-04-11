@@ -25,6 +25,7 @@ import { PostSchema, PostSchemaType } from "@/app/utils/zod";
 import { SearchCard } from "@/app/src/components/feed/SearchCard";
 import { LoadingCards } from "./LoadingCards";
 import { useAuth } from "@/app/src/context/useAuthContext";
+import { GlobalSpinner } from "@/app/src/components/globalSpinner/GlobalSpinner";
 
 export function Posts() {
   const {user, loading: userLoading} = useAuth()
@@ -83,9 +84,7 @@ export function Posts() {
     setInlinePost(searchPost);
   }, [searchPost]);
 
-  if (userLoading) return null;
-
-
+  
   return (
     <div className="space-y-4">
       {/* Arrows */}
