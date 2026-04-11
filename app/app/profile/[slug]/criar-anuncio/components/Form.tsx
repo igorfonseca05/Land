@@ -110,11 +110,10 @@ export interface PostProps {
 
 export function Form() {
   const inputFile = useRef<HTMLInputElement | null>(null);
-  
-  const {user} = useAuth()
+
+  const { user } = useAuth();
   const { profile } = useProfileContext();
   const router = useRouter();
-
 
   const [isDragging, setIsDragging] = useState(false);
   const [file, setFile] = useState<File[]>([]);
@@ -136,15 +135,15 @@ export function Form() {
   function handleLandDetails(
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) {
-    setLandDetails({
-      ...landDetails,
+    setLandDetails((prev) => ({
+      ...(prev || {}),
       [e.target.name]: e.target.value.toLocaleLowerCase(),
-    });
+    }));
 
-    setErrors({
-      ...errors,
+    setErrors((prev) => ({
+      ...(prev || {}),
       [e.target.name]: [],
-    });
+    }));
   }
 
   function handleLocationDetails(
@@ -213,8 +212,17 @@ export function Form() {
     setIsDragging(false);
     const dt = e.dataTransfer;
     if (dt && dt.files && dt.files.length) {
-      const files = Array.from(dt.files ?? []);
-      setFile((prev) => [...prev, ...files].slice(0, 5));
+      const selectedFiles = Array.from(dt.files ?? []);
+
+      const validFiles = selectedFiles.filter((file) => {
+        if (file.size > 2 * 1024 * 1024) {
+          toast.error("Máximo 2MB");
+          return false;
+        }
+        return true;
+      });
+
+      setFile((prev) => [...prev, ...validFiles].slice(0, 5));
     }
   }
 
@@ -307,7 +315,6 @@ export function Form() {
 
       toast.dismiss();
       toast.success("Anúncio publicado com sucesso!");
-      setLoading(false);
 
       // opcional: reset
       setFile([]);
@@ -316,7 +323,6 @@ export function Form() {
       setFeatures([]);
       router.push(`/app/profile/${profile?.slug}`);
     } catch (err) {
-      setLoading(false);
       toast.dismiss();
       toast.error("Erro ao publicar anúncio");
     } finally {
@@ -330,22 +336,32 @@ export function Form() {
     setURL(fileUrl);
 
     return () => {
-      if (file) file.map((item) => URL.createObjectURL(item));
+      fileUrl.map((item) => URL.revokeObjectURL(item));
     };
   }, [file]);
 
-  useEffect(() => {
-    if (!file.length) return;
+  // useEffect(() => {
+  //   if (!file.length) return;
+  //   const fileUrl = file.map((item) => URL.createObjectURL(item));
+  //   setURL(fileUrl);
 
-    const maxValue = 2;
+  //   return () => {
+  //     if (file) file.map((item) => URL.createObjectURL(item));
+  //   };
+  // }, [file]);
 
-    file.forEach((item) => {
-      if (item.size > maxValue * 1024 * 1024) {
-        setFile((prev) => prev.filter((file) => file.name !== item.name));
-        return toast.error(`As imagens devem ter no máximo ${maxValue}MB`);
-      }
-    });
-  }, [file]);
+  // useEffect(() => {
+  //   if (!file.length) return;
+
+  //   const maxValue = 2;
+
+  //   file.forEach((item) => {
+  //     if (item.size > maxValue * 1024 * 1024) {
+  //       setFile((prev) => prev.filter((file) => file.name !== item.name));
+  //       return toast.error(`As imagens devem ter no máximo ${maxValue}MB`);
+  //     }
+  //   });
+  // }, [file]);
 
   useEffect(() => {
     console.log(location);
@@ -372,7 +388,16 @@ export function Form() {
           className="hidden"
           onChange={(e) => {
             const selectedFiles = Array.from(e.target.files ?? []);
-            setFile((prev) => [...prev, ...selectedFiles].slice(0, 5));
+
+            const validFiles = selectedFiles.filter((file) => {
+              if (file.size > 2 * 1024 * 1024) {
+                 toast.error("Máximo 2MB");
+                return false;
+              }
+              return true;
+            });
+
+            setFile((prev) => [...prev, ...validFiles].slice(0, 5));
           }}
         />
 

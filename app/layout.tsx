@@ -10,6 +10,7 @@ import { Toaster } from "sonner";
 import { PageContainer } from "./src/components/layout/PageContainer";
 // import { Header } from "./src/components/layout/(Header)/Header";
 import { SearchPostProvider } from "./src/context/usePostContext";
+import "leaflet/dist/leaflet.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

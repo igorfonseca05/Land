@@ -65,9 +65,10 @@ export default function profile() {
 
 
   useEffect(() => {
-    setLoading(true);
     const isLoggedIn = user
     if (!isLoggedIn) return;
+    
+    setLoading(true);
 
     const {uid} = isLoggedIn
 
@@ -94,7 +95,7 @@ export default function profile() {
     };
 
     fetchAds();
-  }, []);
+  }, [user]);
 
 
   return (

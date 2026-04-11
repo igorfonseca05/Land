@@ -3,7 +3,6 @@
 import { db } from "@/app/config/firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
 
