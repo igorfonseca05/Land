@@ -7,8 +7,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "./src/context/useAuthContext";
 import { ProfileProvider } from "./src/context/userProfileContext";
 import { Toaster } from "sonner";
-import { PageContainer } from "./src/components/layout/PageContainer";
-// import { Header } from "./src/components/layout/(Header)/Header";
+
 import { SearchPostProvider } from "./src/context/usePostContext";
 
 const geistSans = Geist({
@@ -37,13 +36,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Toaster richColors position="top-right" />
-        <AuthProvider>
-          <ProfileProvider>
+        {/* <AuthProvider> */}
+          {/* <ProfileProvider> */}
               <SearchPostProvider>
                 {children}
               </SearchPostProvider>
-          </ProfileProvider>
-        </AuthProvider>
+          {/* </ProfileProvider> */}
+        {/* </AuthProvider> */}
       </body>
     </html>
   );
