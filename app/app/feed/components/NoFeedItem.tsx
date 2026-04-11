@@ -9,7 +9,7 @@ interface NoFeedItem {
   onAddProduct?: () => void;
 }
 
-const NoFeedItem: React.FC<NoFeedItem> = ({ onAddProduct }) => {
+export function NoFeedItem (onAddProduct: NoFeedItem) {
 
   const {profile} = useProfileContext()
 
@@ -39,4 +39,3 @@ const NoFeedItem: React.FC<NoFeedItem> = ({ onAddProduct }) => {
   );
 };
 
-export default NoFeedItem;
