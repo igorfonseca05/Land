@@ -37,11 +37,11 @@ export default function RootLayout({
       >
         <Toaster richColors position="top-right" />
         {/* <AuthProvider> */}
-          {/* <ProfileProvider> */}
+          <ProfileProvider>
               <SearchPostProvider>
                 {children}
               </SearchPostProvider>
-          {/* </ProfileProvider> */}
+          </ProfileProvider>
         {/* </AuthProvider> */}
       </body>
     </html>
