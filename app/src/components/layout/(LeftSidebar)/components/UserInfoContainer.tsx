@@ -12,7 +12,9 @@ export function UserInfoContainer() {
   const { profile } = useProfileContext();
   const path = usePathname();
   
-  if (!profile) return null;
+  if (!profile) {
+  return <div className="p-8 text-center">Carregando...</div>;
+}
 
   return (
     <>

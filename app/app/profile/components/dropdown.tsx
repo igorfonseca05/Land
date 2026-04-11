@@ -69,7 +69,9 @@ export function EditPostModal({ infos }: { infos: PostSchemaType }) {
     setPost(infos.description);
   }, [infos]);
 
-  if (!profile) return <p>Not authenticated</p>;
+  if (!profile) {
+  return <div className="p-8 text-center">Carregando...</div>;
+}
 
   return (
     <>

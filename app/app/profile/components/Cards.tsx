@@ -13,7 +13,9 @@ import { PostActions } from "@/app/src/components/feed/PostActions";
 export function Cards({ infos }: { infos: PostSchemaType }) {
   const { profile } = useProfileContext();
 
-  if (!profile) return null;
+  if (!profile) {
+  return <div className="p-8 text-center">Carregando...</div>;
+}
 
   return (
     <article className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 ">

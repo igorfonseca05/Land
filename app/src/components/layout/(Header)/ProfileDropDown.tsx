@@ -27,7 +27,9 @@ export function UserMenu() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  if(!profile) return null;
+  if (!profile) {
+  return <div className="p-8 text-center">Carregando...</div>;
+}
   
   return (
     <div ref={ref} className="relative flex items-center gap-3">

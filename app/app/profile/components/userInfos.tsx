@@ -295,9 +295,10 @@ export function UserProfile() {
     }
   }, [profile]);
 
-  if (profileLoading) {
-    return <p>Carregando...</p>;
-  }
+
+  if (!profile) {
+  return <div className="p-8 text-center">Carregando...</div>;
+}
 
   // useEffect(() => {
   //   setSizeDescription(215 - profileInfo.description.length);
@@ -305,7 +306,7 @@ export function UserProfile() {
 
   return (
     <>
-      {profile && (
+      {(
         <>
           <Modal
             isOpen={editModalIsOpen}
