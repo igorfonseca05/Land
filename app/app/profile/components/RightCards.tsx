@@ -1,15 +1,11 @@
 "use client";
-import { auth } from "@/app/config/firebase";
-import { Modal } from "@/app/src/components/GlobalModal/Modal";
+
 import { useAuth } from "@/app/src/context/useAuthContext";
 import { useProfileContext } from "@/app/src/context/userProfileContext";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
-  MdAccountCircle,
   MdAttachMoney,
-  MdCheck,
   MdCheckCircle,
-  MdClose,
   MdFavorite,
   MdVisibility,
 } from "react-icons/md";

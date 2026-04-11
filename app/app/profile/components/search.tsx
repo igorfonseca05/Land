@@ -1,7 +1,6 @@
 'use client'
 import { useProfileContext } from "@/app/src/context/userProfileContext";
 import Link from "next/link";
-import React from "react";
 import { MdAddCircle } from "react-icons/md";
 
 const UserListings = () => {

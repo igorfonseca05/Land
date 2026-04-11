@@ -22,7 +22,7 @@ type Post = z.infer<typeof PostSearchSchema>;
 
 export function EditPostModal({ infos }: { infos: PostSchemaType }) {
   const dropdownRef = useRef<HTMLDivElement>(null);
-  
+
   const { profile } = useProfileContext();
   
   const [open, setOpen] = useState(false);
@@ -30,10 +30,27 @@ export function EditPostModal({ infos }: { infos: PostSchemaType }) {
   const [post, setPost] = useState("");
   const charactereCount = 2000;
   const [error, setError] = useState<
-    ZodFlattenedError<Post>["fieldErrors"] | null
+  ZodFlattenedError<Post>["fieldErrors"] | null
   >(null);
+  
+  function handleEditForm(e: FormEvent) {
+    e.preventDefault();
 
-  // Fecha ao clicar fora
+    const isValidPost = PostSearchSchema.safeParse({ post });
+    
+    if (!isValidPost.success) {
+      return setError(isValidPost.error.flatten().fieldErrors);
+    }
+    
+    const { description } = isValidPost.data;
+
+    const postInfos = {
+      description,
+      updatedAt: serverTimestamp(),
+    } as const;
+  }
+
+    // Fecha ao clicar fora
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (
@@ -47,23 +64,6 @@ export function EditPostModal({ infos }: { infos: PostSchemaType }) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  function handleEditForm(e: FormEvent) {
-    e.preventDefault();
-
-    const isValidPost = PostSearchSchema.safeParse({ post });
-
-    if (!isValidPost.success) {
-      return setError(isValidPost.error.flatten().fieldErrors);
-    }
-
-    const { description } = isValidPost.data;
-
-    const postInfos = {
-      description,
-      updatedAt: serverTimestamp(),
-    } as const;
-  }
 
   useEffect(() => {
     setPost(infos.description);

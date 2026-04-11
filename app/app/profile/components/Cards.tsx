@@ -2,12 +2,6 @@
 
 import {
   MdAspectRatio,
-  MdCampaign,
-  MdChatBubble,
-  MdDelete,
-  MdEdit,
-  MdMoreHoriz,
-  MdMoreVert,
 } from "react-icons/md";
 import { formatFirebaseTime } from "@/app/utils/functions";
 import { useProfileContext } from "@/app/src/context/userProfileContext";
