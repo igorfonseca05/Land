@@ -82,7 +82,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, [router]);
 
   
-  if (!mounted) return null;
+  // if (!mounted) return null;
 
   return (
     <AuthContext.Provider
