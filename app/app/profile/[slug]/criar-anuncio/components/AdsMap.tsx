@@ -5,7 +5,6 @@ import L from "leaflet";
 import "leaflet-control-geocoder";
 import "leaflet-control-geocoder";
 declare module "leaflet-control-geocoder";
-// import {geocoder} from "leaflet-control-geocoder"; "leaflet-control-geocoder";
 
 
 export function AdsMap({

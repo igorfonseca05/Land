@@ -17,7 +17,14 @@ import {
 import { auth, db } from "@/app/config/firebase";
 import { useProfileContext } from "@/app/src/context/userProfileContext";
 import { useRouter } from "next/navigation";
-import { AdsMap } from "./AdsMap";
+// import { AdsMap } from "./AdsMap";
+
+// const AdsMap = dynamic(() => import("./AdsMap"), {
+//   ssr: false,
+// });
+
+import dynamic from "next/dynamic";
+
 import { useAuth } from "@/app/src/context/useAuthContext";
 type ErrorField =
   | "images"
@@ -109,6 +116,7 @@ export interface PostProps {
 }
 
 export function Form() {
+  
   const inputFile = useRef<HTMLInputElement | null>(null);
 
   const { user } = useAuth();
@@ -644,7 +652,7 @@ export function Form() {
             <label className="block text-sm font-bold text-neutral-700 dark:text-neutral-300 mb-2">
               Selecione seu terreno no mapa
             </label>
-            <AdsMap handleLocationDetails={handleLocationDetails} />
+            {/* <AdsMap handleLocationDetails={handleLocationDetails} /> */}
             <div className="mt-4 bg-gray-50 border border-gray-200 rounded-lg p-4 text-sm text-gray-700">
               <h3 className="font-semibold mb-2">Como usar o mapa</h3>
 
