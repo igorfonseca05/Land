@@ -114,7 +114,7 @@ export function FeedCard({ ...props }: PostProps) {
         </div>
       </div>
 
-      <div className="relative max-w-155">
+      <div className="relative w-full">
         {postHasImages ? (
           <Swiper
             modules={[Navigation]}

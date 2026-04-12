@@ -14,7 +14,7 @@ import {
   MdInfoOutline,
 } from "react-icons/md";
 
-export function NavBar() {
+export function NavBar({onClose} : {onClose?: (isOpen: boolean) => void}) {
   const { user } = useAuth();
   const path = usePathname();
 
@@ -80,6 +80,7 @@ export function NavBar() {
 
           return (
             <Link
+            onClick={() => onClose && onClose(false)}
               key={i}
               href={`${href}`}
               className={`flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium ${
