@@ -38,13 +38,13 @@ export default function RootLayout({
       >
         <Toaster richColors position="top-right" />
         <AuthProvider>
-          <AuthGate>
+          {/* <AuthGate> */}
             <ProfileProvider>
               <SearchPostProvider>
                 {children}
               </SearchPostProvider>
           </ProfileProvider>
-          </AuthGate>
+          {/* </AuthGate> */}
         </AuthProvider>
       </body>
     </html>
