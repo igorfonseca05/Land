@@ -58,7 +58,7 @@ export function Mapa() {
   });
 
   function handleMap() {
-      if (typeof window === "undefined") return;
+    if (typeof window === "undefined") return;
     if (mapaContainer.current) return;
     const map = L.map("mapa").setView([location.lat, location.lng], 3.5);
 
@@ -99,10 +99,12 @@ export function Mapa() {
     });
 
     // Buscando localização do usuário
-    map.locate({ setView: true, maxZoom: 60 });
+    map.locate({ setView: true, maxZoom: 60, enableHighAccuracy: true, });
 
     map.on("locationfound", (e) => {
       setLocation(e.latlng);
+
+      console.log(e.latlng);
 
       const userLocationMarker = L.marker(e.latlng, {
         icon: userPosition,
