@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import "leaflet/dist/leaflet.css";
 
@@ -19,7 +19,7 @@ type Ad = {
   image: string;
 };
 
-export function Mapa() {
+export default function Mapa() {
   const mapaContainer = useRef<L.Map | null>(null);
 
   const [location, setLocation] = useState<{ lat: number; lng: number }>({

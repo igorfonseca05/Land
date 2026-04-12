@@ -1,4 +1,6 @@
-import { Mapa } from './components/Map'
+'use client'
+
+import Mapa from "../mapa/components/Map"
 
 export default function Page() {
   return (
