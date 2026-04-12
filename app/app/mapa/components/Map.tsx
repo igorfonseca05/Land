@@ -1,12 +1,13 @@
-"use client"
+"use client";
 
 import "leaflet/dist/leaflet.css";
 
 import { db } from "@/app/config/firebase";
 import { collection, getDocs, query, where } from "firebase/firestore";
-import L from "leaflet";
+// import L from "leaflet";
 import { useEffect, useState } from "react";
 import { useRef } from "react";
+import { DivIcon } from "leaflet";
 
 type Ad = {
   adId: string;
@@ -21,104 +22,15 @@ type Ad = {
 
 export default function Mapa() {
   const mapaContainer = useRef<L.Map | null>(null);
+  const leafletRef = useRef<any>(null);
 
   const [location, setLocation] = useState<{ lat: number; lng: number }>({
     lat: -15.7806,
     lng: -47.9297,
   });
 
-  const userPosition = L.divIcon({
-    html: `
-    <svg width="25" height="25" viewBox="0 0 24 24">
-      <path 
-        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-        fill="#4285F4"
-      />
-      <circle cx="12" cy="9" r="3" fill="white"/>
-    </svg>
-  `,
-    className: "",
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
 
-  const customIcon = L.divIcon({
-    html: `
-    <svg width="25" height="25" viewBox="0 0 24 24">
-      <path 
-        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
-        fill="#6add55"
-      />
-      <circle cx="12" cy="9" r="3" fill="white"/>
-    </svg>
-  `,
-    className: "",
-    iconSize: [40, 40],
-    iconAnchor: [20, 40],
-  });
-
-  function handleMap() {
-    if (typeof window === "undefined") return;
-    if (mapaContainer.current) return;
-    const map = L.map("mapa").setView([location.lat, location.lng], 3.5);
-
-    mapaContainer.current = map;
-
-    // mapa satélite
-    const satellite = L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      { attribution: "Tiles © Esri" },
-    );
-
-    const terrain = L.tileLayer(
-      "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
-      {
-        attribution: "© OpenTopoMap",
-      },
-    );
-
-    const googleStreets = L.tileLayer(
-      "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
-      {
-        subdomains: ["mt0", "mt1", "mt2", "mt3"],
-      },
-    );
-
-    const baseMaps = {
-      Satélite: satellite,
-      Terreno: terrain,
-      Ruas: googleStreets,
-    };
-
-    satellite.addTo(map);
-
-    L.control.layers(baseMaps).addTo(map);
-
-    map.on("click", (e) => {
-      setLocation(e.latlng);
-    });
-
-    // Buscando localização do usuário
-    map.locate({ setView: true, maxZoom: 60, enableHighAccuracy: true, });
-
-    map.on("locationfound", (e) => {
-      setLocation(e.latlng);
-
-      console.log(e.latlng);
-
-      const userLocationMarker = L.marker(e.latlng, {
-        icon: userPosition,
-      }).addTo(map);
-
-      userLocationMarker.bindPopup("Sua localização.");
-    });
-
-    map.on("locationerror", () => {
-      console.log("não encontrada");
-    });
-  }
-
-  function createAdPopup(ad: {
+   function createAdPopup(ad: {
     id: string;
     title: string;
     price: string;
@@ -158,7 +70,7 @@ export default function Mapa() {
   }
 
   // Buscando terrenos cadastrados e renderizando pins no mapa
-  async function getLands() {
+  async function getLands(L: any, customIcon: DivIcon) {
     const snapshot = await getDocs(collection(db, "mapMarkers"));
 
     snapshot.docs.map((point) => {
@@ -186,10 +98,108 @@ export default function Mapa() {
     });
   }
 
+
   useEffect(() => {
-    handleMap();
-    getLands();
+    async function initMap() {
+      const L = (await import("leaflet")).default;
+      leafletRef.current = L;
+
+      if (mapaContainer.current) return;
+
+      const userPosition = L.divIcon({
+        html: `
+    <svg width="25" height="25" viewBox="0 0 24 24">
+      <path 
+        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+        fill="#4285F4"
+      />
+      <circle cx="12" cy="9" r="3" fill="white"/>
+    </svg>
+  `,
+        className: "",
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+      });
+
+      const customIcon = L.divIcon({
+        html: `
+    <svg width="25" height="25" viewBox="0 0 24 24">
+      <path 
+        d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+        fill="#6add55"
+      />
+      <circle cx="12" cy="9" r="3" fill="white"/>
+    </svg>
+  `,
+        className: "",
+        iconSize: [40, 40],
+        iconAnchor: [20, 40],
+      });
+
+      const map = L.map("mapa").setView([location.lat, location.lng], 3.5);
+
+      mapaContainer.current = map;
+
+      // mapa satélite
+      const satellite = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        { attribution: "Tiles © Esri" },
+      );
+
+      const terrain = L.tileLayer(
+        "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+        {
+          attribution: "© OpenTopoMap",
+        },
+      );
+
+      const googleStreets = L.tileLayer(
+        "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+        {
+          subdomains: ["mt0", "mt1", "mt2", "mt3"],
+        },
+      );
+
+      const baseMaps = {
+        Satélite: satellite,
+        Terreno: terrain,
+        Ruas: googleStreets,
+      };
+
+      satellite.addTo(map);
+
+      L.control.layers(baseMaps).addTo(map);
+
+      map.on("click", (e) => {
+        setLocation(e.latlng);
+      });
+
+      // Buscando localização do usuário
+      map.locate({ setView: true, maxZoom: 60, enableHighAccuracy: true });
+
+      map.on("locationfound", (e) => {
+        setLocation(e.latlng);
+
+        console.log(e.latlng);
+
+        const userLocationMarker = L.marker(e.latlng, {
+          icon: userPosition,
+        }).addTo(map);
+
+        userLocationMarker.bindPopup("Sua localização.");
+      });
+
+      map.on("locationerror", () => {
+        console.log("não encontrada");
+      });
+
+      getLands(L, customIcon)
+    }
+
+    initMap()
+
   }, []);
+
 
   return (
     <div>
