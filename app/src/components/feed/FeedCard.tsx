@@ -33,13 +33,15 @@ export function FeedCard({ ...props }: PostProps) {
   const postHasImages = Array.isArray(props.images) && props.images.length > 1;
   const postHasOneImage = props.images?.length === 1;
 
-  const isDesabled = props.type === 'search'
+  const isDesabled = props.type === "search";
 
-  console.log(props)
+  console.log(props);
 
   return (
-    <Link href={isDesabled? '#' : `${`/app/ads/${`${props.title}-${props.id}`}`}`}>
-      <div className="p-2 md:p-4 ">
+    <Link
+      href={isDesabled ? "#" : `${`/app/ads/${`${props.title}-${props.id}`}`}`}
+    >
+      <div className="p-4 md:p-6 ">
         {/* Header */}
         <div className="flex justify-between pb-3 ">
           <div className="flex gap-3">
@@ -48,12 +50,14 @@ export function FeedCard({ ...props }: PostProps) {
               <p className="font-bold text-sm capitalize">
                 {props.author.split(/\s+/)[0]}
               </p>
-              <p className="text-xs text-neutral-500 ">
+              <p className="text-[clamp(10px,2vw,18px)] text-neutral-500 ">
                 {/* <span className="capitalize">{location ? location : ""}</span> •{" "} */}
                 Postado há {formatFirebaseTime(props.createdAt)}
               </p>
             </div>
           </div>
+
+          {/* Indicador tipo do anuncio */}
           <div className="flex gap-4 items-center">
             {props.type === "search" ? (
               <>
@@ -62,7 +66,7 @@ export function FeedCard({ ...props }: PostProps) {
                   font-semibold bg-green-50 text-green-800"
                 >
                   <MdSearch />
-                  Busca
+                  <span className="hidden sm:block">Busca</span>
                 </span>
               </>
             ) : (
@@ -72,7 +76,7 @@ export function FeedCard({ ...props }: PostProps) {
                   font-semibold bg-yellow-100 text-yellow-600"
                 >
                   <MdSell />
-                  Venda
+                  <span className="hidden sm:block">Venda</span>
                 </span>
               </>
             )}
@@ -81,31 +85,33 @@ export function FeedCard({ ...props }: PostProps) {
         </div>
 
         {/* Body */}
-        <div className="space-y-1">
+        <div className="space-y-0">
           <p
             className={`${
               props.title && props.type === "search"
-                ? "text-xl font-semibold text-neutral-900"
+                ? "text-[clamp(16px,2vw,18px)] font-semibold text-neutral-900"
                 : "text-md text-neutral-900 font-semibold"
             }`}
           >
             {getUpperCaseLatter(props.title)}
           </p>
 
-          <p className="text-sm text-neutral-900 leading-relaxed pt-3 ">
+          <p className="text-[clamp(14px,2vw,18px)] text-neutral-900 leading-relaxed pt-2 ">
             {props.description}
           </p>
 
           {props.type === "search" && (
             <>
-              <p className="text-neutral-700 text-sm font-semibold pt-3">
+              <p className="text-neutral-700 text-sm font-semibold py-2">
                 Requisitos
               </p>
               <div className=" grid grid-cols-2 gap-4 text-sm text-neutral-900">
                 {props.features.map((item, i) => (
                   <div className="flex items-center gap-2" key={i}>
                     <MdCheckCircle className="text-green-500" />
-                    <span className="inline-block">{item}</span>
+                    <span className="inline-block text-[clamp(12px,1vw,18px)]">
+                      {item}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -174,10 +180,7 @@ export function FeedCard({ ...props }: PostProps) {
             </span>
           </div>
         )}
-        <PostActions
-               id={props.id}
-               likesCount={props.likesCount}
-             />
+        <PostActions id={props.id} likesCount={props.likesCount} />
       </div>
     </Link>
   );

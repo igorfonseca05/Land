@@ -16,8 +16,8 @@ export function PostActions({ ...props }: {id: string, likesCount: number | unde
     <>
       {getAuth().currentUser && (
         <>
-          <hr className="text-neutral-200" />
-          <div className="flex justify-between items-center py-1 p-2 md:p-4">
+          <hr className="text-neutral-100"  />
+          <div className="flex justify-between items-center p-4 md:p-4">
             <div className="flex gap-4 items-center">
               <LikeButton postId={props.id} likesCount={props.likesCount} />
               <MdShare />

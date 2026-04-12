@@ -7,6 +7,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/app/config/firebase";
 import { useRouter } from "next/navigation";
 import { useProfileContext } from "../../../context/userProfileContext";
+import { NotificationContainer } from "./NotificationContainer";
 
 export function UserMenu() {
   const { profile } = useProfileContext();
@@ -14,6 +15,8 @@ export function UserMenu() {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false); // Adicione isso
   const ref = useRef<HTMLDivElement>(null);
+
+   const [notificationIsOpen, setNotificationIsOpen] = useState(false)
 
   // 1. Garante que o componente está montado no cliente
   useEffect(() => {
@@ -38,7 +41,8 @@ export function UserMenu() {
 
   return (
     <div ref={ref} className="relative flex items-center gap-3">
-      <MdNotifications className="text-neutral-800 text-[20px] cursor-pointer" />
+      <MdNotifications onClick={() => setNotificationIsOpen(true)} className="text-neutral-800 text-[20px] cursor-pointer" />
+      <NotificationContainer isOpen={notificationIsOpen} setIsOpen={setNotificationIsOpen}/>
 
       <div
         onClick={() => setOpen((prev) => !prev)}
