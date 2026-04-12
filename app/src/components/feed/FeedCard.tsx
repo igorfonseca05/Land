@@ -96,7 +96,7 @@ export function FeedCard({ ...props }: PostProps) {
             {getUpperCaseLatter(props.title)}
           </p>
 
-          <p className="text-[clamp(14px,2vw,18px)] text-neutral-900 leading-relaxed pt-2 ">
+          <p className="text-[clamp(14px,1vw,18px)] text-neutral-900 leading-relaxed pt-2 ">
             {props.description}
           </p>
 
