@@ -1,4 +1,4 @@
-# 🌳 Reno - Marketplace de Terrenos
+# 🌳 Reno - Marketplace de Terrenos(Em desenvolvimento)
 
 ![alt text](<reno capa.png>)
 
