@@ -88,7 +88,7 @@ export function EditPostModal({ infos }: { infos: PostSchemaType }) {
           {/* Header */}
           <div className="flex items-center gap-3">
             <Image
-              src={profile?.profile || "/place.webp"}
+              src={profile?.photoURL || "/place.webp"}
               alt="User avatar"
               width={40}
               height={40}

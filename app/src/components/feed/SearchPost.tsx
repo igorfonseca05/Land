@@ -34,7 +34,7 @@ export function SearchPostCard({
       {/* Header */}
       <div className=" flex justify-between">
         <div className="flex gap-3">
-          <Avatar fallback="igor" src={profile?.profile} />
+          <Avatar fallback="igor" src={profile?.photoURL} />
           <div>
             <p className="font-bold text-sm capitalize">{"igor"}</p>
             <p className="text-xs text-neutral-500 ">

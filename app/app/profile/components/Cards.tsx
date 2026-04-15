@@ -13,17 +13,13 @@ import { PostActions } from "@/app/src/components/feed/PostActions";
 export function Cards({ infos }: { infos: PostSchemaType }) {
   const { profile } = useProfileContext();
 
-  if (!profile) {
-  return <div className="p-8 text-center">Carregando...</div>;
-}
-
   return (
     <article className="bg-white dark:bg-neutral-900 rounded-2xl border border-neutral-200 dark:border-neutral-800 ">
       {/* Header */}
       <div className="flex justify-between p-4">
         <div className="flex items-center gap-3">
           <img
-            src={profile?.profile || "/place.webp"}
+            src={profile?.photoURL || "/place.webp"}
             alt="User avatar"
             className="w-10 h-10 rounded-full object-cover bg-neutral-200"
           />

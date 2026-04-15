@@ -12,9 +12,9 @@ export function UserInfoContainer() {
   const { profile } = useProfileContext();
   const path = usePathname();
   
-  if (!profile) {
-  return <div className="p-8 text-center">Carregando...</div>;
-}
+//   if (!profile) {
+//   return <div className="p-8 text-center">Carregando...</div>;
+// }
 
   return (
     <>
@@ -30,7 +30,7 @@ export function UserInfoContainer() {
             {/* Avatar */}
             <div className="relative w-12 h-12 rounded-full overflow-hidden shrink-0">
               <Image
-                src={profile?.profile || "/place.webp"}
+                src={profile?.photoURL || "/place.webp"}
                 alt="profile image"
                 fill
                 className="object-cover"
