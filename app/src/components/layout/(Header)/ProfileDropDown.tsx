@@ -8,8 +8,10 @@ import { auth } from "@/app/config/firebase";
 import { useRouter } from "next/navigation";
 import { useProfileContext } from "../../../context/userProfileContext";
 import { NotificationContainer } from "./NotificationContainer";
+import { useAuth } from "@/app/src/context/useAuthContext";
 
 export function UserMenu() {
+  const {user} = useAuth()
   const { profile } = useProfileContext();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -17,6 +19,8 @@ export function UserMenu() {
   const ref = useRef<HTMLDivElement>(null);
 
    const [notificationIsOpen, setNotificationIsOpen] = useState(false)
+
+   console.log(profile)
 
   // 1. Garante que o componente está montado no cliente
   useEffect(() => {
@@ -35,21 +39,25 @@ export function UserMenu() {
 
   // 2. Se não estiver montado ou o perfil não existir, renderiza um placeholder neutro
   // Isso evita que o servidor e o cliente briguem por conteúdos diferentes
-  if (!mounted || !profile) {
-    return <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />;
-  }
+  // if (!user || !mounted || !profile) {
+  //   return <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />;
+  // }
+
 
   return (
     <div ref={ref} className="relative flex items-center gap-3">
       <MdNotifications onClick={() => setNotificationIsOpen(true)} className="text-neutral-800 text-[20px] cursor-pointer" />
       <NotificationContainer isOpen={notificationIsOpen} setIsOpen={setNotificationIsOpen}/>
-
       <div
         onClick={() => setOpen((prev) => !prev)}
         className="cursor-pointer flex items-center gap-2 rounded-lg hover:bg-gray-100"
       >
         {/* Verifique se profile.profile é uma STRING (URL). Se for objeto, o erro 310 ocorre aqui */}
-        <Avatar src={typeof profile.profile === 'string' ? profile.profile : ""} fallback="U" />
+        {profile !== null ? (
+          <Avatar src={typeof profile.photoURL === 'string' ? profile.photoURL : ""} fallback="U" />
+        ) : (
+          <Avatar src={typeof user?.photoURL === 'string' ? user?.photoURL : ""} fallback="U" />
+        )}
       </div>
 
       {open && (
@@ -57,7 +65,7 @@ export function UserMenu() {
           <button
             className="flex w-full items-center gap-2 px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
             onClick={() => {
-              router.push(`/app/profile/${profile?.slug}`);
+              router.push(`/app/profile/${profile?.slug || user?.email}`);
               setOpen(false);
             }}
           >

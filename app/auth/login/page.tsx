@@ -1,47 +1,48 @@
-
-import { Logo } from '@/app/src/components/ui/Logo';
-import Link from 'next/link';
-import React from 'react';
-import { BsApple } from 'react-icons/bs';
-import { FaGoogle } from 'react-icons/fa6';
-import { FcGoogle } from 'react-icons/fc';
-import { GrGoogle } from 'react-icons/gr';
-import { MdEmail, MdLock } from 'react-icons/md';
-import { LoginForm } from './components/LoginForm';
+import { Logo } from "@/app/src/components/ui/Logo";
+import Link from "next/link";
+import { BsApple } from "react-icons/bs";
+import { LoginForm } from "./components/LoginForm";
+import { GoogleButtonLogin } from "./components/GoogleButtonLogin";
+import Image from "next/image";
 
 export default function LoginPage() {
-
-
-
-
   return (
     <div className="flex min-h-screen w-full bg-slate-50 dark:bg-black font-sans antialiased">
       {/* Lado esquerdo: Imagem e marca (oculto no mobile) */}
       <div className="hidden lg:flex w-1/2 relative bg-neutral-900">
         <div className="absolute inset-0 z-0">
-          <img 
-            alt="Imagem de fundo de terreno" 
-            className="h-full w-full object-cover opacity-60 grayscale-[20%]" 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBvmVzMU685QhHdIDzc46MT1NG3X_tjTtq__Z6rjx5MBlpZOdURInfDyEAEkM9J4WtnO8W4_S_JBcF26DO_PsX8jiYfbA1Zu06pqMpqoudCY3Q5iY-S74BJMnMoD36qPppDFgn1YKyQKJ21ahec8RmaKUNLJDp61Qnr8HHWjXuUHdg9NMv76cSZA99DagW9PLxm0l7Rc3-VAPso3VBweuybZFwpeBZmdbZCY0ohRhd_XbhAJv4Fh5L-OqoD8R7b4dT7v2QoOotJDE"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-neutral-900/90 via-neutral-900/40 to-transparent"></div>
+          <div className="relative h-full w-full">
+            <Image
+              src="https://res.cloudinary.com/igorfonseca/image/upload/v1776204621/reno_l844fc.png"
+              alt="Imagem de fundo de terreno"
+              fill
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
+              className="object-cover opacity-60 grayscale-[10%] object-[70%]"
+              priority
+            />
+          </div>
+          <div className="absolute inset-0 bg-linear-to-t from-neutral-900/90 via-neutral-900/40 to-transparent"></div>
         </div>
-        
+
         <div className="relative z-10 w-full flex flex-col justify-between p-12 text-white">
-          <Link href={'/app/feed'} className="flex items-center gap-2">
-            <Logo/>
+          <Link href={"/app/feed"} className="flex items-center gap-2">
+            <Logo />
             <h2 className="text-2xl font-bold tracking-tight">Reno</h2>
           </Link>
 
           <div className="space-y-6 max-w-lg mb-10">
             <h1 className="text-5xl font-bold leading-tight">
-              Encontre seu terreno.<br />Construa seu legado.
+              Encontre seu terreno.
+              <br />
+              Construa seu legado.
             </h1>
             <p className="text-lg text-neutral-300 leading-relaxed">
-              Junte-se ao marketplace de terrenos que mais cresce. Descubra milhares de anúncios fora do mercado, conecte-se com vendedores verificados e garanta seu futuro hoje.
+              Junte-se ao marketplace de terrenos. Descubra milhares de anúncios
+              fora do mercado, conecte-se com vendedores verificados e garanta
+              seu futuro hoje.
             </p>
-            
-            <div className="flex items-center gap-4 pt-4">
+
+            {/* <div className="flex items-center gap-4 pt-4">
               <div className="flex -space-x-3">
                 <img alt="Usuário" className="w-10 h-10 rounded-full border-2 border-neutral-900 bg-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDgxl69GjLIY51P25EWbajk7tP0rwiwhT2IkRTQZ9zzI8VPCQJDMEELkXAg4ehyZB759HBPFIUsc3XP6j5iipnhSz47sqqmRykHeyaoc_tGR236FQ7Zx37z1nYrCuj7MsUiBopNNI1vO4xn-mKcS78lJcFf7av0hXBzYMc2wJ9WbuElqQz8_FRS23cHHjflmgwZDzLJmDOrcO4IQK318ijmB4yDlp1gFXKLQMIKiXw3MyNveivdH2MN0Qk0B2nQ_H2_yu0Nhj-YmtQ"/>
                 <img alt="Usuário" className="w-10 h-10 rounded-full border-2 border-neutral-900 bg-white" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiYr144yLCHk1a9t6uX7irWD-3HPz55tpTZmRNLM01SmAkc5nmTBedzup_nwpsYftOM_wn0escLrCDTvWrKu8-gRHxGLPmfcTUZ_oNTV6fYnU6rkwnG2nvmKNIVcTQwPG9yT3zcB7JOzFaG69AuLKuW5KbTqlXyfqSLj0QGC2dhOy_IhAAv9RvPws2qzQHQP0quBq8HopZyJyhL--AeC0k1LTB0LjW_9BN6jGugqtgE5M70W9Fo_afx2w0go6O-Mtn181yp5xiJBs"/>
@@ -52,7 +53,7 @@ export default function LoginPage() {
               <div className="text-sm font-medium text-neutral-300">
                 <span className="text-green-500 font-bold">4,9/5</span> avaliação de compradores ativos
               </div>
-            </div>
+            </div> */}
           </div>
 
           <div className="text-xs text-neutral-500">
@@ -66,7 +67,9 @@ export default function LoginPage() {
         {/* Logo mobile */}
         <div className="lg:hidden absolute top-6 left-6 flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center text-white">
-            <span className="material-symbols-outlined text-[20px]">landscape</span>
+            <span className="material-symbols-outlined text-[20px]">
+              landscape
+            </span>
           </div>
           <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
             Reno
@@ -83,7 +86,7 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <LoginForm/>
+          <LoginForm />
 
           <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
@@ -91,20 +94,15 @@ export default function LoginPage() {
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-2 bg-white dark:bg-neutral-900 text-neutral-500">
-                Ou continuar com
+                ou continuar com
               </span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
+            <GoogleButtonLogin />
             <button className="flex items-center justify-center gap-2 py-2.5 px-4 border border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
-              <FcGoogle/>
-              <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                Google
-              </span>
-            </button>
-            <button className="flex items-center justify-center gap-2 py-2.5 px-4 border border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
-              <BsApple/>
+              <BsApple />
               <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                 Apple
               </span>
@@ -113,18 +111,28 @@ export default function LoginPage() {
 
           <p className="text-center text-sm text-neutral-500 dark:text-neutral-400 pt-4">
             Não tem uma conta?
-            <Link href={'/auth/signup'} className="font-bold text-green-600 hover:text-green-500 hover:underline transition-colors">
-              {' '}Cadastre-se aqui
+            <Link
+              href={"/auth/signup"}
+              className="font-bold text-green-600 hover:text-green-500 hover:underline transition-colors"
+            >
+              {" "}
+              Cadastre-se aqui
             </Link>
           </p>
         </div>
 
         <div className="absolute bottom-6 w-full text-center lg:text-left lg:px-12">
           <div className="flex justify-center lg:justify-start gap-4 text-xs text-neutral-400">
-            <a className="hover:text-neutral-600 dark:hover:text-neutral-300" href="#">
+            <a
+              className="hover:text-neutral-600 dark:hover:text-neutral-300"
+              href="#"
+            >
               Política de Privacidade
             </a>
-            <a className="hover:text-neutral-600 dark:hover:text-neutral-300" href="#">
+            <a
+              className="hover:text-neutral-600 dark:hover:text-neutral-300"
+              href="#"
+            >
               Termos de Serviço
             </a>
           </div>

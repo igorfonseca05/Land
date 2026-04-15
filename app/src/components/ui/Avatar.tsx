@@ -11,7 +11,7 @@ export function Avatar({ src, fallback }: Props) {
     : "/place.webp";
 
   return (
-    <div className="relative h-10 w-10 shrink-0">
+    <div className="relative h-11 w-11 shrink-0">
       <img
         src={validSrc}
         alt="avatar"

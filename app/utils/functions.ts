@@ -50,3 +50,7 @@ export function getUpperCaseLatter(text: string = "") {
     return text.slice(0, 1).toUpperCase() + text.slice(1);
   }
 
+export function getFirstName(name: string | undefined| null) {
+  return name?.trim().split(/\s+/)[0]
+}
+

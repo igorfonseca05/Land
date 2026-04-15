@@ -113,7 +113,7 @@ export function Posts() {
                 id={doc.id}
                 userId={userData?.uid as string}
                 author={userData?.name as string}
-                img={userData?.profile as string}
+                img={userData?.photoURL as string}
                 publicId={userData?.publicId as string}
                 location={doc.location}
                 createdAt={doc.createdAt}

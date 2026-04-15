@@ -44,27 +44,29 @@ const profileLevels = {
 };
 
 const RightSideCards = () => {
-  const {user} = useAuth()
+  const { user } = useAuth();
   const { profile } = useProfileContext();
   const [isOpen, setIsOpen] = useState(false);
+
+  const hasActivities = null;
 
   const itensToVerify = [
     {
       id: 1,
       message: "Foto de perfil",
-      condition: profile?.profile || '',
+      condition: profile?.photoURL || user?.photoURL || '',
       icon: MdCheckCircle,
     },
     {
       id: 2,
       message: "Endereço de email verificado",
-      condition: user?.emailVerified || '',
+      condition: user?.emailVerified || "",
       icon: MdCheckCircle,
     },
     {
       id: 3,
       message: "Adicionar número para contato",
-      condition: profile?.phone || "",
+      condition: profile?.phone || user?.phoneNumber || '',
       icon: MdCheckCircle,
     },
     {
@@ -100,11 +102,9 @@ const RightSideCards = () => {
   else if (marker < 84) level = profileLevels.good;
   else level = profileLevels.excellent;
 
-
   return (
     <>
-     {!profile ? null : (
-       <div className="flex flex-col gap-6 w-full sticky -top-57">
+      <div className="flex flex-col gap-6 w-full sticky -top-57">
         {/* Card 1: Profile Strength */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
           <div className="flex items-center justify-between mb-4">
@@ -137,35 +137,8 @@ const RightSideCards = () => {
                 {message}
               </div>
             ))}
-            {/* <div
-              className={`${user?.emailVerified && "line-through text-gray-500 decoration-gray-400"} flex items-center gap-3 text-sm `}
-            >
-              {user?.emailVerified ? (
-                <MdCheckCircle className="text-green-500 text-[18px]" />
-              ) : (
-                <span className="w-4 h-4 rounded-full border-2 border-gray-300"></span>
-              )}
-              Endereço de email verificado
-            </div> */}
-            {/* <div
-              className={`${user?.photoURL && "line-through text-gray-500 decoration-gray-400"} flex items-center gap-3 text-sm `}
-            >
-              {user?.photoURL ? (
-                <MdCheckCircle className="text-green-500 text-[18px]" />
-              ) : (
-                <span className="w-4 h-4 rounded-full border-2 border-gray-300"></span>
-              )}
-              Adicionar foto de perfil
-            </div> */}
-            {/* <div className="flex items-center gap-3 text-sm font-medium text-gray-900">
-              <span className="w-4 h-4 rounded-full border-2 border-gray-300"></span>
-              Adicionar numero para contato
-            </div> */}
-            {/* <div className="flex items-center gap-3 text-sm font-medium text-gray-900">
-              <span className="w-4 h-4 rounded-full border-2 border-gray-300"></span>
-              Conta verificada
-            </div> */}
           </div>
+
           <button
             className="w-full mt-5 py-2 text-sm text-gray-900 bg-gray-100 font-bold rounded-lg hover:bg-gray-200 transition-colors"
             onClick={() => setIsOpen(true)}
@@ -174,50 +147,46 @@ const RightSideCards = () => {
           </button>
         </div>
 
-        {/* Card 2: Recent Activity */}
+        {/* Card 2: Atividade recente */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-5">
           <h3 className="text-lg font-bold text-gray-900 mb-4">
             Recent Activity
           </h3>
-          <div className="flex flex-col gap-4">
-            <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center shrink-0">
-                <MdVisibility size={16} />
-              </div>
-              <div>
-                <p className="text-sm text-gray-900">
-                  <span className="font-bold">John D.</span> viewed your listing
-                  in Park County.
-                </p>
-                <p className="text-xs text-gray-500 mt-1">10 mins ago</p>
-              </div>
+
+          {hasActivities ? (
+            <div className="flex flex-col gap-4">
+              {/* {activities.map((item, index) => (
+                <div key={index} className="flex gap-3">
+                  <div
+                    className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${item.bg}`}
+                  >
+                    {item.icon}
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-900">{item.text}</p>
+                    <p className="text-xs text-gray-500 mt-1">{item.time}</p>
+                  </div>
+                </div>
+              ))} */}
             </div>
-            <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-red-50 text-red-600 flex items-center justify-center shrink-0">
-                <MdFavorite size={16} />
+          ) : (
+            // 🔻 EMPTY STATE
+            <div className="flex flex-col items-center justify-center text-center py-6">
+              <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center mb-3">
+                <MdVisibility size={20} className="text-gray-400" />
               </div>
-              <div>
-                <p className="text-sm text-gray-900">
-                  Your listing is trending in Colorado!
-                </p>
-                <p className="text-xs text-gray-500 mt-1">2 hours ago</p>
-              </div>
+
+              <p className="text-sm font-medium text-gray-700">
+                Nenhuma atividade recente
+              </p>
+
+              <p className="text-xs text-gray-500 mt-1 max-w-[200px]">
+               Quando pessoas interagirem com seus posts, elas aparecerão aqui.
+              </p>
             </div>
-            <div className="flex gap-3">
-              <div className="w-8 h-8 rounded-full bg-green-50 text-green-600 flex items-center justify-center shrink-0">
-                <MdAttachMoney size={16} />
-              </div>
-              <div>
-                <p className="text-sm text-gray-900">
-                  New offer received for Lake Lot.
-                </p>
-                <p className="text-xs text-gray-500 mt-1">1 day ago</p>
-              </div>
-            </div>
-          </div>
+          )}
         </div>
       </div>
-    )}
     </>
   );
 };

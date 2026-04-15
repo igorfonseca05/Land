@@ -67,8 +67,6 @@ export default function profile() {
 
     const {uid} = isLoggedIn
 
-    console.log(uid)
-
     const adsCollectionRef = collection(db, "ads");
 
     const q = query(

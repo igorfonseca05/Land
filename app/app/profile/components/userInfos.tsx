@@ -5,6 +5,7 @@ import { Modal } from "@/app/src/components/GlobalModal/Modal";
 import { useAuth } from "@/app/src/context/useAuthContext";
 // UserProfile.jsx
 import { useProfileContext } from "@/app/src/context/userProfileContext";
+import { getFirstName } from "@/app/utils/functions";
 import { Profile, ProfileInfoSchema } from "@/app/utils/zod";
 import { FirebaseError } from "firebase/app";
 import { sendEmailVerification, updateProfile } from "firebase/auth";
@@ -136,8 +137,6 @@ export function UserProfile() {
         ...data,
         updatedAt: serverTimestamp(),
       };
-
-      // console.log(userInfo);
 
       await setDoc(
         doc(db, "users", user.uid),
@@ -285,7 +284,7 @@ export function UserProfile() {
 
   useEffect(() => {
     if (profile) {
-      setProfileInfo({
+      return setProfileInfo({
         name: profile.name ?? "",
         phone: profile.phone ?? "",
         profession: profile.profession ?? "",
@@ -295,10 +294,7 @@ export function UserProfile() {
     }
   }, [profile]);
 
-
-  if (!profile) {
-  return <div className="p-8 text-center">Carregando...</div>;
-}
+  console.log(process.env.NEXT_PUBLIC_BACKGROUND)
 
   // useEffect(() => {
   //   setSizeDescription(215 - profileInfo.description.length);
@@ -306,7 +302,7 @@ export function UserProfile() {
 
   return (
     <>
-      {(
+      {
         <>
           <Modal
             isOpen={editModalIsOpen}
@@ -335,11 +331,13 @@ export function UserProfile() {
               <section className="space-y-4">
                 {/* Capa do modal de edit */}
                 <div className="relative group">
-                  {profileCover?.preview || profile?.profile ? (
+                  {profileCover?.preview || profile?.photoURL || process.env.NEXT_PUBLIC_BACKGROUND ? (
                     <div className="relative h-40 w-full overflow-hidden rounded-xl border-2 border-dashed border-neutral-200 dark:border-neutral-700">
                       <Image
                         src={
-                          profileCover?.preview || profile?.cover || "/capa.png"
+                          profileCover?.preview || 
+                          profile?.cover || 
+                          process.env.NEXT_PUBLIC_BACKGROUND!
                         }
                         alt="Imagem de capa do perfil"
                         fill
@@ -377,7 +375,8 @@ export function UserProfile() {
                       className="size-24 rounded-full border-4 border-white dark:border-neutral-800 shadow-md object-cover"
                       src={`${
                         profileImage?.preview ||
-                        profile?.profile ||
+                        profile?.photoURL || 
+                        user?.photoURL ||
                         "/place.webp"
                       }`}
                       alt="Profile"
@@ -443,7 +442,7 @@ export function UserProfile() {
                       className={`w-full capitalize px-4 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 focus:ring-2 focus:ring-gray-500  focus:border-transparent transition-all outline-none ${
                         error?.name?.length && "ring-2 ring-red-500"
                       }`}
-                      value={profileInfo?.name}
+                      value={profileInfo?.name || user?.displayName || ''}
                       onChange={handleChange}
                     />
                   </div>
@@ -466,7 +465,7 @@ export function UserProfile() {
                         className={`w-full px-4 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 focus:ring-2 focus:ring-gray-500  focus:border-transparent transition-all outline-none ${
                           error?.name?.length && "ring-2 ring-red-500"
                         }`}
-                        value={profile?.email}
+                        value={profile?.email || user?.email || ''}
                         onChange={handleChange}
                       />
                       {user?.emailVerified ? (
@@ -525,7 +524,7 @@ export function UserProfile() {
                         error?.profession?.length && "ring-2 ring-red-500"
                       }`}
                       placeholder="(12) 992456578"
-                      value={profileInfo?.phone}
+                      value={profileInfo?.phone || user?.phoneNumber || ''}
                       onChange={handleChange}
                     />
                   </div>
@@ -620,9 +619,9 @@ export function UserProfile() {
           {/* Body */}
           <div className="max-w-2xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-md overflow-hidden">
             {/* Capa */}
-            <div className="relative h-40 w-full">
+            <div className="relative h-40 w-full object-center">
               <Image
-                src={profile?.cover || "/capa.png"}
+                src={profile?.cover || process.env.NEXT_PUBLIC_BACKGROUND || "/capa.png"}
                 alt="Imagem de capa do perfil"
                 fill
                 className="object-cover"
@@ -638,7 +637,9 @@ export function UserProfile() {
                   <div className="flex justify-between w-full items-end">
                     <div className="relative w-30 h-30 rounded-full overflow-hidden border-4 border-white">
                       <Image
-                        src={profile?.profile || "/place.webp"}
+                        src={
+                          profile?.photoURL || user?.photoURL || "/place.webp"
+                        }
                         alt="profile image"
                         fill
                         className="object-cover"
@@ -656,7 +657,7 @@ export function UserProfile() {
                   {/* Nome usuário */}
                   <div className="gap-1 space-y-2">
                     <h1 className="text-2xl font-bold capitalize text-gray-900 dark:text-white flex items-center gap-1">
-                      {profile?.name.trim().split(/\s+/)[0]}
+                      {getFirstName(profile?.name) || getFirstName(user?.displayName)}
                       {profile?.profileVerified && (
                         <MdVerified className="text-blue-500 text-xs " />
                       )}
@@ -684,7 +685,7 @@ export function UserProfile() {
               {/* Mobile View */}
               <div className="sm:hidden mb-4">
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-1">
-                  {profile?.name.trim().split(/\s+/)[0]}
+                 {getFirstName(profile?.name) || getFirstName(user?.displayName)}
                   <MdVerified className="text-blue-500" />
                 </h1>
                 {profile?.profession && profile?.location ? (
@@ -737,7 +738,7 @@ export function UserProfile() {
             </div>
           </div>
         </>
-      )}
+      }
     </>
   );
 }

@@ -7,10 +7,6 @@ const UserListings = () => {
 
   const {profile} = useProfileContext()
 
-    if (!profile) {
-  return <div className="p-8 text-center">Carregando...</div>;
-}
-
   return (
     <div className="flex flex-col gap-4 mt-4">
       {/* Menu de abas + botão */}

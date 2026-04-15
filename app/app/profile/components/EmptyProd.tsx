@@ -13,9 +13,9 @@ const NoProducts: React.FC<NoProductsProps> = ({ onAddProduct }) => {
 
   const {profile} = useProfileContext()
 
-  if (!profile) {
-  return <div className="p-8 text-center">Carregando...</div>;
-}
+//   if (!profile) {
+//   return <div className="p-8 text-center">Carregando...</div>;
+// }
 
   return (
     <div className="flex flex-col items-center justify-center py-16 px-6 bg-white rounded-2xl shadow border-gray-200">

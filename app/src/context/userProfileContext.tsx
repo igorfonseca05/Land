@@ -17,6 +17,7 @@ import {
 import { User } from "firebase/auth";
 import { db, auth } from "@/app/config/firebase";
 import { useAuth } from "./useAuthContext";
+import { toast } from "sonner";
 
 export type UserProfile = {
   uid: string;
@@ -29,7 +30,7 @@ export type UserProfile = {
   profession?: string;
   location?: string;
   description?: string;
-  profile?: string,
+  photoURL?: string,
   cover?: string
   phone?: string
   profileVerified?: boolean,
@@ -73,6 +74,7 @@ export function ProfileProvider({ children }: Props) {
           });
         } else {
           setProfile(null);
+          // toast.warning('Preecha as infos do seu perfil')
         }
 
         setLoading(false);

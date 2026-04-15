@@ -57,7 +57,7 @@ type featuresList =
   | "Sem restrições ambientais";
 
 export function HeroSearch() {
-  const {user} = useAuth()
+  const { user } = useAuth();
   const { profile } = useProfileContext();
   const { setSearchPost } = useSearchPost();
   const [isOpen, setIsOpen] = useState(false);
@@ -177,6 +177,8 @@ export function HeroSearch() {
     }
   }, [isOpen]);
 
+  console.log(user)
+
   return (
     <>
       <Modal
@@ -197,15 +199,16 @@ export function HeroSearch() {
             <div className="flex flex-col justify-between gap-3 p-2 pt-0">
               {/* Header */}
               <div className="flex items-center gap-3">
-                <img
-                  src={`${profile?.profile}` || "/place.webp"}
+                <Image
+                  src={user?.photoURL || profile?.photoURL || "/place.webp"}
                   alt="User avatar"
+                  width={40}
+                  height={40}
                   className="w-10 h-10 rounded-full object-cover"
                 />
-
                 <div className="flex flex-col">
                   <span className="text-sm capitalize font-semibold text-neutral-900 dark:text-white">
-                    {profile?.name.split(/\s+/)[0]}
+                    {profile?.name.split(/\s+/)[0] || user?.displayName?.split(/\s+/)[0] }
                   </span>
                   <span className="text-xs capitalize text-neutral-400 dark:text-white">
                     {profile?.location}
@@ -371,7 +374,7 @@ export function HeroSearch() {
       <div className="bg-white rounded-2xl border border-neutral-200 p-4">
         <div className="flex gap-3 mb-4">
           <Image
-            src={profile?.profile || "/place.webp"}
+            src={profile?.photoURL || user?.photoURL || "/place.webp"}
             alt="User avatar"
             width={40}
             height={40}

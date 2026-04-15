@@ -35,8 +35,6 @@ export function FeedCard({ ...props }: PostProps) {
 
   const isDesabled = props.type === "search";
 
-  console.log(props);
-
   return (
     <Link
       href={isDesabled ? "#" : `${`/app/ads/${`${props.title}-${props.id}`}`}`}
@@ -50,9 +48,9 @@ export function FeedCard({ ...props }: PostProps) {
               <p className="font-bold text-sm capitalize">
                 {props.author.split(/\s+/)[0]}
               </p>
-              <p className="text-[clamp(10px,2vw,18px)] text-neutral-500 ">
+              <p className="text-[clamp(10px,1vw,18px)] text-neutral-500 ">
                 {/* <span className="capitalize">{location ? location : ""}</span> •{" "} */}
-                Postado há {formatFirebaseTime(props.createdAt)}
+                Postado {formatFirebaseTime(props.createdAt)}
               </p>
             </div>
           </div>
