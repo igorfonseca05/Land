@@ -17,11 +17,11 @@ export default function LoginPage() {
               alt="Imagem de fundo de terreno"
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
-              className="object-cover opacity-60 grayscale-[10%] object-[70%]"
+              className="object-cover opacity-60 grayscale-[10%] object-[90%]"
               priority
             />
           </div>
-          <div className="absolute inset-0 bg-linear-to-t from-neutral-900/90 via-neutral-900/40 to-transparent"></div>
+          <div className="absolute inset-0 bg-linear-to-t from-neutral-900/90 via-neutral-900/50 to-transparent"></div>
         </div>
 
         <div className="relative z-10 w-full flex flex-col justify-between p-12 text-white">
@@ -99,14 +99,14 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="flex-1">
             <GoogleButtonLogin />
-            <button className="flex items-center justify-center gap-2 py-2.5 px-4 border border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
+            {/* <button className="flex items-center justify-center gap-2 py-2.5 px-4 border border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
               <BsApple />
               <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
                 Apple
               </span>
-            </button>
+            </button> */}
           </div>
 
           <p className="text-center text-sm text-neutral-500 dark:text-neutral-400 pt-4">

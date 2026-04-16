@@ -150,7 +150,7 @@ export function Form() {
   }, [isAuthenticated]);
 
   return (
-    <form onSubmit={handleForm} action="#" className="space-y-5" method="POST">
+    <form onSubmit={handleForm} action="#" className="space-y-5 overflow-y-auto" method="POST">
       <div>
         <label
           className="block text-sm font-bold text-neutral-700 dark:text-neutral-300"
@@ -162,10 +162,10 @@ export function Form() {
           <input
             onChange={(e) => handleChange(e)}
             autoComplete="name"
-            className="block w-full appearance-none rounded-xl border border-neutral-300 dark:border-neutral-700 px-3 py-2.5 pl-10 placeholder-neutral-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm bg-neutral-50 dark:bg-neutral-800 dark:text-white transition-all"
+          className="block w-full pl-10 pr-4 py-3 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-400 focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all outline-none"
             id="name"
             name="name"
-            placeholder="Alex Hunter"
+            placeholder="Marcelo Antunes"
             required
             type="text"
           />
@@ -189,7 +189,7 @@ export function Form() {
           <input
             onChange={(e) => handleChange(e)}
             autoComplete="email"
-            className="block w-full appearance-none rounded-xl border border-neutral-300 dark:border-neutral-700 px-3 py-2.5 pl-10 placeholder-neutral-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm bg-neutral-50 dark:bg-neutral-800 dark:text-white transition-all"
+           className="block w-full pl-10 pr-4 py-3 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-400 focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all outline-none"
             id="email"
             name="email"
             placeholder="alex@example.com"
@@ -216,7 +216,7 @@ export function Form() {
           <input
             onChange={(e) => handleChange(e)}
             autoComplete="new-password"
-            className="block w-full appearance-none rounded-xl border border-neutral-300 dark:border-neutral-700 px-3 py-2.5 pl-10 placeholder-neutral-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm bg-neutral-50 dark:bg-neutral-800 dark:text-white transition-all"
+           className="block w-full pl-10 pr-4 py-3 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-400 focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all outline-none"
             id="password"
             name="password"
             placeholder="••••••••"
@@ -245,7 +245,7 @@ export function Form() {
           <input
             onChange={(e) => handleChange(e)}
             autoComplete="new-password"
-            className="block w-full appearance-none rounded-xl border border-neutral-300 dark:border-neutral-700 px-3 py-2.5 pl-10 placeholder-neutral-400 shadow-sm focus:border-green-500 focus:outline-none focus:ring-green-500 sm:text-sm bg-neutral-50 dark:bg-neutral-800 dark:text-white transition-all"
+           className="block w-full pl-10 pr-4 py-3 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-400 focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all outline-none"
             id="confirm_password"
             name="confirm_password"
             placeholder="••••••••"

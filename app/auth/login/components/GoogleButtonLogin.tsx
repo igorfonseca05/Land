@@ -20,7 +20,7 @@ export function GoogleButtonLogin() {
     }
 
   return (
-    <button onClick={loginGoogle} className="flex items-center justify-center gap-2 py-2.5 px-4 border border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
+    <button onClick={loginGoogle} className="flex w-full items-center justify-center gap-2 py-2.5 px-4 border border-neutral-200 dark:border-neutral-700 rounded-xl bg-white dark:bg-neutral-800 hover:bg-neutral-50 dark:hover:bg-neutral-700 transition-colors">
       <FcGoogle />
       <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
         Google
