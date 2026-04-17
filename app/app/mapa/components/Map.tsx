@@ -106,7 +106,7 @@ export default function Mapa() {
 
       if (mapaContainer.current) return;
 
-      const userPosition = L.divIcon({
+      const userPositionIcon = L.divIcon({
         html: `
     <svg width="25" height="25" viewBox="0 0 24 24">
       <path 
@@ -178,12 +178,21 @@ export default function Mapa() {
       map.locate({ setView: true, maxZoom: 60, enableHighAccuracy: true });
 
       map.on("locationfound", (e) => {
-        setLocation(e.latlng);
 
-        console.log(e.latlng);
+        const latIsNotInBrazil = (e.latlng.lat < -5 || e.latlng.lat > -33)
+        const lngIsNotInBrazil = (e.latlng.lat < -5 || e.latlng.lat > -33)
+      
+        const isNotInBrazil = latIsNotInBrazil || lngIsNotInBrazil
 
-        const userLocationMarker = L.marker(e.latlng, {
-          icon: userPosition,
+        if(isNotInBrazil) {
+         setLocation({lat: -15.7942 , lng: -47.8822 })
+         map.setView({lat: -15.7942 , lng: -47.8822 }, 4);
+        } else {
+          setLocation(e.latlng);
+          map.setView(e.latlng, 13);
+        }
+        const userLocationMarker = L.marker(location, {
+          icon: userPositionIcon,
         }).addTo(map);
 
         userLocationMarker.bindPopup("Sua localização.");

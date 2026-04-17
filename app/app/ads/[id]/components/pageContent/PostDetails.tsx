@@ -27,12 +27,12 @@ import { GiPathDistance } from "react-icons/gi";
 import { useEffect, useState } from "react";
 import { NormalizedAd, PostSchema } from "@/app/utils/zod";
 import { useRef } from "react";
-import L from "leaflet";
 
 type Unit = "ha" | "acre" | "sqm";
 
 export function PostDetails({ uid }: { uid: string | undefined }) {
   const mapRef = useRef<L.Map | null>(null);
+  const leaflet = useRef<any>(null);
 
   const [post, setPost] = useState<NormalizedAd | null>(null);
   const [loading, setLoading] = useState(false);
@@ -76,33 +76,41 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
   }, []);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (!mapRef.current || !post?.location?.coord) return;
+    async function initMap() {
 
-    const { lat, lng } = post?.location.coord;
+      const L = (await import('leaflet')).default
+      leaflet.current = L
 
-    const map = L.map("mapa").setView([-15, -22], 13);
+      if (!mapRef.current || !post?.location?.coord) return;
 
-    const satellite = L.tileLayer(
-      "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      { attribution: "Tiles © Esri" },
-    );
 
-    const googleStreets = L.tileLayer(
-      "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
-      {
-        subdomains: ["mt0", "mt1", "mt2", "mt3"],
-      },
-    );
+      const { lat, lng } = post?.location.coord;
 
-    const baseMaps = {
-      Satélite: satellite,
-      Ruas: googleStreets,
-    };
+      const map = L.map("mapa").setView([-15, -22], 13);
 
-    satellite.addTo(map);
+      const satellite = L.tileLayer(
+        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+        { attribution: "Tiles © Esri" },
+      );
 
-    L.control.layers(baseMaps).addTo(map);
+      const googleStreets = L.tileLayer(
+        "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+        {
+          subdomains: ["mt0", "mt1", "mt2", "mt3"],
+        },
+      );
+
+      const baseMaps = {
+        Satélite: satellite,
+        Ruas: googleStreets,
+      };
+
+      satellite.addTo(map);
+
+      L.control.layers(baseMaps).addTo(map);
+    }
+
+    initMap()
   }, [post]);
 
   return (

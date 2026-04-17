@@ -52,7 +52,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 
           <div className="flex items-center gap-3 mt-4 mb-6">
             <img
-              src={profile?.photoURL || "/default-avatar.png"}
+              src={profile?.photoURL || "/place.webp"}
               alt="User"
               className="w-12 h-12 rounded-full object-cover"
             />

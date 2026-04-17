@@ -177,7 +177,6 @@ export function HeroSearch() {
     }
   }, [isOpen]);
 
-  console.log(user)
 
   return (
     <>

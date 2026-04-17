@@ -56,7 +56,7 @@ export function NavBar({onClose} : {onClose?: (isOpen: boolean) => void}) {
       id: 2,
       icon: MdMap,
       label: "Explorar no mapa",
-      href: "/mapa",
+      href: "/app/mapa",
     },
     {
       id: 3,
