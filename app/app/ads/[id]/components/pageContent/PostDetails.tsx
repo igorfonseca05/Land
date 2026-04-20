@@ -27,6 +27,7 @@ import { GiPathDistance } from "react-icons/gi";
 import { useEffect, useState } from "react";
 import { NormalizedAd, PostSchema } from "@/app/utils/zod";
 import { useRef } from "react";
+import { GlobalSpinner } from "@/app/src/components/globalSpinner/GlobalSpinner";
 
 type Unit = "ha" | "acre" | "sqm";
 
@@ -116,7 +117,7 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
   return (
     <>
       {loading ? (
-        <p>Carregando</p>
+        <GlobalSpinner/>
       ) : (
         <div className="space-y-4 px-1 md:px-0">
           <div className="relative h-100">

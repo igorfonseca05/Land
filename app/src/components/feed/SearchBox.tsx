@@ -372,13 +372,13 @@ export function HeroSearch() {
 
       <div className="bg-white rounded-2xl border border-neutral-200 p-4">
         <div className="flex gap-3 mb-4">
-          <Image
+          {/* <Image
             src={profile?.photoURL || user?.photoURL || "/place.webp"}
             alt="User avatar"
             width={40}
             height={40}
             className="w-10 h-10 rounded-full object-cover"
-          />
+          /> */}
 
           <button
             onClick={() => setIsOpen(true)}

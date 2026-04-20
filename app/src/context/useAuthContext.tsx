@@ -33,17 +33,17 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const publicRoutes = ["/login", "/signup", "/feed", "/como-funciona"];
+    const publicRoutes = ["/login", "/signup", "/feed", "/como-funciona", '/ads'];
 
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       const isPublicRoute = publicRoutes.some((route) => path.includes(route));
 
-      setUser(user);
-      setLoading(false);
-
       if (!user && !isPublicRoute) {
         router.replace("/auth/login");
       }
+
+      setUser(user);
+      setLoading(false);
     });
 
     return () => unsubscribe();
