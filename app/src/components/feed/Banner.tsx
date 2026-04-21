@@ -1,15 +1,13 @@
+import Image from "next/image";
 import Link from "next/link";
+import banner  from '@/public/banner.png'
 
 export function CommunityBanner() {
   return (
     <div className="relative overflow-hidden bg-slate-900 rounded-2xl shadow-lg min-h-[65] flex items-center group">
       {/* Background */}
       <div className="absolute inset-0 z-0">
-        <img
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdP_U3nEhoB11RNtEDKCPXTg_jFMG3urFONvudpjHfspKQvXXFkTHgmTnryfa0frVFDcyvb1Hbn9d9LljIdlA8Qg_n63EyCagnVIkGeeiZG20R0TbR7bz7Mg3S-hSczlu7oCGjZG8ayLhYfDFhmP3rgBwmUQxsdCaPl0ZyIMWZZis7HXOXLMd6gUv2nKdNWzQF6p-OGAlvUIx889jzcoDsh2FsW98vdSJS1UY2e6pYENvIINtIv27jC851KyXpWeSTkRVjp3_FUdYl"
-          alt="Landscape"
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
+        <Image src={banner} alt="" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"></Image>
         <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/40 to-transparent" />
       </div>
 
