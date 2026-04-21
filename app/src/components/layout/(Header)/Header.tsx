@@ -15,12 +15,11 @@ import { MobileMenu } from "./MobileSideMenu";
 import { useState } from "react";
 
 export function Header() {
-
   const {user} = useAuth()
 
   const [isOpen, setIsOpen] = useState(false)
 
-  console.log(user)
+  // console.log(user)
 
   return (
     <header className="fixed top-0 w-full bg-white border-b border-neutral-200 z-10">

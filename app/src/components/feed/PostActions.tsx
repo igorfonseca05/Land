@@ -9,15 +9,15 @@ import { SavePost } from "./savePost";
 import { getAuth } from "firebase/auth";
 import { PostProps } from "./FeedCard";
 import { PostSchemaType } from "@/app/utils/zod";
+import { useAuth } from "../../context/useAuthContext";
 
 export function PostActions({ ...props }: {id: string, likesCount: number | undefined } ) {
-
+    const {user} = useAuth()
   return (
     <>
-      {getAuth().currentUser && (
         <>
           <hr className="text-neutral-100"  />
-          <div className="flex justify-between items-center p-4 md:p-4">
+          <div className={`${user? `flex justify-between items-center p-4 md:p-4`: `flex justify-between items-center p-4 md:p-4 opacity-50 pointer-events-none`}`}>
             <div className="flex gap-4 items-center">
               <LikeButton postId={props.id} likesCount={props.likesCount} />
               <MdShare />
@@ -25,7 +25,6 @@ export function PostActions({ ...props }: {id: string, likesCount: number | unde
             <SavePost postId={props.id} />
           </div>
         </>
-      )}
     </>
   );
 }

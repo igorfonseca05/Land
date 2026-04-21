@@ -29,8 +29,7 @@ export default function Mapa() {
     lng: -47.9297,
   });
 
-
-   function createAdPopup(ad: {
+  function createAdPopup(ad: {
     id: string;
     title: string;
     price: string;
@@ -98,8 +97,9 @@ export default function Mapa() {
     });
   }
 
-
   useEffect(() => {
+    let map: any;
+
     async function initMap() {
       const L = (await import("leaflet")).default;
       leafletRef.current = L;
@@ -137,7 +137,6 @@ export default function Mapa() {
       });
 
       const map = L.map("mapa").setView([location.lat, location.lng], 3.5);
-
       mapaContainer.current = map;
 
       // mapa satélite
@@ -170,45 +169,47 @@ export default function Mapa() {
 
       L.control.layers(baseMaps).addTo(map);
 
-      map.on("click", (e) => {
-        setLocation(e.latlng);
-      });
+      // map.on("click", (e) => {
+      //   console.log(e.latlng);
+      // });
 
       // Buscando localização do usuário
       map.locate({ setView: true, maxZoom: 60, enableHighAccuracy: true });
 
       map.on("locationfound", (e) => {
+        const { lat, lng } = e.latlng;
 
-        const latIsNotInBrazil = (e.latlng.lat < -5 || e.latlng.lat > -33)
-        const lngIsNotInBrazil = (e.latlng.lat < -5 || e.latlng.lat > -33)
-      
-        const isNotInBrazil = latIsNotInBrazil || lngIsNotInBrazil
+        const isNotInBrazil = lat > -5 || lat < -33 || lng > -35 || lng < -75;
 
-        if(isNotInBrazil) {
-         setLocation({lat: -15.7942 , lng: -47.8822 })
-         map.setView({lat: -15.7942 , lng: -47.8822 }, 4);
-        } else {
-          setLocation(e.latlng);
-          map.setView(e.latlng, 13);
-        }
-        const userLocationMarker = L.marker(location, {
+        const finalPosition = isNotInBrazil
+          ? { lat: -15.7942, lng: -47.8822 }
+          : e.latlng;
+
+        map.setView(finalPosition, isNotInBrazil ? 4 : 13);
+
+        L.marker(finalPosition, {
           icon: userPositionIcon,
-        }).addTo(map);
-
-        userLocationMarker.bindPopup("Sua localização.");
+        })
+          .addTo(map)
+          .bindPopup("Sua localização.");
       });
 
       map.on("locationerror", () => {
         console.log("não encontrada");
       });
 
-      getLands(L, customIcon)
+      getLands(L, customIcon);
     }
 
-    initMap()
+    initMap();
 
-  }, []);
-
+    return () => {
+      if (map) {
+        map.remove();
+        mapaContainer.current = null;
+      }
+    };
+  }, [location]);
 
   return (
     <div>

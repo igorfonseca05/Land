@@ -33,21 +33,54 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const publicRoutes = ["/login", "/signup", "/feed", "/como-funciona", '/ads'];
-
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      const isPublicRoute = publicRoutes.some((route) => path.includes(route));
-
-      if (!user && !isPublicRoute) {
-        router.replace("/auth/login");
-      }
-
       setUser(user);
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, []);
+
+  // useEffect(() => {
+  //   const publicRoutes = [
+  //     "/login",
+  //     "/signup",
+  //     "/feed",
+  //     "/como-funciona",
+  //     "/mapa",
+  //     "/ads",
+  //   ];
+
+  //   const isPublicRoute = publicRoutes.some((route) => path.includes(route));
+
+  //   if (!loading && !user && !isPublicRoute) {
+  //     router.replace("/auth/login");
+  //   }
+  // }, [user, loading, path, router]);
+
+  // useEffect(() => {
+  //   const publicRoutes = [
+  //     "/login",
+  //     "/signup",
+  //     "/feed",
+  //     "/como-funciona",
+  //     "/mapa",
+  //     "/ads",
+  //   ];
+
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     const isPublicRoute = publicRoutes.some((route) => path.includes(route));
+
+  //     if (!user && !isPublicRoute && path !== "/auth/login") {
+  //       router.replace("/auth/login");
+  //     }
+
+  //     setUser(user);
+  //     setLoading(false);
+  //   });
+
+  //   return () => unsubscribe();
+  // }, [router, path]);
 
   return (
     <AuthContext.Provider

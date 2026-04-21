@@ -28,11 +28,13 @@ import { useEffect, useState } from "react";
 import { NormalizedAd, PostSchema } from "@/app/utils/zod";
 import { useRef } from "react";
 import { GlobalSpinner } from "@/app/src/components/globalSpinner/GlobalSpinner";
+import { FirebaseError } from "firebase/app";
+import { toast } from "sonner";
 
 type Unit = "ha" | "acre" | "sqm";
 
-export function PostDetails({ uid }: { uid: string | undefined }) {
-  const mapRef = useRef<L.Map | null>(null);
+export function PostDetails({ uid }: { uid: string }) {
+  const mapRef = useRef<any>(null);
   const leaflet = useRef<any>(null);
 
   const [post, setPost] = useState<NormalizedAd | null>(null);
@@ -53,28 +55,39 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
 
     return "";
   }
-
+  
   function getUpperCaseLatter(text: string = "") {
     return text.slice(0, 1).toUpperCase() + text.slice(1);
   }
 
   useEffect(() => {
-    async function getDocument() {
-      if (!uid) {
-        return <p>Impossivel encontrar documento</p>;
-      }
-      setLoading(true);
-      const docRef = doc(db, "ads", uid);
-      const docSnap = await getDoc(docRef);
-      setLoading(false);
+    // setLoading(true);
 
-      if (docSnap.exists()) {
-        setPost(docSnap.data() as NormalizedAd);
+    async function getDocument() {
+      try {
+        const docRef = doc(db, "ads", uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          return setPost(docSnap.data() as NormalizedAd);
+        }
+      } catch (error: unknown) {
+        const err =
+          error instanceof FirebaseError
+            ? error
+            : new Error("Erro desconhecido");
+        toast.error(err.message);
+      } finally {
+        setLoading(false);
       }
     }
 
+    // if(!uid) return 
+
     getDocument();
-  }, []);
+  }, [uid]);
+
+  console.log(post);
 
   useEffect(() => {
     async function initMap() {
@@ -83,7 +96,6 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
       leaflet.current = L
 
       if (!mapRef.current || !post?.location?.coord) return;
-
 
       const { lat, lng } = post?.location.coord;
 
@@ -117,31 +129,50 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
   return (
     <>
       {loading ? (
-        <GlobalSpinner/>
+        <GlobalSpinner />
       ) : (
         <div className="space-y-4 px-1 md:px-0">
           <div className="relative h-100">
-            <Swiper
-              modules={[Navigation]}
-              navigation
-              loop
-              slidesPerView={1}
-              spaceBetween={20}
-              className="select-none"
-            >
-              <SwiperSlide className="h-100">
-                {post?.images?.map((link, i) => (
-                  <div key={i} className="relative w-full h-full aspect-video">
-                    <Image
-                      src={`${link}`}
-                      alt="Slide"
-                      fill
-                      className="object-cover rounded-xl sm:rounded-sm"
-                    />
-                  </div>
-                ))}
-              </SwiperSlide>
-            </Swiper>
+            {Array.isArray(post?.images) && post?.images?.length > 1 ? (
+              <Swiper
+                modules={[Navigation]}
+                navigation
+                loop
+                slidesPerView={1}
+                spaceBetween={20}
+                className="select-none"
+              >
+                <SwiperSlide className="h-100">
+                  {post?.images?.map((link, i) => (
+                    <div
+                      key={i}
+                      className="relative w-full h-full aspect-video"
+                    >
+                      <Image
+                        src={`${link}`}
+                        alt="Slide"
+                        fill
+                        className="object-cover rounded-xl sm:rounded-sm"
+                      />
+                    </div>
+                  ))}
+                </SwiperSlide>
+              </Swiper>
+            ) : (
+              <div
+                key={post?.images?.indexOf(post?.images[0])}
+                className="relative w-full h-full aspect-video"
+              >
+                {post?.images && (
+                  <Image
+                    src={`${post?.images[0]}`}
+                    alt="Slide"
+                    fill
+                    className="object-cover rounded-xl sm:rounded-sm"
+                  />
+                )}
+              </div>
+            )}
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -216,7 +247,6 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
 
               <div className="border-b border-zinc-200 dark:border-zinc-800 pb-8">
                 <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-4">
-                  Sobre esse terreno
                 </h3>
                 <div className="max-w-none text-zinc-600 dark:text-zinc-300">
                   <p className="mb-4">
@@ -287,9 +317,9 @@ export function PostDetails({ uid }: { uid: string | undefined }) {
                 <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-4">
                   Location
                 </h3>
-                <div>
+                {/* <div>
                   <div id="mapa" style={{ height: "180px", zIndex: 1 }} />
-                </div>
+                </div> */}
                 {/* <div className="rounded-2xl overflow-hidden h-64 w-full bg-zinc-100 cursor-pointer border border-zinc-200">
                 </div> */}
                 <div className="mt-4 flex flex-col sm:flex-row gap-4 text-sm text-zinc-500">

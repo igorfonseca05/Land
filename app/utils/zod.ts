@@ -117,7 +117,7 @@ export const featuresList = [
 /* ========= Schema Normalizado ========= */
 
 export const NormalizedAdSchema = z.object({
-  images: z.array(ImageSchema).default([]).optional(),
+  images: z.array(z.string()).default([]).optional(),
   type: z.enum(["search", "sale"]),
   details: DetailsSchema.optional(),
   location: LocationSchema.optional(),

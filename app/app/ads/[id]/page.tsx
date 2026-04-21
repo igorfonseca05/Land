@@ -5,7 +5,11 @@ export default async function page({params} : {params: Promise<{id: string}>}) {
 
   return (
      <div>
-         <PostDetails uid={uid}/>
+        {uid ? (
+           <PostDetails uid={uid}/>
+        ) : (
+          <p>Impossivel buscar anuncio</p>
+        )}
      </div>
   )
 }

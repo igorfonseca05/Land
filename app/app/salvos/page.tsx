@@ -35,9 +35,9 @@ export default function Page() {
 
   useEffect(() => {
     async function getSavedDocs() {
-      setLoading(true);
-
       if (!user?.uid) return;
+
+      setLoading(true);
 
       const savedPosts = collection(db, "users", user.uid, "saved");
       const saved = await getDocs(savedPosts);
@@ -82,7 +82,7 @@ export default function Page() {
     }
 
     getSavedDocs();
-  }, []);
+  }, [user]);
 
 
   return (
