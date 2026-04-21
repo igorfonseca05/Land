@@ -150,7 +150,7 @@ export function Form() {
   }, [isAuthenticated]);
 
   return (
-    <form onSubmit={handleForm} action="#" className="space-y-5 overflow-y-auto" method="POST">
+    <form onSubmit={handleForm} action="#" className="space-y-3 overflow-y-auto p-2" method="POST">
       <div>
         <label
           className="block text-sm font-bold text-neutral-700 dark:text-neutral-300"

@@ -1,85 +1,74 @@
 import Link from "next/link";
-import React from "react";
-import { Logo } from "@/app/src/components/ui/Logo";
 import { Form } from "./components/Form";
 import { Header } from "@/app/src/components/layout/(Header)/Header";
+import Image from "next/image";
+import bg from "@/public/signupBg.png";
+import { Logo } from "@/app/src/components/ui/Logo";
 
 export default function RegisterPage() {
   return (
-    <div className="bg-slate-50 dark:bg-black text-neutral-900 dark:text-white antialiased min-h-screen flex flex-col">
-      {/* Navigation */}
-      <Header/>
-      {/* <nav className="fixed w-full z-50 top-0 border-b border-neutral-200 dark:border-neutral-800 bg-white/95 dark:bg-stone-900/95 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <Link href={"/feed"} className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-lg bg-green-500 flex items-center justify-center text-neutral-900">
-                <Logo />
-              </div>
-              <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
-                Reno
-              </h2>
-            </Link>
-            <div className="flex items-center gap-4">
-              <span className="text-sm text-neutral-500 dark:text-neutral-400 hidden sm:block">
-                Já é membro?
-              </span>
-              <Link
-                href={"/auth/login"}
-                className="px-6 py-3 rounded-xl bg-green-500 text-white font-bold hover:bg-green-400 transition"
-              >
-                Entrar
-              </Link>
-            </div>
+    <div className="min-h-screen relative flex flex-col bg-white text-gray-900">
+      {/* <Header /> */}
+
+      <main className="flex flex-1 flex-col md:flex-row">
+        {/* LEFT SIDE (Imagem) */}
+        <section className="relative hidden md:flex md:w-1/2 lg:w-1/2 items-end p-12 overflow-hidden">
+        <Link
+          href={"/app/feed"}
+          className="flex items-center z-10 absolute top-12 gap-2 text-white"
+        >
+          <Logo />
+          <h2 className="text-2xl font-bold tracking-tight">Reno</h2>
+        </Link>
+          <div className="absolute inset-0">
+            <Image src={bg} alt="" className="w-full h-full object-cover" />
+            {/* <img
+              src="https://res.cloudinary.com/igorfonseca/image/upload/v1776297959/signup_vmicbx.png"
+              className="w-full h-full object-cover"
+              alt="Landscape"
+            /> */}
+            <div className="absolute inset-0 bg-linear-to-b from-black/40 to-black/70" />
           </div>
-        </div>
-      </nav> */}
 
-      {/* Main Content */}
-      <main
-        className="flex-1 flex flex-col justify-center sm:px-6 lg:px-8 relative overflow-hidden"
-        style={{
-          backgroundImage:
-            "url('https://res.cloudinary.com/igorfonseca/image/upload/v1776297959/signup_vmicbx.png')",
-        }}
-      >
-        {/* Background Blobs */}
-        {/* <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-7xl pointer-events-none overflow-hidden">
-          <div className="absolute top-20 left-10 w-96 h-96 bg-green-500/10 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen opacity-70 animate-pulse"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-green-500/10 rounded-full blur-[100px] mix-blend-multiply dark:mix-blend-screen opacity-70"></div>
-        </div> */}
+          <div className="relative z-10 max-w-xl">
+            <h1 className="text-white text-4xl font-bold leading-tight mb-4">
+              Comece sua jornada na terra dos seus sonhos
+            </h1>
+            <p className="text-white/80 text-base">
+              O mercado de terras mais transparente e eficiente do Brasil.
+              Encontre, negocie e invista com segurança.
+            </p>
+          </div>
+        </section>
 
-        <div className="sm:mx-auto sm:w-full sm:max-w-md relative z-5">
-          <div className="bg-white py-8 px-4 sm:px-10 mt-10">
-            <div className="sm:mx-auto sm:w-full sm:max-w-md mb-8 text-center">
-              <h2 className="text-3xl font-bold tracking-tight text-neutral-900 dark:text-white">
-                Criar sua conta
-              </h2>
-              <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
-                Junte-se ao mercado imobiliário de terrenos que mais cresce.
+        {/* RIGHT SIDE (Formulário) */}
+        <section className="flex-1 flex items-center justify-center p-6 md:p-10 bg-gray-50">
+          <div className="w-full max-w-md ">
+            {/* HEADER */}
+            <div className="mb-6 text-center md:text-left">
+              <h2 className="text-2xl font-bold mb-2">Criar conta</h2>
+              <p className="text-sm text-gray-500">
+                Insira seus dados para começar a explorar propriedades.
               </p>
             </div>
 
+            {/* FORM (sua lógica intacta) */}
             <Form />
 
-            <div className="mt-8 text-center border-t border-neutral-100 space-x-1 dark:border-neutral-800 pt-6">
-              <p className="text-sm text-neutral-500 dark:text-neutral-400">
+            {/* FOOTER */}
+            <div className="mt-1  text-center">
+              <p className="text-sm text-gray-500">
                 Já possui uma conta?
                 <Link
-                  href={"/auth/login"}
-                  className="font-bold text-neutral-900 dark:text-white pl-2 hover:text-green-500 transition-colors hover:underline"
+                  href="/auth/login"
+                  className="ml-2 font-semibold text-gray-900 hover:text-green-600 transition"
                 >
-                  Acessar minha conta
+                  Entrar
                 </Link>
               </p>
             </div>
           </div>
-        </div>
-        {/* <div className="mt-10 text-center relative z-10">
-          <p className="text-xs text-neutral-400">
-            © 2024 LandMarket. All rights reserved.
-          </p>
-        </div> */}
+        </section>
       </main>
     </div>
   );
