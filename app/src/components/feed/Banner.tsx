@@ -4,7 +4,7 @@ import banner  from '@/public/banner.png'
 
 export function CommunityBanner() {
   return (
-    <div className="relative overflow-hidden bg-slate-900 rounded-2xl shadow-lg min-h-[65] flex items-center group">
+    <div className="relative z-1 overflow-hidden bg-slate-900 rounded-2xl shadow-lg min-h-[65] flex items-center group">
       {/* Background */}
       <div className="absolute inset-0 z-0">
         <Image src={banner} alt="" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"></Image>
