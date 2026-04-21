@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import {
+  MdAccountCircle,
   MdClose,
   MdExpandMore,
   MdImage,
@@ -31,6 +32,7 @@ import { getAuth } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { SearchPostCard } from "./SearchPost";
 import { useAuth } from "../../context/useAuthContext";
+import Link from "next/link";
 
 type Post = {
   title: string;
@@ -177,7 +179,6 @@ export function HeroSearch() {
     }
   }, [isOpen]);
 
-
   return (
     <>
       <Modal
@@ -207,7 +208,8 @@ export function HeroSearch() {
                 />
                 <div className="flex flex-col">
                   <span className="text-sm capitalize font-semibold text-neutral-900 dark:text-white">
-                    {profile?.name.split(/\s+/)[0] || user?.displayName?.split(/\s+/)[0] }
+                    {profile?.name.split(/\s+/)[0] ||
+                      user?.displayName?.split(/\s+/)[0]}
                   </span>
                   <span className="text-xs capitalize text-neutral-400 dark:text-white">
                     {profile?.location}
@@ -370,47 +372,78 @@ export function HeroSearch() {
         )}
       </Modal>
 
-      <div className="bg-white rounded-2xl border border-neutral-200 p-4">
-        <div className="flex gap-3 mb-4">
-          <Image
-            src={profile?.photoURL || user?.photoURL || "/place.webp"}
-            alt="User avatar"
-            width={40}
-            height={40}
-            className="w-10 h-10 rounded-full object-cover"
-          />
+      {user ? (
+        <div className="bg-white rounded-2xl border border-neutral-200 p-4">
+          <div className="flex gap-3 mb-4">
+            <Image
+              src={profile?.photoURL || user?.photoURL || "/place.webp"}
+              alt="User avatar"
+              width={40}
+              height={40}
+              className="w-10 h-10 rounded-full object-cover"
+            />
 
-          <button
-            onClick={() => setIsOpen(true)}
-            className="flex-1 text-left px-4 py-2.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-sm text-neutral-500"
-          >
-            Está buscando uma nova terra?
-          </button>
+            <button
+              onClick={() => setIsOpen(true)}
+              className="flex-1 text-left px-4 py-2.5 rounded-full bg-neutral-100 hover:bg-neutral-200 text-sm text-neutral-500"
+            >
+              Está buscando uma nova terra?
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2 border-t border-neutral-200 pt-3">
+            <button className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-neutral-100">
+              <MdImage className="text-blue-500" />
+              <span className="text-xs font-semibold text-neutral-600">
+                Photo/Video
+              </span>
+            </button>
+
+            <button className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-neutral-100">
+              <MdMap className="text-green-600" />
+              <span className="text-xs font-semibold text-neutral-600">
+                Add Map
+              </span>
+            </button>
+
+            <button className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-neutral-100">
+              <MdSell className="text-orange-500" />
+              <span className="text-xs font-semibold text-neutral-600">
+                Sale/Lease
+              </span>
+            </button>
+          </div>
         </div>
+      ) : (
+        <div className="bg-white rounded-xl shadow p-6 flex flex-col gap-6">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            {/* Texto + ícone */}
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center text-green-600">
+                <MdAccountCircle className="text-3xl"/>
+              </div>
 
-        <div className="flex items-center gap-2 border-t border-neutral-200 pt-3">
-          <button className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-neutral-100">
-            <MdImage className="text-blue-500" />
-            <span className="text-xs font-semibold text-neutral-600">
-              Photo/Video
-            </span>
-          </button>
+              <p className="text-base text-gray-700 font-medium">
+                Participe da comunidade Reno! <br className="hidden md:block" />
+                <span className="text-gray-500 font-normal">
+                  Faça login para postar ou buscar terrenos.
+                </span>
+              </p>
+            </div>
 
-          <button className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-neutral-100">
-            <MdMap className="text-green-600" />
-            <span className="text-xs font-semibold text-neutral-600">
-              Add Map
-            </span>
-          </button>
+            {/* Botões */}
+            <div className="flex gap-3 w-full md:w-auto">
+              <Link href={`/auth/login`} className="flex-1 md:flex-none px-6 py-2 rounded-lg border border-green-500 text-green-600 text-sm font-medium hover:bg-green-50 transition">
+                Entrar
+              </Link>
 
-          <button className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg hover:bg-neutral-100">
-            <MdSell className="text-orange-500" />
-            <span className="text-xs font-semibold text-neutral-600">
-              Sale/Lease
-            </span>
-          </button>
+              <Link href={'/auth/signup'} className="flex-1 md:flex-none bg-green-600 text-white px-6 py-2 rounded-lg text-sm font-medium shadow hover:bg-green-700 transition">
+                Criar conta
+              </Link>
+            </div>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

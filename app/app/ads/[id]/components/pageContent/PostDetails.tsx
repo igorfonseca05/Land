@@ -30,6 +30,7 @@ import { useRef } from "react";
 import { GlobalSpinner } from "@/app/src/components/globalSpinner/GlobalSpinner";
 import { FirebaseError } from "firebase/app";
 import { toast } from "sonner";
+import { AdErrorState } from "@/app/src/components/ErrorState/AdErrorState";
 
 type Unit = "ha" | "acre" | "sqm";
 
@@ -38,7 +39,8 @@ export function PostDetails({ uid }: { uid: string }) {
   const leaflet = useRef<any>(null);
 
   const [post, setPost] = useState<NormalizedAd | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null)
 
   function formatSize(size: number, unit: Unit): string {
     if (unit === "ha") {
@@ -55,7 +57,7 @@ export function PostDetails({ uid }: { uid: string }) {
 
     return "";
   }
-  
+
   function getUpperCaseLatter(text: string = "") {
     return text.slice(0, 1).toUpperCase() + text.slice(1);
   }
@@ -76,61 +78,61 @@ export function PostDetails({ uid }: { uid: string }) {
           error instanceof FirebaseError
             ? error
             : new Error("Erro desconhecido");
-        toast.error(err.message);
+        // toast.error(err.message);
+        setError(err.message)
       } finally {
         setLoading(false);
       }
     }
 
-    // if(!uid) return 
-
     getDocument();
   }, [uid]);
 
-  console.log(post);
+  // useEffect(() => {
+  //   async function initMap() {
 
-  useEffect(() => {
-    async function initMap() {
+  //     const L = (await import('leaflet')).default
+  //     leaflet.current = L
 
-      const L = (await import('leaflet')).default
-      leaflet.current = L
+  //     if (!mapRef.current || !post?.location?.coord) return;
 
-      if (!mapRef.current || !post?.location?.coord) return;
+  //     const { lat, lng } = post?.location.coord;
 
-      const { lat, lng } = post?.location.coord;
+  //     const map = L.map("mapa").setView([-15, -22], 13);
 
-      const map = L.map("mapa").setView([-15, -22], 13);
+  //     const satellite = L.tileLayer(
+  //       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  //       { attribution: "Tiles © Esri" },
+  //     );
 
-      const satellite = L.tileLayer(
-        "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-        { attribution: "Tiles © Esri" },
-      );
+  //     const googleStreets = L.tileLayer(
+  //       "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
+  //       {
+  //         subdomains: ["mt0", "mt1", "mt2", "mt3"],
+  //       },
+  //     );
 
-      const googleStreets = L.tileLayer(
-        "http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}",
-        {
-          subdomains: ["mt0", "mt1", "mt2", "mt3"],
-        },
-      );
+  //     const baseMaps = {
+  //       Satélite: satellite,
+  //       Ruas: googleStreets,
+  //     };
 
-      const baseMaps = {
-        Satélite: satellite,
-        Ruas: googleStreets,
-      };
+  //     satellite.addTo(map);
 
-      satellite.addTo(map);
+  //     L.control.layers(baseMaps).addTo(map);
+  //   }
 
-      L.control.layers(baseMaps).addTo(map);
-    }
-
-    initMap()
-  }, [post]);
+  //   initMap()
+  // }, [post]);
 
   return (
     <>
       {loading ? (
-        <GlobalSpinner />
-      ) : (
+        <div className="flex flex-col pt-20 items-center rounded-lg h-screen space-y-3">
+          <div className="h-10 w-10 animate-spin rounded-full border-4 border-gray-300 border-t-[#84C60B]" />
+          <span className="font-bold text-neutral-700">Buscando dados do anúncio...</span>
+        </div>
+      ) : !error ? (
         <div className="space-y-4 px-1 md:px-0">
           <div className="relative h-100">
             {Array.isArray(post?.images) && post?.images?.length > 1 ? (
@@ -246,8 +248,7 @@ export function PostDetails({ uid }: { uid: string }) {
               </div>
 
               <div className="border-b border-zinc-200 dark:border-zinc-800 pb-8">
-                <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-4">
-                </h3>
+                <h3 className="text-xl font-bold text-zinc-900 dark:text-white mb-4"></h3>
                 <div className="max-w-none text-zinc-600 dark:text-zinc-300">
                   <p className="mb-4">
                     {getUpperCaseLatter(post?.description)}
@@ -411,6 +412,8 @@ export function PostDetails({ uid }: { uid: string }) {
             </div>
           </div>
         </div>
+      ) : (
+        <AdErrorState/>
       )}
     </>
   );

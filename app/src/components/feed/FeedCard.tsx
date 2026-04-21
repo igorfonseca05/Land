@@ -83,33 +83,35 @@ export function FeedCard({ ...props }: PostProps) {
         </div>
 
         {/* Body */}
-        <div className="space-y-0">
+        <div className="space-y-4">
           <p
             className={`${
               props.title && props.type === "search"
-                ? "text-[clamp(16px,2vw,18px)] font-semibold text-neutral-900"
-                : "text-md text-neutral-900 font-semibold"
+                ? "font-h2 text-xl mb-md"
+                : "text-md  font-semibold"
             }`}
           >
             {getUpperCaseLatter(props.title)}
           </p>
 
-          <p className="text-[clamp(14px,1vw,18px)] text-neutral-900 leading-relaxed pt-2 ">
+          <p className="text-[clamp(14px,1.2vw,18px)] text-neutral-600 leading-relaxed ">
             {props.description}
           </p>
 
           {props.type === "search" && (
             <>
-              <p className="text-neutral-700 text-sm font-semibold py-2">
+              {/* <p className="text-neutral-700 text-sm font-semibold py-2">
                 Requisitos
-              </p>
-              <div className=" grid grid-cols-2 gap-4 text-sm text-neutral-900">
+              </p> */}
+              <div className="flex flex-wrap gap-4 text-neutral-900">
                 {props.features.map((item, i) => (
-                  <div className="flex items-center gap-2" key={i}>
-                    <MdCheckCircle className="text-green-500" />
-                    <span className="inline-block text-[clamp(12px,1vw,18px)]">
-                      {item}
-                    </span>
+                  <div className="flex items-center gap-0" key={i}>
+                    <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100">
+                      <MdCheckCircle className="text-green-500" />
+                      <span className="text-[clamp(12px,1vw,18px)] font-label-md text-secondary">
+                        {item}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>

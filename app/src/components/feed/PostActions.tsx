@@ -18,7 +18,7 @@ export function PostActions({ ...props }: {id: string, likesCount: number | unde
         <>
           <hr className="text-neutral-100"  />
           <div className={`${user? `flex justify-between items-center p-4 md:p-4`: `flex justify-between items-center p-4 md:p-4 opacity-50 pointer-events-none`}`}>
-            <div className="flex gap-4 items-center">
+            <div className="flex gap-4 items-center text-lg">
               <LikeButton postId={props.id} likesCount={props.likesCount} />
               <MdShare />
             </div>

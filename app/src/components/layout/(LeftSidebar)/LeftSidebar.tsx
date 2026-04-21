@@ -1,4 +1,4 @@
-import { MdFeed, MdBookmark, MdMap, MdHistory } from "react-icons/md";
+import { MdFeed, MdBookmark, MdMap, MdHistory, MdClose } from "react-icons/md";
 import { UserInfoContainer } from "./components/UserInfoContainer";
 import { NavBar } from "./components/NavBar";
 
@@ -29,9 +29,7 @@ export function LeftSidebar() {
               className="flex items-center gap-1 px-3 py-1 rounded-full bg-neutral-200 text-xs font-semibold text-neutral-700"
             >
               {item}
-              <span className="material-symbols-outlined text-[14px] cursor-pointer">
-                close
-              </span>
+              <MdClose className="text-[14px] cursor-pointer"></MdClose>
             </span>
           ))}
         </div>

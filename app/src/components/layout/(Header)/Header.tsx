@@ -51,18 +51,7 @@ export function Header() {
           </div>
         </nav> */}
 
-        {user ? (
-          <UserMenu/>
-        ) : (
-          <div className="space-x-2">
-            <Link href={'/auth/login'} className="px-6 py-3 rounded-xl bg-green-500 text-white font-bold hover:bg-green-400 transition">
-            Entrar
-           </Link>
-           {/* <button className="px-6 py-3 rounded-xl bg-green-500 text-white font-bold hover:bg-green-400 transition">
-              Criar conta
-            </button> */}
-          </div>
-        )}
+        {user && <UserMenu/>}
        
       </div>
     </header>

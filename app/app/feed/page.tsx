@@ -7,7 +7,7 @@ export default function FeedPage() {
   return (
     <section className="space-y-4">
       <HeroSearch />
-      <div className="flex items-center justify-between px-1">
+      {/* <div className="flex items-center justify-between px-1">
         <div className="flex items-center gap-2">
           <div className="h-px w-8 bg-neutral-300" />
           <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">
@@ -23,7 +23,7 @@ export default function FeedPage() {
         <button className="p-2 text-neutral-500 hover:text-neutral-900">
           <MdTune className="text-xl"/>
         </button>
-      </div>
+      </div> */}
       <Posts />
     </section>
   );
