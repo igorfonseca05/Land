@@ -55,15 +55,15 @@ export function NavBar({onClose} : {onClose?: (isOpen: boolean) => void}) {
     {
       id: 2,
       icon: MdMap,
-      label: "Explorar no mapa",
+      label: "Buscar no mapa",
       href: "/app/mapa",
     },
-    {
-      id: 3,
-      icon: MdSearch,
-      label: "Buscar terrenos",
-      href: "/busca",
-    },
+    // {
+    //   id: 3,
+    //   icon: MdSearch,
+    //   label: "Buscar terrenos",
+    //   href: "/busca",
+    // },
     {
       id: 4,
       icon: MdInfoOutline,
