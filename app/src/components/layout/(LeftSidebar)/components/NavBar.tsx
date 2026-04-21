@@ -67,8 +67,8 @@ export function NavBar({onClose} : {onClose?: (isOpen: boolean) => void}) {
     {
       id: 4,
       icon: MdInfoOutline,
-      label: "Como funciona",
-      href: "/app/como-funciona",
+      label: "Quem somos",
+      href: "/app/quem-somos",
     },
   ];
 
