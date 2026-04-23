@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useProfileContext } from "../../../context/userProfileContext";
 import { NotificationContainer } from "./NotificationContainer";
 import { useAuth } from "@/app/src/context/useAuthContext";
+import Link from "next/link";
 
 export function UserMenu() {
   const {user} = useAuth()
@@ -62,16 +63,14 @@ export function UserMenu() {
 
       {open && (
         <div className="absolute right-0 top-12 w-48 rounded-xl border border-neutral-200 bg-white shadow-lg overflow-hidden z-50">
-          <button
+          <Link
             className="flex w-full items-center gap-2 px-4 py-3 text-sm font-medium text-neutral-700 hover:bg-neutral-100 transition-colors"
-            onClick={() => {
-              router.push(`/app/profile/${profile?.slug || user?.email}`);
-              setOpen(false);
-            }}
+            href={`/app/profile/${profile?.slug || user?.email}`}
+            onClick={()=> setOpen(false)}
           >
             <MdAccountCircle className="text-[18px]" />
             Meu Perfil
-          </button>
+          </Link>
           <button
             className="flex w-full items-center gap-2 px-4 py-3 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
             onClick={async () => {

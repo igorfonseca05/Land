@@ -74,18 +74,24 @@ export function PostDetails({ uid }: { uid: string }) {
     return <AdErrorState />;
   }
 
-  console.log(post)
+  console.log(post);
 
   return (
-    <main className="max-w-5xl mx-auto px-4 space-y-4">
+    <main className="max-w-7xl mx-auto px-4 space-y-4">
       {/* HERO */}
       <div className="relative rounded-2xl overflow-hidden">
         {post.images && post.images.length > 1 ? (
-          <Swiper modules={[Navigation]} navigation loop>
-            {post.images.map((img, i) => (
+          <Swiper modules={[Navigation]} navigation loop slidesPerView={1}>
+            {post.images?.map((url, i) => (
               <SwiperSlide key={i}>
-                <div className="relative w-full h-100">
-                  <Image src={img} alt="image" fill className="object-cover" />
+                <div className="relative w-full h-42 md:h-84">
+                  <Image
+                    src={url}
+                    alt="Slide"
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                    className="object-cover"
+                  />
                 </div>
               </SwiperSlide>
             ))}

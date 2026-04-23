@@ -115,8 +115,8 @@ export const featuresList = [
 ] as const;
 
 const userSnapshotSchema = z.object({
-  name: z.string(),
-  avatar: z.string().optional(),
+  displayName: z.string(),
+  photoURL: z.string().optional(),
   userId: z.string().min(10),
   publicId: z.string(),
   slug: z.string(),
@@ -177,6 +177,7 @@ export type PostSchemaType = z.infer<typeof PostSchema> & {
 
 
 export const PostSearchSchema = z.object({
+  // id: z.string().optional(),
   title: z.string().trim().min(2, "Insira um titulo para o post"),
   description: z
     .string()

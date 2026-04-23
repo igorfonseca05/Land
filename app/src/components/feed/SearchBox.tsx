@@ -18,6 +18,7 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
   serverTimestamp,
   setDoc,
   Timestamp,
@@ -26,7 +27,14 @@ import {
 import { auth, db } from "@/app/config/firebase";
 import { toast } from "sonner";
 import { useSearchPost } from "../../context/usePostContext";
-import { PostSchema, Profile, propertySchema } from "@/app/utils/zod";
+import {
+  PostSchema,
+  PostSearchSchema,
+  Profile,
+  propertySchema,
+  PostSearchSchemaType,
+  PostSchemaType,
+} from "@/app/utils/zod";
 import { details, pre } from "framer-motion/client";
 import { getAuth, User } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
@@ -66,7 +74,6 @@ export function HeroSearch() {
   const { setSearchPost } = useSearchPost();
   const [isOpen, setIsOpen] = useState(false);
 
-  const [userProfile, setUserProfile] = useState<User | Profile | null>(null)
 
   const [post, setPost] = useState<z.infer<typeof PostSchema>>({
     title: "",
@@ -80,13 +87,13 @@ export function HeroSearch() {
     userId: user?.uid ? user.uid : "",
     likesCount: 0,
     userSnapShot: {
-      name: 'oi',
-      avatar:  profile ? profile.photoURL : ( user ? user?.photoURL! : ''),
-      userId: profile ? profile.uid : ( user ? user.uid : ''),
-      publicId: profile ? profile.publicId : '',
-      slug: profile ? profile.slug : '',
-      profileVerified: profile?.profileVerified ? profile.profileVerified : false,
-      profession: profile?.profession ? profile.profession : '',
+      displayName: "",
+      photoURL: "",
+      userId: "",
+      publicId: "",
+      slug: "",
+      profileVerified: false,
+      profession: "",
     },
   });
 
@@ -95,6 +102,8 @@ export function HeroSearch() {
     ZodFlattenedError<Post>["fieldErrors"] | null
   >(null);
   const [loading, setLoading] = useState(false);
+
+  // console.log(profile, user)
 
   const isLoggedIn = user;
 
@@ -139,12 +148,26 @@ export function HeroSearch() {
   async function handlePostForm(e: FormEvent) {
     e.preventDefault();
 
-    // console.log(post)
+    const rawData = {
+      ...post,
+      userSnapShot: {
+        displayName: profile ? profile.name : user ? user?.displayName! : "",
+        photoURL: profile ? profile.photoURL : user ? user?.photoURL! : "",
+        userId: profile ? profile.uid : user ? user.uid : "",
+        publicId: profile ? profile.publicId : "",
+        slug: profile ? profile.slug : "",
+        profileVerified: profile?.profileVerified
+          ? profile.profileVerified
+          : false,
+        profession: profile?.profession ? profile.profession : "",
+      },
+    };
 
+    console.log(rawData)
 
-    const isValidPost = PostSchema.safeParse(post);
+    const isValidPost = PostSchema.safeParse(rawData);
 
-    console.log(isValidPost)
+    console.log(isValidPost.error)
 
     if (!isValidPost.success) {
       return setError(isValidPost.error.flatten().fieldErrors);
@@ -156,6 +179,9 @@ export function HeroSearch() {
 
       if (!user?.uid) return;
 
+    
+      const postId = doc(collection(db, 'posts')).id
+      
       const newPost = {
         ...isValidPost.data,
         userId: user?.uid,
@@ -165,7 +191,9 @@ export function HeroSearch() {
         likesCount: 0,
       };
 
-      await addDoc(collection(db, "ads"), newPost);
+      // await setDoc(doc(db, 'ads', postId), newPost);
+      await addDoc(collection(db, 'ads'), newPost);
+      // setSearchPost({...newPost, id: postId});
       setSearchPost(newPost);
       setLoading(false);
       setIsOpen(false);
@@ -195,8 +223,8 @@ export function HeroSearch() {
         userId: user?.uid ? user.uid : "",
         likesCount: 0,
         userSnapShot: {
-          name: "",
-          avatar: "",
+          displayName: "",
+          photoURL: "",
           userId: user?.uid ? user.uid : "",
           publicId: "",
           slug: "",
@@ -207,17 +235,6 @@ export function HeroSearch() {
     }
   }, [isOpen]);
 
-  useEffect(() => {
-
-    if(profile) {
-      return setUserProfile(profile)
-    }
-
-    if(user) {
-      return setUserProfile(user)
-    }
-
-  }, [profile, user])
 
   return (
     <>
