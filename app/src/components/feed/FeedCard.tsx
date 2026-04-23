@@ -19,7 +19,7 @@ import { PostSchemaType } from "@/app/utils/zod";
 import { PostActions } from "./PostActions";
 import { useProfileContext } from "../../context/userProfileContext";
 import { useAuth } from "../../context/useAuthContext";
-// export type PostProps = PostSchemaType;
+export type PostProps = PostSchemaType;
 
 // export function FeedCard({ ...props }: PostProps) {
 //   const postHasImages = Array.isArray(props.images) && props.images.length > 1;
@@ -178,15 +178,13 @@ import { useAuth } from "../../context/useAuthContext";
 //   );
 // }
 
-export function FeedCard({ ...props }: PostSchemaType) {
+export function FeedCard({ ...props }: PostProps) {
   const {profile} = useProfileContext()
   const {user} = useAuth()
   const postHasImages = Array.isArray(props.images) && props.images.length > 1;
   const postHasOneImage = props.images?.length === 1;
 
   const isDesabled = props.type === "search";
-
-  console.log(props.userSnapShot);
 
   return (
     <article className="bg-white rounded-xl shadow-sm overflow-hidden transition-all hover:shadow-md">
