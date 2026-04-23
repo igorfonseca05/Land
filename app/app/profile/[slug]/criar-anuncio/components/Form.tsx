@@ -256,6 +256,15 @@ export function Form() {
       features,
       status: "active",
       userId: user.uid,
+      userSnapShot: {
+        userId: user.uid,
+        name: user.displayName,
+        avatar: user.photoURL,
+        publicId: profile?.publicId,
+        profileVerified: profile?.profileVerified,
+        profession: profile?.profession,
+        slug: profile?.slug
+      }
     };
 
     const parsed = NormalizedAdSchema.safeParse(rawData);
@@ -332,6 +341,7 @@ export function Form() {
     } catch (err) {
       toast.dismiss();
       toast.error("Erro ao publicar anúncio");
+      console.log(err)
     } finally {
       setLoading(false);
     }
@@ -347,9 +357,9 @@ export function Form() {
     };
   }, [file]);
 
-  useEffect(() => {
-    console.log(location);
-  }, [location]);
+  // useEffect(() => {
+  //   console.log(location);
+  // }, [location]);
 
   if (!profile) {
     return <div className="p-8 text-center">Carregando...</div>;

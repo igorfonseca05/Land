@@ -114,10 +114,20 @@ export const featuresList = [
   "Sem restrições ambientais",
 ] as const;
 
+const userSnapshotSchema = z.object({
+  name: z.string(),
+  avatar: z.string().optional(),
+  userId: z.string().min(10),
+  publicId: z.string(),
+  slug: z.string(),
+  profileVerified: z.boolean(),
+  profession: z.string()
+});
+
 /* ========= Schema Normalizado ========= */
 
 export const NormalizedAdSchema = z.object({
-  images: z.array(z.string()).default([]).optional(),
+  images: z.array(z.file()).default([]).optional(),
   type: z.enum(["search", "sale"]),
   details: DetailsSchema.optional(),
   location: LocationSchema.optional(),
@@ -133,10 +143,10 @@ export const NormalizedAdSchema = z.object({
   features: z.array(z.enum(featuresList)),
   userId: z.string().min(10),
   status: z.enum(["active", "inactive", "reserved", "sold"]),
+  userSnapShot: userSnapshotSchema
 });
 
 export type NormalizedAd = z.infer<typeof NormalizedAdSchema>;
-
 
 export const PostSchema = z.object({
   images: z.array(z.string()).nullable().default([]),
@@ -156,7 +166,8 @@ export const PostSchema = z.object({
   features: z.array(z.enum(featuresList)),
   userId: z.string().min(10),
   status: z.enum(["active", "inactive", "reserved", "sold"]),
-  likesCount: z.number().default(0).optional()
+  likesCount: z.number().default(0).optional(),
+  userSnapShot: userSnapshotSchema
 });
 
 export type PostSchemaType = z.infer<typeof PostSchema> & {
@@ -178,6 +189,7 @@ export const PostSearchSchema = z.object({
   type: z.string().optional(),
   userId: z.string().optional(),
   likesCount: z.number().optional(),
+  userSnapShot: userSnapshotSchema
 });
 
 export const propertySchema = z.object({
@@ -186,8 +198,6 @@ export const propertySchema = z.object({
   features: z.array(z.enum(featuresList)),
 });
 
-export type PostSchema = z.infer<typeof PostSearchSchema>;
+export type PostSearchSchemaType = z.infer<typeof PostSearchSchema>;
 
-// [2026-01-14T19:33:31.390Z]  @firebase/firestore: "Firestore (12.6.0): Could not reach Cloud Firestore backend. Connection failed 1 times. Most recent error: FirebaseError: [code=unknown]: Fetching auth token failed: Firebase: Error (auth/network-request-failed).\nThis typically indicates that your device does not have a healthy Internet connection at the moment. The client will operate in offline mode until it is able to successfully connect to the backend."
 
-// Failed to get document because the client is offline.

@@ -1,14 +1,14 @@
 "use client";
-import { formatFirebaseTime } from "@/app/utils/functions";
+import { formatFirebaseTime, getUpperCaseLatter } from "@/app/utils/functions";
 // import { PostModel } from "../../context/usePostContext";
 import { Avatar } from "../ui/Avatar";
 import { MdMoreHoriz } from "react-icons/md";
 import { useProfileContext } from "../../context/userProfileContext";
 import { PostActions } from "./PostActions";
-import { PostSchema } from "@/app/utils/zod";
+import { PostSearchSchemaType } from "@/app/utils/zod";
 
 type SearchPostProps = {
-  post: PostSchema;
+  post: PostSearchSchemaType;
   userName: string | null | undefined;
   userLocation?: string;
   isPosting: boolean;
@@ -38,7 +38,7 @@ export function SearchPostCard({
           <div>
             <p className="font-bold text-sm capitalize">{"igor"}</p>
             <p className="text-xs text-neutral-500 ">
-              <span className="capitalize">{profile?.location}</span> • Postado
+               Postado
               há {formatFirebaseTime(post.createdAt)}
             </p>
           </div>
@@ -46,12 +46,26 @@ export function SearchPostCard({
         <MdMoreHoriz />
       </div>
       {/* Conteúdo do post */}
-      <p className="text-sm text-neutral-700 dark:text-neutral-200 whitespace-pre-wrap">
-        {post.title}
-      </p>
+       <h2
+                  className={`${
+                    post.type === "search"
+                      ? "text-lg font-semibold mb-3"
+                      : "text-base font-semibold mb-2"
+                  }`}
+                >
+                  {getUpperCaseLatter(post.title)}
+                </h2>
       <p className="text-sm text-neutral-700 dark:text-neutral-200 whitespace-pre-wrap">
         {post.description}
       </p>
+
+       {/* DIVIDER */}
+          <hr className="border-gray-100 mb-2" />
+
+          {/* ACTIONS */}
+          {/* <div className="flex h-6 flex-1 tems-center justify-between">
+            <PostActions id={post.id} likesCount={post.likesCount} />
+          </div> */}
   
     </div>
   );

@@ -1,14 +1,14 @@
 import { formatFirebaseTime } from "@/app/utils/functions";
 import { Avatar } from "../ui/Avatar";
-import { PostProps } from "./FeedCard";
+// import { PostProps } from "./FeedCard";
 import { MdCheckCircle, MdSearch, MdShare } from "react-icons/md";
 import { getAuth } from "firebase/auth";
 import { LikeButton } from "./LikeButton";
 import { SavePost } from "./savePost";
 import { DocumentData } from "firebase/firestore";
-import { Profile } from "@/app/utils/zod";
+import { PostSchemaType, Profile } from "@/app/utils/zod";
 
-export function SearchCard({...props}: PostProps) {
+export function SearchCard({...props}: PostSchemaType) {
 
   const convertedFirebaseDate = formatFirebaseTime(props.createdAt).trim().toLowerCase()
   const today = new Date().toLocaleDateString('pt', {
@@ -28,10 +28,10 @@ export function SearchCard({...props}: PostProps) {
     <div className="p-2 md:p-6 space-y-2.5">
       <div className=" flex justify-between ">
         <div className="flex gap-3">
-          <Avatar src={props.img} fallback={props?.author} />
+          <Avatar src={props.userSnapShot.avatar} fallback={props?.userSnapShot.name} />
           <div>
             <p className="font-bold text-sm capitalize">
-              {props.author}
+              {props?.userSnapShot.name}
             </p>
             <p className="text-xs text-neutral-500 ">
               {/* <span className="capitalize">{location ? location : ""}</span> •{" "} */}

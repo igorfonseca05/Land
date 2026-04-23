@@ -22,12 +22,7 @@ import { getAuth } from "firebase/auth";
 import { SearchCard } from "./SearchCard";
 import { PostSchemaType } from "@/app/utils/zod";
 import { PostActions } from "./PostActions";
-export type PostProps = PostSchemaType & {
-  author: string;
-  img: string;
-  userId: string;
-  publicId: string;
-};
+// export type PostProps = PostSchemaType;
 
 // export function FeedCard({ ...props }: PostProps) {
 //   const postHasImages = Array.isArray(props.images) && props.images.length > 1;
@@ -60,7 +55,7 @@ export type PostProps = PostSchemaType & {
 //             {props.type === "search" ? (
 //               <>
 //                 <span
-//                   className="inline-flex gap-x-1 items-center px-3 py-1 rounded-full text-sm 
+//                   className="inline-flex gap-x-1 items-center px-3 py-1 rounded-full text-sm
 //                   font-semibold bg-green-50 text-green-800"
 //                 >
 //                   <MdSearch />
@@ -70,7 +65,7 @@ export type PostProps = PostSchemaType & {
 //             ) : (
 //               <>
 //                 <span
-//                   className="inline-flex gap-x-1 items-center px-3 py-1 rounded-full text-sm 
+//                   className="inline-flex gap-x-1 items-center px-3 py-1 rounded-full text-sm
 //                   font-semibold bg-yellow-100 text-yellow-600"
 //                 >
 //                   <MdSell />
@@ -186,7 +181,7 @@ export type PostProps = PostSchemaType & {
 //   );
 // }
 
-export function FeedCard({ ...props }: PostProps) {
+export function FeedCard({ ...props }: PostSchemaType) {
   const postHasImages = Array.isArray(props.images) && props.images.length > 1;
   const postHasOneImage = props.images?.length === 1;
 
@@ -203,13 +198,13 @@ export function FeedCard({ ...props }: PostProps) {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
               <Avatar
-                src={props.img}
-                fallback={props.author.split(/\s+/)[0]}
+                src={props.userSnapShot.avatar}
+                fallback={props.userSnapShot.name.split(/\s+/)[0]}
               />
 
               <div>
                 <p className="text-sm font-semibold capitalize">
-                  {props.author.split(/\s+/)[0]}
+                  {props.userSnapShot.name.split(/\s+/)[0]}
                 </p>
                 <p className="text-xs text-gray-400">
                   Postado {formatFirebaseTime(props.createdAt)}
@@ -263,11 +258,12 @@ export function FeedCard({ ...props }: PostProps) {
                 >
                   {props.images?.map((url, i) => (
                     <SwiperSlide key={i}>
-                      <div className="relative w-full h-full">
+                      <div className="relative w-full h-84">
                         <Image
                           src={url}
                           alt="Slide"
                           fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                           className="object-cover"
                         />
                       </div>
@@ -279,13 +275,14 @@ export function FeedCard({ ...props }: PostProps) {
                   src={`${props.images?.[0]}`}
                   alt="Imagem"
                   fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                   className="object-cover"
                 />
               )}
 
               {/* BADGES */}
               {props.type === "sale" && (
-                <div className="absolute bottom-3 left-3 flex gap-2">
+                <div className="absolute bottom-3 left-3 flex gap-2 z-2">
                   {props.details?.price && (
                     <span className="bg-black/70 text-white text-xs px-2 py-1 rounded-md flex items-center gap-1 font-medium">
                       <FaMoneyBill className="text-green-400" />
@@ -318,10 +315,10 @@ export function FeedCard({ ...props }: PostProps) {
           )}
 
           {/* DIVIDER */}
-          <hr className="border-gray-100 mb-3" />
+          <hr className="border-gray-100 mb-2" />
 
           {/* ACTIONS */}
-          <div className="flex  flex-1 tems-center justify-between">
+          <div className="flex h-6 flex-1 tems-center justify-between">
             <PostActions id={props.id} likesCount={props.likesCount} />
           </div>
         </div>

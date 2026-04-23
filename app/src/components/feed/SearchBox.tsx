@@ -26,14 +26,15 @@ import {
 import { auth, db } from "@/app/config/firebase";
 import { toast } from "sonner";
 import { useSearchPost } from "../../context/usePostContext";
-import { PostSchema, propertySchema } from "@/app/utils/zod";
+import { PostSchema, Profile, propertySchema } from "@/app/utils/zod";
 import { details, pre } from "framer-motion/client";
-import { getAuth } from "firebase/auth";
+import { getAuth, User } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { SearchPostCard } from "./SearchPost";
 import { useAuth } from "../../context/useAuthContext";
 import Link from "next/link";
 import { CommunityBanner } from "./Banner";
+import { createPublicId } from "@/app/utils/functions";
 
 type Post = {
   title: string;
@@ -64,6 +65,9 @@ export function HeroSearch() {
   const { profile } = useProfileContext();
   const { setSearchPost } = useSearchPost();
   const [isOpen, setIsOpen] = useState(false);
+
+  const [userProfile, setUserProfile] = useState<User | Profile | null>(null)
+
   const [post, setPost] = useState<z.infer<typeof PostSchema>>({
     title: "",
     description: "",
@@ -75,6 +79,15 @@ export function HeroSearch() {
     status: "active",
     userId: user?.uid ? user.uid : "",
     likesCount: 0,
+    userSnapShot: {
+      name: 'oi',
+      avatar:  profile ? profile.photoURL : ( user ? user?.photoURL! : ''),
+      userId: profile ? profile.uid : ( user ? user.uid : ''),
+      publicId: profile ? profile.publicId : '',
+      slug: profile ? profile.slug : '',
+      profileVerified: profile?.profileVerified ? profile.profileVerified : false,
+      profession: profile?.profession ? profile.profession : '',
+    },
   });
 
   const [charactereCount, setCharacterCount] = useState(2000);
@@ -126,7 +139,12 @@ export function HeroSearch() {
   async function handlePostForm(e: FormEvent) {
     e.preventDefault();
 
+    // console.log(post)
+
+
     const isValidPost = PostSchema.safeParse(post);
+
+    console.log(isValidPost)
 
     if (!isValidPost.success) {
       return setError(isValidPost.error.flatten().fieldErrors);
@@ -176,9 +194,30 @@ export function HeroSearch() {
         status: "active",
         userId: user?.uid ? user.uid : "",
         likesCount: 0,
+        userSnapShot: {
+          name: "",
+          avatar: "",
+          userId: user?.uid ? user.uid : "",
+          publicId: "",
+          slug: "",
+          profileVerified: false,
+          profession: "",
+        },
       });
     }
   }, [isOpen]);
+
+  useEffect(() => {
+
+    if(profile) {
+      return setUserProfile(profile)
+    }
+
+    if(user) {
+      return setUserProfile(user)
+    }
+
+  }, [profile, user])
 
   return (
     <>
@@ -416,7 +455,7 @@ export function HeroSearch() {
           </div>
         </div>
       ) : (
-        <CommunityBanner/>
+        <CommunityBanner />
       )}
     </>
   );

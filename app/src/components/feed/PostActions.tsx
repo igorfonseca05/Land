@@ -7,7 +7,7 @@ import { auth, db } from "@/app/config/firebase";
 import { LikeButton } from "./LikeButton";
 import { SavePost } from "./savePost";
 import { getAuth } from "firebase/auth";
-import { PostProps } from "./FeedCard";
+// import { PostProps } from "./FeedCard";
 import { PostSchemaType } from "@/app/utils/zod";
 import { useAuth } from "../../context/useAuthContext";
 

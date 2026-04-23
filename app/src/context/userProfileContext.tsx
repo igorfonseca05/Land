@@ -34,6 +34,7 @@ export type UserProfile = {
   cover?: string
   phone?: string
   profileVerified?: boolean,
+  publicId: string
 };
 
 type ProfileContextType = {

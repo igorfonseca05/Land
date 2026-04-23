@@ -21,7 +21,7 @@ import { useSearchPost } from "@/app/src/context/usePostContext";
 import { SearchPostCard } from "@/app/src/components/feed/SearchPost";
 import { NoFeedItem } from "./NoFeedItem";
 import Link from "next/link";
-import { PostSchema, PostSchemaType } from "@/app/utils/zod";
+import { PostSchema, PostSchemaType, PostSearchSchemaType } from "@/app/utils/zod";
 import { SearchCard } from "@/app/src/components/feed/SearchCard";
 import { LoadingCards } from "./LoadingCards";
 import { useAuth } from "@/app/src/context/useAuthContext";
@@ -32,7 +32,7 @@ export function Posts() {
   const { searchPost, postLoading } = useSearchPost();
   const [posts, setPosts] = useState<PostSchemaType[]>([]);
   const [owner, setOwner] = useState<{ [key: string]: UserProfile }>({});
-  const [inlinePost, setInlinePost] = useState<PostSchema | null>(null);
+  const [inlinePost, setInlinePost] = useState<PostSearchSchemaType | null>(null);
   const [loading, setLoading] = useState(false);
 
   const thereIsNoFeedItem = !inlinePost && posts.length === 0;
@@ -55,25 +55,25 @@ export function Posts() {
         ...(doc.data() as Omit<PostSchemaType, "id">),
       }));
 
-      const userIds = [...new Set(posts.map((f) => f.userId))];
+      // const userIds = [...new Set(posts.map((f) => f.userId))];
 
-      if (!Array.isArray(userIds) || userIds.length === 0) {
-        setLoading(false);
-        return;
-      }
+      // if (!Array.isArray(userIds) || userIds.length === 0) {
+      //   setLoading(false);
+      //   return;
+      // }
 
-      const usersQuery = query(
-        collection(db, "users"),
-        where(documentId(), "in", userIds),
-      );
+      // const usersQuery = query(
+      //   collection(db, "users"),
+      //   where(documentId(), "in", userIds),
+      // );
 
-      const usersSnap = await getDocs(usersQuery);
+      // const usersSnap = await getDocs(usersQuery);
 
-      const usersMap = Object.fromEntries(
-        usersSnap.docs.map((doc) => [doc.id, doc.data()]),
-      );
+      // const usersMap = Object.fromEntries(
+      //   usersSnap.docs.map((doc) => [doc.id, doc.data()]),
+      // );
       setPosts(posts);
-      setOwner(usersMap);
+      // setOwner(usersMap);
       setLoading(false);
     }
 
@@ -103,7 +103,7 @@ export function Posts() {
         <NoFeedItem />
       ) : (
         posts.map((doc, i) => {
-          const userData = owner[doc.userId];
+          // const userData = owner[doc.userId];
           return (
             <article
               key={doc.id}
@@ -111,10 +111,10 @@ export function Posts() {
             >
               <FeedCard
                 id={doc.id}
-                userId={userData?.uid as string}
-                author={userData?.name as string}
-                img={userData?.photoURL as string}
-                publicId={userData?.publicId as string}
+                userId={doc.userId}
+                // author={userData?.name as string}
+                // img={userData?.photoURL as string}
+                // publicId={userData?.publicId as string}
                 location={doc.location}
                 createdAt={doc.createdAt}
                 description={doc.description}
@@ -125,6 +125,7 @@ export function Posts() {
                 features={doc.features}
                 likesCount={doc.likesCount}
                 status={doc.status}
+                userSnapShot = {doc.userSnapShot}
               />
             </article>
           );
