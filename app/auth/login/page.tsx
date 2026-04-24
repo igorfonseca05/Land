@@ -4,6 +4,7 @@ import { BsApple } from "react-icons/bs";
 import { LoginForm } from "./components/LoginForm";
 import { GoogleButtonLogin } from "./components/GoogleButtonLogin";
 import Image from "next/image";
+import reno from '@/public/reno.png'
 
 export default function LoginPage() {
   return (
@@ -13,11 +14,11 @@ export default function LoginPage() {
         <div className="absolute inset-0 z-0">
           <div className="relative h-full w-full">
             <Image
-              src="https://res.cloudinary.com/igorfonseca/image/upload/v1776204621/reno_l844fc.png"
+              src={reno}
               alt="Imagem de fundo de terreno"
               fill
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 100vw"
-              className="object-cover opacity-60 grayscale-[10%] object-[90%]"
+              className="object-cover opacity-60 grayscale-10 object-[90%]"
               priority
             />
           </div>
