@@ -76,6 +76,7 @@ export function HeroSearch() {
 
 
   const [post, setPost] = useState<z.infer<typeof PostSchema>>({
+    id: '',
     title: "",
     description: "",
     features: [],
@@ -163,11 +164,8 @@ export function HeroSearch() {
       },
     };
 
-    console.log(rawData)
 
     const isValidPost = PostSchema.safeParse(rawData);
-
-    console.log(isValidPost.error)
 
     if (!isValidPost.success) {
       return setError(isValidPost.error.flatten().fieldErrors);
@@ -212,6 +210,7 @@ export function HeroSearch() {
     if (!isOpen) {
       setError(null);
       setPost({
+        id: '',
         title: "",
         description: "",
         features: [],
