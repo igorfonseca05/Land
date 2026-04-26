@@ -294,10 +294,6 @@ export function UserProfile() {
   }, [profile]);
 
 
-  // useEffect(() => {
-  //   setSizeDescription(215 - profileInfo.description.length);
-  // }, [profileInfo.description]);
-
   return (
     <>
       {

@@ -19,6 +19,8 @@ import { useEffect, useState } from "react";
 import { NormalizedAd, PostSchemaType } from "@/app/utils/zod";
 import { FirebaseError } from "firebase/app";
 import { AdErrorState } from "@/app/src/components/ErrorState/AdErrorState";
+import { Avatar } from "@/app/src/components/ui/Avatar";
+import { PostHeader } from "@/app/src/components/PostHeader/PostHeader";
 
 type Unit = "ha" | "acre" | "sqm";
 
@@ -61,7 +63,6 @@ export function PostDetails({ uid }: { uid: string }) {
     getDocument();
   }, [uid]);
 
-
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center flex-col gap-3">
@@ -81,7 +82,7 @@ export function PostDetails({ uid }: { uid: string }) {
     <main className="max-w-7xl mx-auto space-y-4">
       {/* HERO */}
       <div className="relative rounded-2xl overflow-hidden">
-        { post.images && post.images.length > 1 ? (
+        {post.images && post.images.length > 1 ? (
           <Swiper modules={[Navigation]} navigation loop slidesPerView={1}>
             {post.images?.map((url, i) => (
               <SwiperSlide key={i}>
@@ -121,7 +122,32 @@ export function PostDetails({ uid }: { uid: string }) {
         <div className="lg:col-span-8 space-y-4">
           {/* TITLE */}
           <div className="bg-white rounded-xl p-6 shadow-sm">
-            <h1 className="text-2xl font-bold mb-2">{upper(post.title)}</h1>
+            {/* <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-md border border-zinc-200 dark:border-zinc-800 p-5 flex items-center gap-4">
+              <div className="flex-1 overflow-hidden">
+              <div className="flex items-center gap-1 mb-0.5">
+              <h3 className="font-bold text-zinc-900 dark:text-white truncate">
+              Rocky Mtn Properties
+              </h3>
+              <span
+              className="material-symbols-outlined text-[16px] text-blue-500"
+              title="Verified Seller"
+              >
+              verified
+              </span>
+              </div>
+              <p className="text-xs text-zinc-500 mb-2">
+              Member since 2021 • 42 Listings
+              </p>
+              <a
+              className="text-xs font-bold text-green-600 hover:underline"
+              href="#"
+              >
+              View Profile
+              </a>
+              </div>
+              </div> */}
+            <h1 className="text-[clamp(24px,2vw,18px)] font-bold mb-4">{upper(post.title)}</h1>
+              <PostHeader user={post.userSnapShot} createdAt={post.createdAt}/>
 
             <div className="flex justify-between flex-wrap gap-4">
               {post.location && (
@@ -159,8 +185,8 @@ export function PostDetails({ uid }: { uid: string }) {
           </div>
 
           {/* INFO CARDS */}
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-white p-4 rounded-xl flex gap-3 shadow-sm">
+          <div className="flex flex-wrap gap-4">
+            <div className="bg-white w-min-[300px] flex-1 p-4 rounded-xl flex gap-3 shadow-sm">
               <MdAspectRatio className="text-green-500 text-xl" />
               <div>
                 <p className="text-xs text-gray-500">Tamanho</p>
@@ -172,7 +198,7 @@ export function PostDetails({ uid }: { uid: string }) {
               </div>
             </div>
 
-            <div className="bg-white p-4 rounded-xl flex gap-3 shadow-sm">
+            <div className="bg-white flex-1 p-4 rounded-xl flex gap-3 shadow-sm">
               <MdLandscape className="text-blue-400 text-xl" />
               <div>
                 <p className="text-xs text-gray-500">Zona</p>
@@ -207,33 +233,6 @@ export function PostDetails({ uid }: { uid: string }) {
               <p className="text-xs text-gray-400 mt-3 text-center">
                 Sem compromisso. Tire suas dúvidas diretamente.
               </p>
-            </div>
-            <div className="bg-white dark:bg-zinc-900 rounded-2xl shadow-md border border-zinc-200 dark:border-zinc-800 p-5 flex items-center gap-4">
-              <div className="size-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold border border-blue-200 shrink-0">
-                RP
-              </div>
-              <div className="flex-1 overflow-hidden">
-                <div className="flex items-center gap-1 mb-0.5">
-                  <h3 className="font-bold text-zinc-900 dark:text-white truncate">
-                    Rocky Mtn Properties
-                  </h3>
-                  <span
-                    className="material-symbols-outlined text-[16px] text-blue-500"
-                    title="Verified Seller"
-                  >
-                    verified
-                  </span>
-                </div>
-                <p className="text-xs text-zinc-500 mb-2">
-                  Member since 2021 • 42 Listings
-                </p>
-                <a
-                  className="text-xs font-bold text-green-600 hover:underline"
-                  href="#"
-                >
-                  View Profile
-                </a>
-              </div>
             </div>
           </div>
         </div>

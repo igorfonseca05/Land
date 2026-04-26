@@ -1,6 +1,6 @@
 type Props = {
   src?: string | null;
-  fallback: string;
+  fallback?: string;
 };
 
 export function Avatar({ src, fallback }: Props) {

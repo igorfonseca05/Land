@@ -19,6 +19,7 @@ import { PostSchemaType } from "@/app/utils/zod";
 import { PostActions } from "./PostActions";
 import { useProfileContext } from "../../context/userProfileContext";
 import { useAuth } from "../../context/useAuthContext";
+import { PostHeader } from "../PostHeader/PostHeader";
 export type PostProps = PostSchemaType;
 
 // export function FeedCard({ ...props }: PostProps) {
@@ -179,8 +180,8 @@ export type PostProps = PostSchemaType;
 // }
 
 export function FeedCard({ ...props }: PostProps) {
-  const {profile} = useProfileContext()
-  const {user} = useAuth()
+  const { profile } = useProfileContext();
+  const { user } = useAuth();
   const postHasImages = Array.isArray(props.images) && props.images.length > 1;
   const postHasOneImage = props.images?.length === 1;
 
@@ -190,27 +191,7 @@ export function FeedCard({ ...props }: PostProps) {
     <article className="bg-white rounded-xl shadow-sm overflow-hidden transition-all hover:shadow-md">
       <div className="p-4 md:p-5">
         {/* HEADER */}
-        <Link href={`#`}>
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-3">
-            <Avatar
-              src={props.userSnapShot.photoURL && props.userSnapShot.photoURL}
-              fallback={props.userSnapShot.displayName.split(/\s+/)[0]}
-            />
-
-            <div>
-              <p className="text-sm font-semibold capitalize">
-                {props.userSnapShot.displayName.split(/\s+/)[0]}
-              </p>
-              <p className="text-xs text-gray-400">
-                Postado {formatFirebaseTime(props.createdAt)}
-              </p>
-            </div>
-          </div>
-
-          <MdMoreHoriz className="text-gray-400 text-xl" />
-        </div>
-        </Link>
+        <PostHeader user={props.userSnapShot} createdAt={props.createdAt} />
 
         <Link
           href={isDesabled ? "#" : `/app/ads/${props.title}-${props.id}`}

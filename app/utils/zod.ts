@@ -175,6 +175,7 @@ export type PostSchemaType = z.infer<typeof PostSchema> & {
   id: string;
 };
 
+export type userSnapShot = z.infer<typeof userSnapshotSchema>
 
 export const PostSearchSchema = z.object({
   // id: z.string().optional(),
