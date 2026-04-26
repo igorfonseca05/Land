@@ -127,6 +127,7 @@ const userSnapshotSchema = z.object({
 /* ========= Schema Normalizado ========= */
 
 export const NormalizedAdSchema = z.object({
+  id: z.string().optional(),
   images: z.array(z.file()).default([]).optional(),
   type: z.enum(["search", "sale"]),
   details: DetailsSchema.optional(),
@@ -149,6 +150,7 @@ export const NormalizedAdSchema = z.object({
 export type NormalizedAd = z.infer<typeof NormalizedAdSchema>;
 
 export const PostSchema = z.object({
+  id: z.string(),
   images: z.array(z.string()).nullable().default([]),
   type: z.enum(["search", "sale"]),
   details: DetailsSchema.nullable().default(null),

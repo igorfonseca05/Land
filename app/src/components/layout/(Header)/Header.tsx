@@ -20,8 +20,6 @@ export function Header() {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  // console.log(user)s
-
   return (
     <header className="fixed top-0 w-full bg-white border-b border-neutral-200 z-10">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">

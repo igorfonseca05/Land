@@ -7,12 +7,20 @@ import { userSnapShot } from "@/app/utils/zod";
 
 type PropsInfos = {
   user: userSnapShot;
-  createdAt: Timestamp | FieldValue;
+  createdAt?: Timestamp | FieldValue;
   avatarOnly?: boolean;
-  points?: boolean
+  points?: boolean;
+  showDate?: boolean;
+  showPersonalInfos?: boolean;
 };
 
-export function PostHeader({ user, createdAt, avatarOnly, points }: PropsInfos) {
+export function PostHeader({
+  user,
+  createdAt,
+  avatarOnly,
+  points,
+  showPersonalInfos = false,
+}: PropsInfos) {
   const userName = user.displayName;
 
   return (
@@ -29,9 +37,17 @@ export function PostHeader({ user, createdAt, avatarOnly, points }: PropsInfos) 
                 <p className="text-sm font-semibold capitalize">
                   {getFirstName(userName)}
                 </p>
-                <p className="text-xs text-gray-400">
-                  Postado {formatFirebaseTime(createdAt)}
-                </p>
+                {createdAt && (
+                  <p className="text-xs text-gray-400">
+                    Postado {formatFirebaseTime(createdAt)}
+                  </p>
+                )}
+
+                {showPersonalInfos && (
+                    <p className="text-xs text-neutral-500">{user.profession}</p>
+                )}
+
+                {/* 📊 STATS */}
               </div>
             </div>
 

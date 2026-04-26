@@ -1,7 +1,7 @@
 "use client";
 
 import { auth, db } from "@/app/config/firebase";
-import { PostProps } from "@/app/src/components/feed/FeedCard";
+import { FeedCard, PostProps } from "@/app/src/components/feed/FeedCard";
 import { LikeButton } from "@/app/src/components/feed/LikeButton";
 // import { SavedPostCard } from "@/app/src/components/feed/savedPostCard";
 import { SavePost } from "@/app/src/components/feed/savePost";
@@ -28,16 +28,16 @@ import { useEffect, useState } from "react";
 import { MdSearch } from "react-icons/md";
 
 export default function Page() {
-  const {user} = useAuth()
+  const { user } = useAuth();
   const [saved, setSaved] = useState<DocumentData[] | PostSchemaType[]>([]);
-  const [users, setUser] = useState<{ [key: string]: DocumentData }>({});
-  const [loading, setLoading] = useState(false);
+  // const [users, setUser] = useState<{ [key: string]: DocumentData }>({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getSavedDocs() {
       if (!user?.uid) return;
 
-      setLoading(true);
+      // setLoading(true);
 
       const savedPosts = collection(db, "users", user.uid, "saved");
       const saved = await getDocs(savedPosts);
@@ -54,8 +54,8 @@ export default function Page() {
       const ads = adsSnapshots
         .filter((doc) => doc && doc.exists())
         .map((doc) => ({
-          postId: doc && doc.id,
-          ...(doc && doc.data() as Omit<PostSchemaType, "id">),
+          id: doc && doc.id,
+          ...(doc && (doc.data() as Omit<PostSchemaType, "id">)),
         }));
 
       const users = [...new Set(ads.map((post) => post.userId))];
@@ -65,18 +65,7 @@ export default function Page() {
         return;
       }
 
-      const q = query(
-        collection(db, "users"),
-        where(documentId(), "in", users),
-      );
-
-      const response = await getDocs(q);
-
-      const usersPersonalInfo = Object.fromEntries(
-        response.docs.map((user) => [user.id, user.data()]),
-      );
-
-      setUser(usersPersonalInfo);
+      // setUser(usersPersonalInfo);
       setSaved(ads);
       setLoading(false);
     }
@@ -84,10 +73,11 @@ export default function Page() {
     getSavedDocs();
   }, [user]);
 
+  console.log(saved)
 
   return (
     <div className="space-y-4">
-      <h1 className="bg-white border border-neutral-200 rounded-2xl text-3xl text-neutral-500">Salvos</h1>
+      {/* <h1 className="bg-white border border-neutral-200 rounded-2xl text-3xl text-neutral-500">Salvos</h1> */}
       {loading && (
         <div className="flex flex-col gap-y-4 items-center justify-center h-50">
           <div className="w-10 h-10 border-4 border-gray-300 border-t-green-500 rounded-full animate-spin"></div>
@@ -98,25 +88,27 @@ export default function Page() {
       <div className="space-y-3">
         {Array.isArray(saved) &&
           saved.length !== 0 &&
-          saved.map((item, i) => {
-            const data = {
-              ...item,
-              author: users[item.userId].name,
-              img: users[item.userId].profile,
-              publicId: users[item.userId].publicId,
-              userId: users[item.userId],
-            };
+          saved.map((doc, i) => {
             return (
               <article
                 className="bg-white border border-neutral-200 rounded-2xl overflow-hidden space-y-4"
                 key={i}
               >
-                {item.type === "search" ? (
-                  <p>oi</p>
-                ) : (
-                  // <SearchCard props={data} />
-                  <p>oi</p>
-                )}
+                <FeedCard
+                  id={doc.id}
+                  userId={doc.userId}
+                  location={doc.location}
+                  createdAt={doc.createdAt}
+                  description={doc.description}
+                  images={doc.images}
+                  details={doc.details}
+                  type={doc.type}
+                  title={doc.title}
+                  features={doc.features}
+                  likesCount={doc.likesCount}
+                  status={doc.status}
+                  userSnapShot={doc.userSnapShot}
+                />
               </article>
             );
           })}
@@ -140,7 +132,7 @@ export default function Page() {
 
               <Link
                 href={"/app/feed"}
-                className="mt-2 px-4 py-2 rounded-lg bg-[#84C60B] text-white text-sm font-semibold hover:bg-[#84C60B] transition"
+                className="mt-2 px-4 py-2 rounded-lg bg-green-500 text-white text-sm font-semibold hover:bg-green-600 transition"
               >
                 Explorar posts
               </Link>

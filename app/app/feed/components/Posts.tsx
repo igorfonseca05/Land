@@ -33,13 +33,13 @@ export function Posts() {
   const [posts, setPosts] = useState<PostSchemaType[]>([]);
   const [owner, setOwner] = useState<{ [key: string]: UserProfile }>({});
   const [inlinePost, setInlinePost] = useState<PostSearchSchemaType | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const thereIsNoFeedItem = !inlinePost && posts.length === 0;
 
   useEffect(() => {
     async function getPosts() {
-      setLoading(true);
+      // setLoading(true);
 
       const q = query(
         collection(db, "ads"),

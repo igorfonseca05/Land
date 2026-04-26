@@ -6,6 +6,8 @@ import { NavBar } from "../(LeftSidebar)/components/NavBar";
 import { useAuth } from "@/app/src/context/useAuthContext";
 import { useProfileContext } from "@/app/src/context/userProfileContext";
 import { LogoutButton } from "./LogoutButton";
+import { PostHeader } from "../../PostHeader/PostHeader";
+import { userSnapShot } from "@/app/utils/zod";
 
 type MobileMenuProps = {
   isOpen: boolean;
@@ -14,6 +16,18 @@ type MobileMenuProps = {
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { profile } = useProfileContext();
+
+  const userSnapShot : userSnapShot = {
+    displayName: profile?.name || '',
+    photoURL: profile?.photoURL,
+    userId: profile?.uid || '',
+    profession: profile?.profession || '',
+    slug: profile?.slug || '',
+    profileVerified: profile?.profileVerified || false,
+    publicId: profile?.publicId || ''
+  }
+
+
   // 🔒 trava scroll do body
   useEffect(() => {
     if (isOpen) {
@@ -26,6 +40,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       document.body.style.overflow = "auto";
     };
   }, [isOpen]);
+  
 
   return (
     <>
@@ -51,21 +66,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             </button>
           </div>
 
-          <div className="flex items-center gap-3 mt-4 mb-6">
-            <img
-              src={profile?.photoURL || "/place.webp"}
-              alt="User"
-              className="w-12 h-12 rounded-full object-cover"
-            />
-
-            <div>
-              <p className="font-semibold text-sm">
-                {profile?.name.split(/\s+/)[0] || "Usuário"}
-              </p>
-              <p className="text-xs text-neutral-500">{profile?.profession}</p>
-            </div>
-            {/* 📊 STATS */}
-          </div>
+        <PostHeader user={userSnapShot} showPersonalInfos={true}/>
           <div className="flex justify-between my-4 px-1">
             <div className="flex flex-col items-center">
               <span className="text-sm font-semibold">{0}</span>

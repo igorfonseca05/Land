@@ -18,6 +18,9 @@ export function PostActions({
   likesCount: number | undefined;
 }) {
   const { user } = useAuth();
+
+  
+
   return (
     <>
       <hr className="text-neutral-100" />

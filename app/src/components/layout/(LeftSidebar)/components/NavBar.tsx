@@ -43,6 +43,12 @@ export function NavBar({onClose} : {onClose?: (isOpen: boolean) => void}) {
       label: "Histórico de visualização",
       href: "/app/historico",
     },
+     {
+      id: 5,
+      icon: MdInfoOutline,
+      label: "Quem somos",
+      href: "/app/quem-somos",
+    },
   ];
 
   const publicMenu = [

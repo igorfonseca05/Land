@@ -187,6 +187,8 @@ export function FeedCard({ ...props }: PostProps) {
 
   const isDesabled = props.type === "search";
 
+  // console.log(props)
+
   return (
     <article className="bg-white rounded-xl shadow-sm overflow-hidden transition-all hover:shadow-md">
       <div className="p-4 md:p-5">
