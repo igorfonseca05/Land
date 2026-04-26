@@ -4,7 +4,7 @@ import { BsApple } from "react-icons/bs";
 import { LoginForm } from "./components/LoginForm";
 import { GoogleButtonLogin } from "./components/GoogleButtonLogin";
 import Image from "next/image";
-import reno from '@/public/reno.png'
+import reno from "@/public/reno.png";
 
 export default function LoginPage() {
   return (
@@ -67,14 +67,10 @@ export default function LoginPage() {
       <div className="w-full lg:w-1/2 flex items-center justify-center bg-white dark:bg-neutral-900 p-6 sm:p-12 relative">
         {/* Logo mobile */}
         <div className="lg:hidden absolute top-6 left-6 flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center text-white">
-            <span className="material-symbols-outlined text-[20px]">
-              landscape
-            </span>
-          </div>
-          <h2 className="text-xl font-bold tracking-tight text-neutral-900 dark:text-white">
-            Reno
-          </h2>
+          <Link href={"/app/feed"} className="flex items-center gap-2">
+            <Logo />
+            <h2 className="text-2xl font-bold tracking-tight">Reno</h2>
+          </Link>
         </div>
 
         <div className="w-full max-w-sm space-y-8">
