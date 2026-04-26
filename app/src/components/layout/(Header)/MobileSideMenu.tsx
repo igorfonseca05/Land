@@ -5,6 +5,7 @@ import { MdClose } from "react-icons/md";
 import { NavBar } from "../(LeftSidebar)/components/NavBar";
 import { useAuth } from "@/app/src/context/useAuthContext";
 import { useProfileContext } from "@/app/src/context/userProfileContext";
+import { LogoutButton } from "./LogoutButton";
 
 type MobileMenuProps = {
   isOpen: boolean;
@@ -65,43 +66,28 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             </div>
             {/* 📊 STATS */}
           </div>
-            <div className="flex justify-between my-4 px-1">
-              <div className="flex flex-col items-center">
-                <span className="text-sm font-semibold">
-                  { 0}
-                </span>
-                <span className="text-xs text-neutral-500">Posts</span>
-              </div>
-
-              <div className="flex flex-col items-center">
-                <span className="text-sm font-semibold">
-                  { 0}
-                </span>
-                <span className="text-xs text-neutral-500">Seguindo</span>
-              </div>
-
-              <div className="flex flex-col items-center">
-                <span className="text-sm font-semibold">
-                  { 0}
-                </span>
-                <span className="text-xs text-neutral-500">Seguidores</span>
-              </div>
+          <div className="flex justify-between my-4 px-1">
+            <div className="flex flex-col items-center">
+              <span className="text-sm font-semibold">{0}</span>
+              <span className="text-xs text-neutral-500">Posts</span>
             </div>
+
+            <div className="flex flex-col items-center">
+              <span className="text-sm font-semibold">{0}</span>
+              <span className="text-xs text-neutral-500">Seguindo</span>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <span className="text-sm font-semibold">{0}</span>
+              <span className="text-xs text-neutral-500">Seguidores</span>
+            </div>
+          </div>
 
           {/* 📌 MENU */}
           <NavBar onClose={onClose} />
         </div>
         <div className="pt-4 border-t border-neutral-200">
-          <button
-            onClick={() => {
-              onClose(false);
-              // 👉 coloca seu logout aqui
-              // signOut(auth)
-            }}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition"
-          >
-            Sair
-          </button>
+          <LogoutButton />
         </div>
       </div>
     </>

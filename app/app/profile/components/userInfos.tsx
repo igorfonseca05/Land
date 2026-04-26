@@ -280,7 +280,6 @@ export function UserProfile() {
     }
   }
 
-  // Calculando caracteres restantes
 
   useEffect(() => {
     if (profile) {
@@ -294,7 +293,6 @@ export function UserProfile() {
     }
   }, [profile]);
 
-  console.log(process.env.NEXT_PUBLIC_BACKGROUND)
 
   // useEffect(() => {
   //   setSizeDescription(215 - profileInfo.description.length);
@@ -630,7 +628,7 @@ export function UserProfile() {
             </div>
 
             {/* Informações do usuário */}
-            <div className="px-6">
+            <div className="px-4">
               <div className="flex justify-between items-end -mt-16 ">
                 <div className="relative flex flex-col gap-2 flex-1">
                   {/* Foto de perfil */}
@@ -683,7 +681,7 @@ export function UserProfile() {
               </div>
 
               {/* Mobile View */}
-              <div className="sm:hidden mb-4">
+              {/* <div className="sm:hidden mb-4">
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-1">
                  {getFirstName(profile?.name) || getFirstName(user?.displayName)}
                   <MdVerified className="text-blue-500" />
@@ -695,7 +693,7 @@ export function UserProfile() {
                 ) : (
                   <p>Cidade, SC</p>
                 )}
-              </div>
+              </div> */}
 
               {/* Estatísticas */}
               {/* <div className="flex  flex-wrap gap-8 border-t border-gray-200 dark:border-gray-800 pt-4">

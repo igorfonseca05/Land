@@ -13,13 +13,7 @@ export default function RegisterPage() {
       <main className="flex flex-1 flex-col md:flex-row">
         {/* LEFT SIDE (Imagem) */}
         <section className="relative hidden md:flex md:w-1/2 lg:w-1/2 items-end p-12 overflow-hidden">
-        <Link
-          href={"/app/feed"}
-          className="flex items-center z-10 absolute top-12 gap-2 text-white"
-        >
-          <Logo />
-          <h2 className="text-2xl font-bold tracking-tight">Reno</h2>
-        </Link>
+        <Logo writing={true} />
           <div className="absolute inset-0">
             <Image src={bg} alt="" className="w-full h-full object-cover" />
             {/* <img

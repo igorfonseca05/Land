@@ -1,15 +1,18 @@
 import Image from "next/image";
+import Link from "next/link";
 
-export function Logo({writing}: {writing?: boolean}) {
+export function Logo({ writing }: { writing?: boolean }) {
   return (
     <>
       {writing ? (
-        <div className="flex items-center gap-2 font-bold text-lg">
-          <Image src={"/logo.svg"} width={38} height={38} alt="logo"></Image>
-          Reno
-        </div>
+        <Link href={"/app/feed"} className="flex items-center gap-2">
+          <Image src={"/logo.svg"} width={34} height={34} alt="logo"></Image>
+          <h2 className="text-2xl font-bold tracking-tight">Reno</h2>
+        </Link>
       ) : (
-       <Image src={"/logo.svg"} width={38} height={38} alt="logo"></Image>
+        <Link href={"/app/feed"} className="flex items-center gap-2">
+          <Image src={"/logo.svg"} width={34} height={34} alt="logo"></Image>
+        </Link>
       )}
     </>
   );

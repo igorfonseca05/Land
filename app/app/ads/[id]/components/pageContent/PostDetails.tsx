@@ -61,6 +61,7 @@ export function PostDetails({ uid }: { uid: string }) {
     getDocument();
   }, [uid]);
 
+
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center flex-col gap-3">
@@ -77,14 +78,14 @@ export function PostDetails({ uid }: { uid: string }) {
   console.log(post);
 
   return (
-    <main className="max-w-7xl mx-auto px-4 space-y-4">
+    <main className="max-w-7xl mx-auto space-y-4">
       {/* HERO */}
       <div className="relative rounded-2xl overflow-hidden">
-        {post.images && post.images.length > 1 ? (
+        { post.images && post.images.length > 1 ? (
           <Swiper modules={[Navigation]} navigation loop slidesPerView={1}>
             {post.images?.map((url, i) => (
               <SwiperSlide key={i}>
-                <div className="relative w-full h-42 md:h-84">
+                <div className="relative w-full h-58 md:h-84">
                   <Image
                     src={url}
                     alt="Slide"

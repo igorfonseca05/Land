@@ -26,10 +26,7 @@ export default function LoginPage() {
         </div>
 
         <div className="relative z-10 w-full flex flex-col justify-between p-12 text-white">
-          <Link href={"/app/feed"} className="flex items-center gap-2">
-            <Logo />
-            <h2 className="text-2xl font-bold tracking-tight">Reno</h2>
-          </Link>
+          <Logo />
 
           <div className="space-y-6 max-w-lg mb-10">
             <h1 className="text-5xl font-bold leading-tight">
@@ -58,7 +55,8 @@ export default function LoginPage() {
           </div>
 
           <div className="text-xs text-neutral-500">
-            © 2024 LandMarket Inc. Todos os direitos reservados.
+            © {new Date().getFullYear()} LandMarket Inc. Todos os direitos
+            reservados.
           </div>
         </div>
       </div>
@@ -67,10 +65,7 @@ export default function LoginPage() {
       <div className="w-full lg:w-1/2 flex items-center justify-center bg-white dark:bg-neutral-900 p-6 sm:p-12 relative">
         {/* Logo mobile */}
         <div className="lg:hidden absolute top-6 left-6 flex items-center gap-2">
-          <Link href={"/app/feed"} className="flex items-center gap-2">
-            <Logo />
-            <h2 className="text-2xl font-bold tracking-tight">Reno</h2>
-          </Link>
+            <Logo writing={true}/>
         </div>
 
         <div className="w-full max-w-sm space-y-8">

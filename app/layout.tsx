@@ -7,6 +7,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { AuthProvider } from "./src/context/useAuthContext";
 import { ProfileProvider } from "./src/context/userProfileContext";
 import { Toaster } from "sonner";
+import "swiper/swiper.css";
 
 import { SearchPostProvider } from "./src/context/usePostContext";
 import { AuthGate } from "./src/components/GateAuth/AuthGate";
