@@ -305,7 +305,7 @@ export function FeedCard({ ...props }: PostProps) {
 
         {/* ACTIONS */}
         <div className="flex h-6 flex-1 tems-center justify-between">
-          <PostActions id={props.id} likesCount={props.likesCount} />
+          <PostActions {...props} />
         </div>
       </div>
     </article>

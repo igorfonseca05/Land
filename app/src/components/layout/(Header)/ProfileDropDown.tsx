@@ -22,7 +22,7 @@ export function UserMenu() {
 
   const [notificationIsOpen, setNotificationIsOpen] = useState(false);
 
-  console.log(profile);
+  // console.log(profile);
 
   // 1. Garante que o componente está montado no cliente
   useEffect(() => {

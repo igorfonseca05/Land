@@ -11,15 +11,18 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "@/app/config/firebase";
 import { useAuth } from "../../context/useAuthContext";
+import { createNotification, getFirstName } from "@/app/utils/functions";
 
 export function LikeButton({
   postId,
   likesCount = 0,
+  userId,
 }: {
   postId: string;
   likesCount?: number;
+  userId: string;
 }) {
-  const {user} = useAuth()
+  const { user } = useAuth();
   const [likes, setLikes] = useState(likesCount);
   const [hasLiked, setHasLiked] = useState(false);
 
@@ -34,7 +37,6 @@ export function LikeButton({
 
     checkIfLiked();
   }, [postId, user]);
-  
 
   async function handleLike() {
     if (!user) return;
@@ -66,6 +68,14 @@ export function LikeButton({
 
         setLikes((prev) => prev + 1);
         setHasLiked(true);
+
+        createNotification({
+          actorId: user.uid,
+          recipientId: userId,
+          message: `${getFirstName(user.displayName)} curtiu seu anúncio`,
+          type: "like",
+          postId
+        });
       }
     });
   }

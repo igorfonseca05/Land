@@ -1,5 +1,15 @@
-import { Timestamp, FieldValue } from 'firebase/firestore'
-
+import {
+  Timestamp,
+  FieldValue,
+  addDoc,
+  collection,
+  serverTimestamp,
+  query,
+  where,
+  orderBy,
+  onSnapshot,
+} from "firebase/firestore";
+import { db } from "../config/firebase";
 
 export function createSlug(name: string): string {
   return name
@@ -13,44 +23,112 @@ export function createSlug(name: string): string {
 }
 
 export function createPublicId(name: string): string {
-  const firstName =  name.split(/\s+/)[0]
-  return `${firstName}-${crypto.randomUUID()}`
+  const firstName = name.split(/\s+/)[0];
+  return `${firstName}-${crypto.randomUUID()}`;
 }
 
-
 export function formatFirebaseTime(
-  value: Timestamp | FieldValue | undefined
+  value: Timestamp | FieldValue | undefined,
 ): string {
   if (!value || !(value instanceof Timestamp)) {
-    return 'agora'
+    return "agora";
   }
 
-  const date = value.toDate()
-  const now = new Date()
+  const date = value.toDate();
+  const now = new Date();
 
-  const diffMs = now.getTime() - date.getTime()
-  const diffSec = Math.floor(diffMs / 1000)
-  const diffMin = Math.floor(diffSec / 60)
-  const diffHour = Math.floor(diffMin / 60)
-  const diffDay = Math.floor(diffHour / 24)
+  const diffMs = now.getTime() - date.getTime();
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHour = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHour / 24);
 
-  if (diffSec < 60) return `${diffSec} segundo${diffSec !== 1 ? 's' : ''}`
-  if (diffMin < 60) return `${diffMin} minuto${diffMin !== 1 ? 's' : ''}`
-  if (diffHour < 24) return `${diffHour} hora${diffHour !== 1 ? 's' : ''}`
-  if (diffDay === 1) return 'ontem'
+  if (diffSec < 60) return `${diffSec} segundo${diffSec !== 1 ? "s" : ""}`;
+  if (diffMin < 60) return `${diffMin} minuto${diffMin !== 1 ? "s" : ""}`;
+  if (diffHour < 24) return `${diffHour} hora${diffHour !== 1 ? "s" : ""}`;
+  if (diffDay === 1) return "ontem";
 
-  return date.toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-  })
+  return date.toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  });
 }
 
 export function getUpperCaseLatter(text: string = "") {
-    return text.slice(0, 1).toUpperCase() + text.slice(1);
-  }
-
-export function getFirstName(name: string | undefined| null) {
-  return name?.trim().split(/\s+/)[0]
+  return text.slice(0, 1).toUpperCase() + text.slice(1);
 }
 
+export function getFirstName(name: string | undefined | null) {
+  return name?.trim().split(/\s+/)[0];
+}
+
+type NotificationProps = {
+  actorId: string | null;
+  recipientId: string;
+  message: string;
+  type: "like" | "comment" | "system";
+  postId: string;
+};
+
+export type NotificationFirebaseProps = NotificationProps & {
+  createdAt: Timestamp | FieldValue;
+  id: string;
+};
+
+export async function createNotification({
+  actorId,
+  recipientId,
+  postId,
+  message,
+  type,
+}: NotificationProps) {
+  return await addDoc(collection(db, "notifications"), {
+    actorId,
+    recipientId,
+    message,
+    type,
+    postId,
+    read: false,
+    createdAt: serverTimestamp(),
+  });
+}
+
+export function listenNotifications(
+  userId: string,
+  callback: (data: NotificationFirebaseProps[]) => void,
+) {
+  const userQuery = query(
+    collection(db, "notifications"),
+    where("recipientId", "==", userId),
+    orderBy("createdAt", "desc"),
+  );
+
+  const globalQuery = query(
+    collection(db, "notifications"),
+    where("recipientId", "==", null),
+    orderBy("createdAt", "desc"),
+  );
+
+  let userData: NotificationFirebaseProps[] = [];
+  let globalData: NotificationFirebaseProps[] = [];
+
+  const unsubscribeUser = onSnapshot(userQuery, (snapshot) => {
+    userData = snapshot.docs.map(
+      (doc) => ({ id: doc.id, ...doc.data() }) as NotificationFirebaseProps,
+    );
+    callback([...userData, ...globalData]);
+  });
+
+  const unsubscribeGlobal = onSnapshot(globalQuery, (snapshot) => {
+    globalData = snapshot.docs.map(
+      (doc) => ({ id: doc.id, ...doc.data() }) as NotificationFirebaseProps,
+    );
+    callback([...userData, ...globalData]);
+  });
+
+  return () => {
+    unsubscribeUser();
+    unsubscribeGlobal();
+  };
+}
