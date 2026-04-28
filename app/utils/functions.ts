@@ -8,6 +8,11 @@ import {
   where,
   orderBy,
   onSnapshot,
+  getDoc,
+  doc,
+  setDoc,
+  limit,
+  getDocs,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 
@@ -64,8 +69,8 @@ export function getFirstName(name: string | undefined | null) {
 }
 
 type NotificationProps = {
-  actorId: string | null;
-  recipientId: string;
+  fromUserId: string | "global";
+  toUserId: string;
   message: string;
   type: "like" | "comment" | "system";
   postId: string;
@@ -74,25 +79,8 @@ type NotificationProps = {
 export type NotificationFirebaseProps = NotificationProps & {
   createdAt: Timestamp | FieldValue;
   id: string;
+  read: boolean
 };
-
-export async function createNotification({
-  actorId,
-  recipientId,
-  postId,
-  message,
-  type,
-}: NotificationProps) {
-  return await addDoc(collection(db, "notifications"), {
-    actorId,
-    recipientId,
-    message,
-    type,
-    postId,
-    read: false,
-    createdAt: serverTimestamp(),
-  });
-}
 
 export function listenNotifications(
   userId: string,
@@ -100,13 +88,13 @@ export function listenNotifications(
 ) {
   const userQuery = query(
     collection(db, "notifications"),
-    where("recipientId", "==", userId),
+    where("toUserId", "==", userId),
     orderBy("createdAt", "desc"),
   );
 
   const globalQuery = query(
     collection(db, "notifications"),
-    where("recipientId", "==", null),
+    where("toUserId", "==", "global"),
     orderBy("createdAt", "desc"),
   );
 
@@ -131,4 +119,40 @@ export function listenNotifications(
     unsubscribeUser();
     unsubscribeGlobal();
   };
+}
+
+export async function createNotification({
+  fromUserId,
+  toUserId,
+  postId,
+  message,
+  type,
+}: NotificationProps) {
+  if (!fromUserId) return;
+
+  try {
+    const notifRef = doc(
+      db,
+      "notifications",
+      `${type}_${postId}_${fromUserId}`,
+    );
+
+    await setDoc(
+      notifRef,
+      {
+        fromUserId,
+        toUserId,
+        message,
+        type,
+        postId,
+        read: false,
+        createdAt: serverTimestamp(),
+      },
+      { merge: true },
+    );
+  } catch (error) {
+    if (process.env.NODE_ENV === "development") {
+      console.error("Erro ao criar notificação:", error);
+    }
+  }
 }

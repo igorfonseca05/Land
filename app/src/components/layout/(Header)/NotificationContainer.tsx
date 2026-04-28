@@ -1,34 +1,25 @@
 "use client";
 
 import { useAuth } from "@/app/src/context/useAuthContext";
-import { listenNotifications, NotificationFirebaseProps } from "@/app/utils/functions";
+import {
+  listenNotifications,
+  NotificationFirebaseProps,
+} from "@/app/utils/functions";
 import { useEffect, useState } from "react";
 import { MdClose } from "react-icons/md";
+import { LikeAlert } from "./LikeAlert";
 
 interface NotificationProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  notifications: NotificationFirebaseProps[];
 }
 
 export function NotificationContainer({
   isOpen,
   setIsOpen,
+  notifications,
 }: NotificationProps) {
-  const {user} = useAuth()
-
-  const [notifications, setNotifications] = useState<NotificationFirebaseProps[]>([])
-
-  useEffect(() => {
-
-    if (!user?.uid) return;
-    const unsubscribe = listenNotifications(user?.uid, setNotifications)
-
-    return () => unsubscribe();
-  }, [user?.uid])
-
-  console.log(notifications)
-
-
   return (
     <>
       <div
@@ -48,7 +39,7 @@ export function NotificationContainer({
           {/* ❌ BOTÃO FECHAR */}
           <div
             onClick={() => setIsOpen(false)}
-            className="flex justify-start mb-4"
+            className="flex justify-start mb-2"
           >
             <div className="flex justify-between flex-1 items-start">
               <div>
@@ -64,9 +55,17 @@ export function NotificationContainer({
               </button>
             </div>
           </div>
-          <button className="w-full text-center py-2 text-sm font-semibold text-green-600 hover:bg-green-50 rounded-lg transition-colors">
+          <button className="w-full text-center py-2 my-4 text-sm font-semibold text-green-600 hover:bg-green-50 rounded-lg transition-colors">
             Marcar todas como lidas
           </button>
+          {notifications.map((notification) => (
+            <LikeAlert
+              key={notification.id}
+              message={notification.message}
+              createdAt={notification.createdAt}
+              type={notification.type}
+            />
+          ))}
         </div>
       </div>
     </>

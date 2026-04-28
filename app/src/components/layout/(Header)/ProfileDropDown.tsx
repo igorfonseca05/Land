@@ -11,6 +11,10 @@ import { NotificationContainer } from "./NotificationContainer";
 import { useAuth } from "@/app/src/context/useAuthContext";
 import Link from "next/link";
 import { LogoutButton } from "./LogoutButton";
+import {
+  listenNotifications,
+  NotificationFirebaseProps,
+} from "@/app/utils/functions";
 
 export function UserMenu() {
   const { user } = useAuth();
@@ -22,7 +26,16 @@ export function UserMenu() {
 
   const [notificationIsOpen, setNotificationIsOpen] = useState(false);
 
-  // console.log(profile);
+  const [notifications, setNotifications] = useState<
+    NotificationFirebaseProps[]
+  >([]);
+
+  useEffect(() => {
+    if (!user?.uid) return;
+    const unsubscribe = listenNotifications(user?.uid, setNotifications);
+
+    return () => unsubscribe();
+  }, [user?.uid]);
 
   // 1. Garante que o componente está montado no cliente
   useEffect(() => {
@@ -39,15 +52,37 @@ export function UserMenu() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if(notificationIsOpen) {
+      document.body.style.overflowY = 'hidden'
+    } else {
+      document.body.style.overflowY = 'auto'
+    }
+
+  }, [notificationIsOpen])
+
   return (
     <div ref={ref} className="relative flex items-center gap-3">
-      <MdNotifications
-        onClick={() => setNotificationIsOpen(true)}
-        className="text-neutral-800 text-[20px] cursor-pointer"
-      />
+      <div className="relative w-fit cursor-pointer"  onClick={() => setNotificationIsOpen(true)}>
+        <MdNotifications
+          // onClick={() => setNotificationIsOpen(true)}
+          className="text-neutral-800 text-[20px] cursor-pointer"
+        />
+        {notifications.map((notification) => {
+          if (!notification.read) {
+            return (
+              <span
+                key={notification.id}
+                className="w-3 h-3 absolute right-0 top-0 rounded-full bg-red-500"
+              ></span>
+            );
+          }
+        })}
+      </div>
       <NotificationContainer
         isOpen={notificationIsOpen}
         setIsOpen={setNotificationIsOpen}
+        notifications={notifications}
       />
       <div
         onClick={() => setOpen((prev) => !prev)}

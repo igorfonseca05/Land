@@ -11,7 +11,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "@/app/config/firebase";
 import { useAuth } from "../../context/useAuthContext";
-import { createNotification, getFirstName } from "@/app/utils/functions";
+import { createNotification, getFirstName, getUpperCaseLatter } from "@/app/utils/functions";
 
 export function LikeButton({
   postId,
@@ -70,9 +70,9 @@ export function LikeButton({
         setHasLiked(true);
 
         createNotification({
-          actorId: user.uid,
-          recipientId: userId,
-          message: `${getFirstName(user.displayName)} curtiu seu anúncio`,
+          fromUserId: user.uid,
+          toUserId: userId,
+          message: `${getUpperCaseLatter(getFirstName(user.displayName))} curtiu seu anúncio`,
           type: "like",
           postId
         });
