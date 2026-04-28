@@ -71,10 +71,7 @@ export function Cards({ infos }: { infos: PostSchemaType }) {
           </div>
         </div>
       )}
-      <PostActions
-        id={infos.id}
-        likesCount={infos.likesCount}
-      />
+      <PostActions {...infos}/>
     </article>
   );
   //   <div className="flex flex-col gap-4">
