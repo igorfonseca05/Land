@@ -36,7 +36,7 @@ export function UserInfoContainer() {
             {/* Textos */}
             <div>
               <p className="font-bold text-sm capitalize">
-                {profile?.name.split(/\s+/)[0]}
+                {profile?.displayName.split(/\s+/)[0]}
               </p>
               <p className="text-xs text-neutral-500">
                 Procurando terrenos acima de 5 acres
