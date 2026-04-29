@@ -26,7 +26,7 @@ export function Cards({ infos }: { infos: PostSchemaType }) {
 
           <div className="flex flex-col">
             <span className="font-semibold text-neutral-900 capitalize dark:text-white">
-              {profile?.name.trim().split(/\s+/)[0]}
+              {profile?.displayName.trim().split(/\s+/)[0]}
             </span>
             <span className="text-xs text-neutral-500">
               {infos.createdAt && formatFirebaseTime(infos.createdAt)} ·{" "}

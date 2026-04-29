@@ -1,48 +1,19 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import {
-  MdAccountCircle,
-  MdClose,
-  MdExpandMore,
-  MdImage,
-  MdMap,
-  MdSearch,
-  MdSell,
-} from "react-icons/md";
+import { MdClose, MdImage, MdMap, MdSell } from "react-icons/md";
 import { Modal } from "../GlobalModal/Modal";
 import Image from "next/image";
 import { useProfileContext } from "../../context/userProfileContext";
 import { z, ZodFlattenedError } from "zod";
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  serverTimestamp,
-  setDoc,
-  Timestamp,
-  writeBatch,
-} from "firebase/firestore";
-import { auth, db } from "@/app/config/firebase";
+import { addDoc, collection, doc, serverTimestamp } from "firebase/firestore";
+import { db } from "@/app/config/firebase";
 import { toast } from "sonner";
 import { useSearchPost } from "../../context/usePostContext";
-import {
-  PostSchema,
-  PostSearchSchema,
-  Profile,
-  propertySchema,
-  PostSearchSchemaType,
-  PostSchemaType,
-} from "@/app/utils/zod";
-import { details, pre } from "framer-motion/client";
-import { getAuth, User } from "firebase/auth";
+import { PostSchema } from "@/app/utils/zod";
 import { FirebaseError } from "firebase/app";
-import { SearchPostCard } from "./SearchPost";
 import { useAuth } from "../../context/useAuthContext";
-import Link from "next/link";
 import { CommunityBanner } from "./Banner";
-import { createPublicId } from "@/app/utils/functions";
 
 type Post = {
   title: string;
@@ -74,9 +45,8 @@ export function HeroSearch() {
   const { setSearchPost } = useSearchPost();
   const [isOpen, setIsOpen] = useState(false);
 
-
   const [post, setPost] = useState<z.infer<typeof PostSchema>>({
-    id: '',
+    id: "",
     title: "",
     description: "",
     features: [],
@@ -152,7 +122,7 @@ export function HeroSearch() {
     const rawData = {
       ...post,
       userSnapShot: {
-        displayName: profile ? profile.name : user ? user?.displayName! : "",
+        displayName: profile? profile.displayName: user ? user?.displayName! : "",
         photoURL: profile ? profile.photoURL : user ? user?.photoURL! : "",
         userId: profile ? profile.uid : user ? user.uid : "",
         publicId: profile ? profile.publicId : "",
@@ -163,7 +133,6 @@ export function HeroSearch() {
         profession: profile?.profession ? profile.profession : "",
       },
     };
-
 
     const isValidPost = PostSchema.safeParse(rawData);
 
@@ -177,9 +146,8 @@ export function HeroSearch() {
 
       if (!user?.uid) return;
 
-    
-      const postId = doc(collection(db, 'posts')).id
-      
+      const postId = doc(collection(db, "posts")).id;
+
       const newPost = {
         ...isValidPost.data,
         userId: user?.uid,
@@ -190,7 +158,7 @@ export function HeroSearch() {
       };
 
       // await setDoc(doc(db, 'ads', postId), newPost);
-      await addDoc(collection(db, 'ads'), newPost);
+      await addDoc(collection(db, "ads"), newPost);
       // setSearchPost({...newPost, id: postId});
       setSearchPost(newPost);
       setLoading(false);
@@ -210,7 +178,7 @@ export function HeroSearch() {
     if (!isOpen) {
       setError(null);
       setPost({
-        id: '',
+        id: "",
         title: "",
         description: "",
         features: [],
@@ -233,7 +201,6 @@ export function HeroSearch() {
       });
     }
   }, [isOpen]);
-
 
   return (
     <>
@@ -264,8 +231,7 @@ export function HeroSearch() {
                 />
                 <div className="flex flex-col">
                   <span className="text-sm capitalize font-semibold text-neutral-900 dark:text-white">
-                    {profile?.name.split(/\s+/)[0] ||
-                      user?.displayName?.split(/\s+/)[0]}
+                    {user?.displayName?.split(/\s+/)[0]}
                   </span>
                   <span className="text-xs capitalize text-neutral-400 dark:text-white">
                     {profile?.location}

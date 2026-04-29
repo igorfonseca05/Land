@@ -18,7 +18,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
   const { profile } = useProfileContext();
 
   const userSnapShot : userSnapShot = {
-    displayName: profile?.name || '',
+    displayName: profile?.displayName || '',
     photoURL: profile?.photoURL,
     userId: profile?.uid || '',
     profession: profile?.profession || '',

@@ -21,7 +21,7 @@ import { toast } from "sonner";
 
 export type UserProfile = {
   uid: string;
-  name: string;
+  displayName: string;
   email: string;
   imgs?: string[];
   role?: "user" | "admin";

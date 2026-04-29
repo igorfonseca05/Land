@@ -89,13 +89,13 @@ export function NavBar({onClose} : {onClose?: (isOpen: boolean) => void}) {
             onClick={() => onClose && onClose(false)}
               key={i}
               href={`${href}`}
-              className={`flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-medium ${
+              className={`flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-semibold ${
                 active
-                  ? "bg-white border border-neutral-200 font-bold"
+                  ? "bg-white border border-neutral-200 "
                   : "hover:bg-neutral-100 text-neutral-600"
               }`}
             >
-              <Icon className="text-[20px]" />
+              <Icon className="text-[20px] text-green-500"  />
               {label}
             </Link>
           );

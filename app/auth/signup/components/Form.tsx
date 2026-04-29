@@ -27,7 +27,7 @@ import { createPublicId, createSlug } from "@/app/utils/functions";
 
 const signupSchema = z
   .object({
-    name: z
+    displayName: z
       .string()
       .min(2, "Seu nome deve conter no minimo 2 caracteres")
       .trim()
@@ -53,7 +53,7 @@ const signupSchema = z
   });
 
 type SignupErrors = {
-  name?: string[];
+  displayName?: string[];
   email?: string[];
   password?: string[];
   confirm_password?: string[];
@@ -64,7 +64,7 @@ export function Form() {
   const router = useRouter();
 
   const [form, setForm] = useState({
-    name: "",
+    displayName: "",
     email: "",
     password: "",
     confirm_password: "",
@@ -85,11 +85,11 @@ export function Form() {
     });
   }
 
-  
-
   async function handleForm(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
+
+    console.log(form)
 
     const result = signupSchema.safeParse(form);
 
@@ -107,12 +107,12 @@ export function Form() {
       );
 
       await updateProfile(user, {
-        displayName: result.data.name,
+        displayName: result.data.displayName,
       });
 
       await setDoc(doc(db, 'users', user.uid), {
-        slug: createSlug(result.data.name),
-        publicId: createPublicId(result.data.name)
+        slug: createSlug(result.data.displayName),
+        publicId: createPublicId(result.data.displayName)
       })
 
       toast.success("Conta criada!");
@@ -129,9 +129,10 @@ export function Form() {
   }
 
   async function saveUserProfile(user: User) {
+
     const userData = {
       uid: user.uid,
-      name: user.displayName ?? "",
+      displayName: user.displayName ?? "",
       email: user.email ?? "",
       photoURL: user.photoURL ?? "",
       role: "user",
@@ -164,7 +165,7 @@ export function Form() {
             autoComplete="name"
           className="block w-full pl-10 pr-4 py-3 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-400 focus:ring-2 focus:ring-green-500 focus:border-transparent sm:text-sm transition-all outline-none"
             id="name"
-            name="name"
+            name="displayName"
             placeholder="Marcelo Antunes"
             required
             type="text"
@@ -173,8 +174,8 @@ export function Form() {
             <MdPerson className="text-neutral-400 text-[20px]" />
           </div>
         </div>
-        {error?.name && (
-          <p className="text-xs pt-1 text-red-700">{error.name}</p>
+        {error?.displayName && (
+          <p className="text-xs pt-1 text-red-700">{error.displayName}</p>
         )}
       </div>
 

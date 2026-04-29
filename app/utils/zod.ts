@@ -53,7 +53,7 @@ const LocationSchema = z.object({
 // const normalized = NormalizedAdSchema.parse(rawData)
 
 export const ProfileInfoSchema = z.object({
-  name: z
+  displayName: z
     .string()
     .trim()
     .min(2, "O nome deve ter pelo menos 2 caracteres")
@@ -79,7 +79,7 @@ export const ProfileInfoSchema = z.object({
     .string()
     .trim()
     .max(300, "A descrição pode ter no máximo 300 caracteres")
-    .optional(),
+    .default(''),
 
   phone: z
     .string()

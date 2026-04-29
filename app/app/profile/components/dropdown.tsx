@@ -97,7 +97,7 @@ export function EditPostModal({ infos }: { infos: PostSchemaType }) {
 
             <div className="flex flex-col">
               <span className="text-sm capitalize font-semibold text-neutral-900 dark:text-white">
-                {profile?.name.split(/\s+/)[0]}
+                {profile?.displayName.split(/\s+/)[0]}
               </span>
               <span className="text-xs capitalize text-neutral-400 dark:text-white">
                 {profile?.location}

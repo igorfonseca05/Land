@@ -101,6 +101,6 @@ export async function POST(
   return NextResponse.json({
     url: data.secure_url,
     public_id: data.public_id,
-    place: 'profile'
+    place: 'photoURL'
   });
 }

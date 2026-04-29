@@ -15,14 +15,21 @@ import React, { FormEvent, useEffect, useRef, useState } from "react";
 import { MdClose, MdEdit, MdUpload, MdVerified } from "react-icons/md";
 import { toast } from "sonner";
 import z, { ZodError, ZodFlattenedError } from "zod";
+import capa from "@/public/capa13.png";
 
-type ErrorField = "name" | "profession" | "location" | "description" | "phone";
+type ErrorField =
+  | "displayName"
+  | "profession"
+  | "location"
+  | "description"
+  | "phone";
 
 interface ImageProps {
   place: string;
   preview: string;
   file: File;
 }
+
 
 export function UserProfile() {
   const inputFile = useRef<HTMLInputElement | null>(null);
@@ -33,8 +40,8 @@ export function UserProfile() {
 
   const [profileImage, setProfileImage] = useState<ImageProps | null>(null);
   const [profileCover, setProfileCover] = useState<ImageProps | null>(null);
-  const [profileInfo, setProfileInfo] = useState({
-    name: profile?.name || "",
+  const [profileInfo, setProfileInfo] = useState<Profile>({
+    displayName: profile?.displayName || "",
     profession: profile?.profession || "",
     location: profile?.location || "",
     description: profile?.description || "",
@@ -72,6 +79,7 @@ export function UserProfile() {
     if (!user) return;
 
     const isValidData = ProfileInfoSchema.safeParse(profileInfo);
+
     if (!isValidData.success) {
       return setError(isValidData.error.flatten().fieldErrors);
     }
@@ -89,6 +97,7 @@ export function UserProfile() {
         const data = isValidData.data;
         onlyUpdateUser(data);
       } else {
+
         const urls = await makeUploadsAndGetUrls();
 
         const userInfo = {
@@ -97,7 +106,11 @@ export function UserProfile() {
           updatedAt: serverTimestamp(),
         };
 
-        if (urls.profile) {
+        // console.log(isValidData.data, urls)
+
+        const removeProfileImage = urls.photoURL
+
+        if (removeProfileImage) {
           await updateFirebasePhoto();
         }
 
@@ -123,13 +136,7 @@ export function UserProfile() {
     }
   }
 
-  async function onlyUpdateUser(data: {
-    name: string;
-    profession?: string | undefined;
-    location?: string | undefined;
-    description?: string | undefined;
-    phone?: string | undefined;
-  }) {
+  async function onlyUpdateUser(data: Profile) {
     if (!user) return;
 
     try {
@@ -138,13 +145,9 @@ export function UserProfile() {
         updatedAt: serverTimestamp(),
       };
 
-      await setDoc(
-        doc(db, "users", user.uid),
-        { ...userInfo },
-        {
-          merge: true,
-        },
-      );
+      console.log(userInfo)
+
+      await setDoc(doc(db, "users", user.uid), userInfo, { merge: true});
 
       setLoading(false);
       toast.success("Dados salvos com sucesso");
@@ -171,7 +174,7 @@ export function UserProfile() {
   }
 
   async function makeUploadsAndGetUrls(): Promise<
-    Partial<{ cover: string; profile: string }>
+    Partial<{ cover: string; photoURL: string }>
   > {
     const profileFormData = new FormData();
     const coverFormData = new FormData();
@@ -212,7 +215,7 @@ export function UserProfile() {
         }),
     );
 
-    const urls: Partial<{ cover: string; profile: string }> = uploads.reduce(
+    const urls: Partial<{ cover: string; photoURL: string }> = uploads.reduce(
       (acc, img) => {
         acc = { ...acc, [`${img.place}`]: img.url };
         return acc;
@@ -280,11 +283,10 @@ export function UserProfile() {
     }
   }
 
-
   useEffect(() => {
     if (profile) {
       return setProfileInfo({
-        name: profile.name ?? "",
+        displayName: profile.displayName ?? "",
         phone: profile.phone ?? "",
         profession: profile.profession ?? "",
         location: profile.location ?? "",
@@ -292,7 +294,6 @@ export function UserProfile() {
       });
     }
   }, [profile]);
-
 
   return (
     <>
@@ -325,14 +326,10 @@ export function UserProfile() {
               <section className="space-y-4">
                 {/* Capa do modal de edit */}
                 <div className="relative group">
-                  {profileCover?.preview || profile?.photoURL || process.env.NEXT_PUBLIC_BACKGROUND ? (
+                  {profileCover?.preview || profile?.photoURL || capa ? (
                     <div className="relative h-40 w-full overflow-hidden rounded-xl border-2 border-dashed border-neutral-200 dark:border-neutral-700">
                       <Image
-                        src={
-                          profileCover?.preview || 
-                          profile?.cover || 
-                          process.env.NEXT_PUBLIC_BACKGROUND!
-                        }
+                        src={profileCover?.preview || profile?.cover || capa}
                         alt="Imagem de capa do perfil"
                         fill
                         className="object-cover"
@@ -365,20 +362,22 @@ export function UserProfile() {
                 {/* Profile Picture */}
                 <div className="flex items-center gap-6">
                   <div className="relative">
-                    <img
-                      className="size-24 rounded-full border-4 border-white dark:border-neutral-800 shadow-md object-cover"
-                      src={`${
+                    <Image
+                      src={
                         profileImage?.preview ||
-                        profile?.photoURL || 
+                        profile?.photoURL ||
                         user?.photoURL ||
                         "/place.webp"
-                      }`}
+                      }
                       alt="Profile"
+                      width={96}
+                      height={96}
+                      className="rounded-full border-4 border-white dark:border-neutral-800 shadow-md object-cover"
                     />
                     <input
                       ref={inputPhotoProfileRef}
                       type="file"
-                      name="profile"
+                      name="photoURL"
                       id=""
                       className="hidden"
                       accept="image/webp,image/png,image/jpeg,image/jpg"
@@ -424,19 +423,21 @@ export function UserProfile() {
                   <div className="space-y-1.5">
                     <label className="text-sm flex justify-between font-bold text-neutral-700 dark:text-neutral-300">
                       Nome completo
-                      {hasError("name") && (
+                      {hasError("displayName") && (
                         <span className="text-xs font-light text-red-500">
-                          {error?.name}
+                          {error?.displayName}
                         </span>
                       )}
                     </label>
                     <input
                       type="text"
-                      name="name"
+                      name="displayName"
                       className={`w-full capitalize px-4 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 focus:ring-2 focus:ring-gray-500  focus:border-transparent transition-all outline-none ${
-                        error?.name?.length && "ring-2 ring-red-500"
+                        error?.displayName?.length && "ring-2 ring-red-500"
                       }`}
-                      value={profileInfo?.name || user?.displayName || ''}
+                      value={
+                        profileInfo?.displayName || user?.displayName || ""
+                      }
                       onChange={handleChange}
                     />
                   </div>
@@ -457,9 +458,9 @@ export function UserProfile() {
                         name="email"
                         disabled={true}
                         className={`w-full px-4 py-2.5 rounded-xl border border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 focus:ring-2 focus:ring-gray-500  focus:border-transparent transition-all outline-none ${
-                          error?.name?.length && "ring-2 ring-red-500"
+                          error?.displayName?.length && "ring-2 ring-red-500"
                         }`}
-                        value={profile?.email || user?.email || ''}
+                        value={profile?.email || user?.email || ""}
                         onChange={handleChange}
                       />
                       {user?.emailVerified ? (
@@ -518,7 +519,7 @@ export function UserProfile() {
                         error?.profession?.length && "ring-2 ring-red-500"
                       }`}
                       placeholder="(12) 992456578"
-                      value={profileInfo?.phone || user?.phoneNumber || ''}
+                      value={profileInfo?.phone || user?.phoneNumber || ""}
                       onChange={handleChange}
                     />
                   </div>
@@ -581,7 +582,7 @@ export function UserProfile() {
                 onClick={() => {
                   setEditModalIsOpen(false);
                   setProfileInfo({
-                    name: profile?.name || "",
+                    displayName: profile?.displayName || "",
                     profession: profile?.profession || "",
                     location: profile?.location || "",
                     description: profile?.description || "",
@@ -615,7 +616,7 @@ export function UserProfile() {
             {/* Capa */}
             <div className="relative h-40 w-full object-center">
               <Image
-                src={profile?.cover || process.env.NEXT_PUBLIC_BACKGROUND || "/capa.png"}
+                src={profile?.cover || capa || "/capa.png"}
                 alt="Imagem de capa do perfil"
                 fill
                 className="object-cover"
@@ -624,7 +625,7 @@ export function UserProfile() {
             </div>
 
             {/* Informações do usuário */}
-            <div className="px-4">
+            <div className="px-4 md:px-6">
               <div className="flex justify-between items-end -mt-16 ">
                 <div className="relative flex flex-col gap-2 flex-1">
                   {/* Foto de perfil */}
@@ -641,17 +642,18 @@ export function UserProfile() {
                     </div>
                     <button
                       onClick={() => setEditModalIsOpen(true)}
-                      className="px-4 py-2 rounded-lg  bg-white font-bold text-sm hover:bg-gray-50 "
+                      className="mb-1 px-4 py-2 rounded-lg border border-neutral-300 dark:border-neutral-700 font-bold text-sm hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-700 dark:text-neutral-300 transition-colors flex items-center gap-2"
                     >
-                      <MdEdit size={20} />
-                      {/* <span className="hidden sm:inline">Edit Profile</span> */}
+                      <MdEdit size={18} />
+                      <span className="hidden sm:inline">Edit Profile</span>
                     </button>
                   </div>
 
                   {/* Nome usuário */}
                   <div className="gap-1 space-y-2">
                     <h1 className="text-2xl font-bold capitalize text-gray-900 dark:text-white flex items-center gap-1">
-                      {getFirstName(profile?.name) || getFirstName(user?.displayName)}
+                      {getFirstName(profile?.displayName) ||
+                        getFirstName(user?.displayName)}
                       {profile?.profileVerified && (
                         <MdVerified className="text-blue-500 text-xs " />
                       )}
@@ -679,7 +681,7 @@ export function UserProfile() {
               {/* Mobile View */}
               {/* <div className="sm:hidden mb-4">
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-1">
-                 {getFirstName(profile?.name) || getFirstName(user?.displayName)}
+                 {getFirstName(profile?.displayName) || getFirstName(user?.displayName)}
                   <MdVerified className="text-blue-500" />
                 </h1>
                 {profile?.profession && profile?.location ? (

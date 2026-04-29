@@ -25,14 +25,17 @@ export function UserMenu() {
   const ref = useRef<HTMLDivElement>(null);
 
   const [notificationIsOpen, setNotificationIsOpen] = useState(false);
-
   const [notifications, setNotifications] = useState<
     NotificationFirebaseProps[]
   >([]);
 
+  const [markedAsSeen, setMarkedAsSeen] = useState(false);
+
   useEffect(() => {
     if (!user?.uid) return;
     const unsubscribe = listenNotifications(user?.uid, setNotifications);
+
+    setMarkedAsSeen(false)
 
     return () => unsubscribe();
   }, [user?.uid]);
@@ -53,23 +56,29 @@ export function UserMenu() {
   }, []);
 
   useEffect(() => {
-    if(notificationIsOpen) {
-      document.body.style.overflowY = 'hidden'
+    if (notificationIsOpen) {
+      document.body.style.overflowY = "hidden";
     } else {
-      document.body.style.overflowY = 'auto'
+      document.body.style.overflowY = "auto";
     }
 
-  }, [notificationIsOpen])
+    setMarkedAsSeen(true);
+  }, [notificationIsOpen]);
 
   return (
     <div ref={ref} className="relative flex items-center gap-3">
-      <div className="relative w-fit cursor-pointer"  onClick={() => setNotificationIsOpen(true)}>
+      <div
+        className="relative w-fit cursor-pointer"
+        onClick={() => setNotificationIsOpen(true)}
+      >
         <MdNotifications
           // onClick={() => setNotificationIsOpen(true)}
           className="text-neutral-800 text-[20px] cursor-pointer"
         />
         {notifications.map((notification) => {
-          if (!notification.read) {
+          const wasRead = notification.read;
+
+          if (!wasRead && !markedAsSeen) {
             return (
               <span
                 key={notification.id}
