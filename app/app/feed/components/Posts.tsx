@@ -84,6 +84,7 @@ export function Posts() {
     setInlinePost(searchPost);
   }, [searchPost]);
 
+  console.log(posts)
   
   return (
     <div className="space-y-4">
@@ -112,9 +113,6 @@ export function Posts() {
               <FeedCard
                 id={doc.id}
                 userId={doc.userId}
-                // author={userData?.name as string}
-                // img={userData?.photoURL as string}
-                // publicId={userData?.publicId as string}
                 location={doc.location}
                 createdAt={doc.createdAt}
                 description={doc.description}

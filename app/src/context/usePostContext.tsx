@@ -2,15 +2,15 @@
 
 import { FieldValue } from "firebase/firestore";
 import { createContext, useContext, useEffect, useState } from "react";
-import { PostSchema, PostSearchSchemaType } from "@/app/utils/zod";
+import { PostSchema, PostSchemaType, PostSearchSchemaType } from "@/app/utils/zod";
 
-export type PostType = 'search' | 'sell'
-export type PostStatus = 'active' | 'closed' | 'deleted'
+// export type PostType = 'search' | 'sell'
+// export type PostStatus = 'active' | 'closed' | 'deleted'
 
 
 type SearchPostContextType = {
-  searchPost: PostSearchSchemaType | null;
-  setSearchPost: (post: PostSearchSchemaType | null) => void;
+  searchPost: PostSchemaType | null;
+  setSearchPost: (post: PostSchemaType | null) => void;
   clearSearchPost: () => void;
   postLoading: boolean;
   setPostLoading: (postLoading: boolean) => void;
@@ -23,7 +23,7 @@ export function SearchPostProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [searchPost, setSearchPost] = useState<PostSearchSchemaType | null>(null);
+  const [searchPost, setSearchPost] = useState<PostSchemaType | null>(null);
   const [postLoading, setPostLoading] = useState(false);
 
   function clearSearchPost() {

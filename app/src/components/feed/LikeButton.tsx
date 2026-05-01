@@ -26,6 +26,8 @@ export function LikeButton({
   const [likes, setLikes] = useState(likesCount);
   const [hasLiked, setHasLiked] = useState(false);
 
+  // console.log(postId)
+
   useEffect(() => {
     if (!user) return;
 
@@ -59,6 +61,7 @@ export function LikeButton({
       } else {
         // like
         transaction.set(likeRef, {
+          userId,
           createdAt: serverTimestamp(),
         });
 

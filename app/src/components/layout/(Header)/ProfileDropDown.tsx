@@ -36,7 +36,7 @@ export function UserMenu() {
     const unsubscribe = listenNotifications(user?.uid, setNotifications);
 
     setMarkedAsSeen(false)
-
+  
     return () => unsubscribe();
   }, [user?.uid]);
 
@@ -58,11 +58,11 @@ export function UserMenu() {
   useEffect(() => {
     if (notificationIsOpen) {
       document.body.style.overflowY = "hidden";
+      setMarkedAsSeen(true);
     } else {
       document.body.style.overflowY = "auto";
     }
 
-    setMarkedAsSeen(true);
   }, [notificationIsOpen]);
 
   return (

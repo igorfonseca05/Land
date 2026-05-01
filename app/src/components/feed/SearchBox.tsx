@@ -6,11 +6,18 @@ import { Modal } from "../GlobalModal/Modal";
 import Image from "next/image";
 import { useProfileContext } from "../../context/userProfileContext";
 import { z, ZodFlattenedError } from "zod";
-import { addDoc, collection, doc, serverTimestamp } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+  Timestamp,
+} from "firebase/firestore";
 import { db } from "@/app/config/firebase";
 import { toast } from "sonner";
 import { useSearchPost } from "../../context/usePostContext";
-import { PostSchema } from "@/app/utils/zod";
+import { PostSchema, PostSchemaType } from "@/app/utils/zod";
 import { FirebaseError } from "firebase/app";
 import { useAuth } from "../../context/useAuthContext";
 import { CommunityBanner } from "./Banner";
@@ -45,28 +52,31 @@ export function HeroSearch() {
   const { setSearchPost } = useSearchPost();
   const [isOpen, setIsOpen] = useState(false);
 
-  const [post, setPost] = useState<z.infer<typeof PostSchema>>({
-    id: "",
-    title: "",
-    description: "",
-    features: [],
-    images: [],
-    type: "search",
-    details: null,
-    location: null,
-    status: "active",
-    userId: user?.uid ? user.uid : "",
-    likesCount: 0,
-    userSnapShot: {
-      displayName: "",
-      photoURL: "",
-      userId: "",
-      publicId: "",
-      slug: "",
-      profileVerified: false,
-      profession: "",
-    },
-  });
+  const postInitialState: PostSchemaType = {
+        id: "",
+        title: "",
+        description: "",
+        features: [],
+        images: [],
+        type: 'search',
+        details: null,
+        location: null,
+        status: "active",
+        userId: user?.uid ? user.uid : "",
+        likesCount: 0,
+        userSnapShot: {
+          displayName: "",
+          photoURL: "",
+          userId: user?.uid ? user.uid : "",
+          publicId: "",
+          slug: "",
+          profileVerified: false,
+          profession: "",
+        },
+        createdAt: serverTimestamp()
+      }
+
+  const [post, setPost] = useState<z.infer<typeof PostSchema>>(postInitialState);
 
   const [charactereCount, setCharacterCount] = useState(2000);
   const [error, setError] = useState<
@@ -119,27 +129,6 @@ export function HeroSearch() {
   async function handlePostForm(e: FormEvent) {
     e.preventDefault();
 
-    const rawData = {
-      ...post,
-      userSnapShot: {
-        displayName: profile? profile.displayName: user ? user?.displayName! : "",
-        photoURL: profile ? profile.photoURL : user ? user?.photoURL! : "",
-        userId: profile ? profile.uid : user ? user.uid : "",
-        publicId: profile ? profile.publicId : "",
-        slug: profile ? profile.slug : "",
-        profileVerified: profile?.profileVerified
-          ? profile.profileVerified
-          : false,
-        profession: profile?.profession ? profile.profession : "",
-      },
-    };
-
-    const isValidPost = PostSchema.safeParse(rawData);
-
-    if (!isValidPost.success) {
-      return setError(isValidPost.error.flatten().fieldErrors);
-    }
-
     try {
       setLoading(true);
       setError(null);
@@ -149,18 +138,42 @@ export function HeroSearch() {
       const postId = doc(collection(db, "posts")).id;
 
       const newPost = {
-        ...isValidPost.data,
+        ...post,
         userId: user?.uid,
-        type: "search",
+        id: postId,
+        type: 'search',
         status: "active",
         createdAt: serverTimestamp(),
         likesCount: 0,
+        userSnapShot: {
+          displayName: profile
+            ? profile.displayName
+            : user
+              ? user?.displayName!
+              : "",
+          photoURL: profile ? profile.photoURL : user ? user?.photoURL! : "",
+          userId: profile ? profile.uid : user ? user.uid : "",
+          publicId: profile ? profile.publicId : "",
+          slug: profile ? profile.slug : "",
+          profileVerified: profile?.profileVerified
+            ? profile.profileVerified
+            : false,
+          profession: profile?.profession ? profile.profession : "",
+        },
       };
 
-      // await setDoc(doc(db, 'ads', postId), newPost);
-      await addDoc(collection(db, "ads"), newPost);
+      const isValidNewPost = PostSchema.safeParse(newPost);
+
+      if (!isValidNewPost.success) {
+        return setError(isValidNewPost.error.flatten().fieldErrors);
+      }
+      
+      // console.log(isValidNewPost)
+
+      await setDoc(doc(db, "ads", postId), isValidNewPost.data);
+      // await addDoc(collection(db, "ads"), newPost);
       // setSearchPost({...newPost, id: postId});
-      setSearchPost(newPost);
+      setSearchPost(isValidNewPost.data);
       setLoading(false);
       setIsOpen(false);
       toast.success("Publicado.");
@@ -177,28 +190,7 @@ export function HeroSearch() {
   useEffect(() => {
     if (!isOpen) {
       setError(null);
-      setPost({
-        id: "",
-        title: "",
-        description: "",
-        features: [],
-        images: [],
-        type: "search",
-        details: null,
-        location: null,
-        status: "active",
-        userId: user?.uid ? user.uid : "",
-        likesCount: 0,
-        userSnapShot: {
-          displayName: "",
-          photoURL: "",
-          userId: user?.uid ? user.uid : "",
-          publicId: "",
-          slug: "",
-          profileVerified: false,
-          profession: "",
-        },
-      });
+      setPost(postInitialState);
     }
   }, [isOpen]);
 

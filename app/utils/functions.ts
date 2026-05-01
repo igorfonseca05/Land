@@ -151,8 +151,8 @@ export async function createNotification({
       { merge: true },
     );
   } catch (error) {
-    if (process.env.NODE_ENV === "development") {
-      console.error("Erro ao criar notificação:", error);
-    }
+    // if (process.env.NODE_ENV === "development") {
+    //   console.error("Erro ao criar notificação:", error);
+    // }
   }
 }

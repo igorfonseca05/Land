@@ -149,17 +149,17 @@ export const NormalizedAdSchema = z.object({
 
 export type NormalizedAd = z.infer<typeof NormalizedAdSchema>;
 
+
 export const PostSchema = z.object({
-  id: z.string(),
-  images: z.array(z.string()).nullable().default([]),
+  id: z.string().min(1),
+  images: z.array(z.string()).default([]),
   type: z.enum(["search", "sale"]),
   details: DetailsSchema.nullable().default(null),
   location: LocationSchema.nullable().default(null),
   title: z
     .string("Título é obrigatório")
     .trim()
-    .min(1, "Título não pode ser vazio")
-    .transform((v) => v.toLowerCase()),
+    .min(1, "Título não pode ser vazio"),
   description: z
     .string()
     .trim()
@@ -168,8 +168,9 @@ export const PostSchema = z.object({
   features: z.array(z.enum(featuresList)),
   userId: z.string().min(10),
   status: z.enum(["active", "inactive", "reserved", "sold"]),
-  likesCount: z.number().default(0).optional(),
-  userSnapShot: userSnapshotSchema
+  likesCount: z.number().default(0),
+  userSnapShot: userSnapshotSchema,
+  createdAt: z.any()
 });
 
 export type PostSchemaType = z.infer<typeof PostSchema> & {
@@ -196,12 +197,12 @@ export const PostSearchSchema = z.object({
   userSnapShot: userSnapshotSchema
 });
 
-export const propertySchema = z.object({
-  title: z.string().min(1, "Título é obrigatório"),
-  description: z.string().min(1, "Descrição é obrigatória"),
-  features: z.array(z.enum(featuresList)),
-});
+// export const propertySchema = z.object({
+//   title: z.string().min(1, "Título é obrigatório"),
+//   description: z.string().min(1, "Descrição é obrigatória"),
+//   features: z.array(z.enum(featuresList)),
+// });
 
-export type PostSearchSchemaType = z.infer<typeof PostSearchSchema>;
+export type PostSearchSchemaType = z.infer<typeof PostSchema>;
 
 
